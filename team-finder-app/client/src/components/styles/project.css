@@ -12,3 +12,40 @@
     text-align: center;
 }
 
+.edit-close-delete {
+    position: relative;
+    left: 15px;
+    bottom: 15px;
+}
+
+.gh-icon {
+    height: 50px;
+    position: relative;
+    top: 15px;
+    right: 70px;
+}
+
+.dropdown-custom {
+    border: none;
+    background-color: transparent;
+}
+
+.show>.btn-primary.dropdown-toggle  {
+    border: none;
+    background-color: transparent; 
+}
+
+.btn-primary:focus {
+    border: none;
+    background-color: transparent; 
+}
+
+.btn-primary:hover {
+    border: none;
+    background-color: transparent; 
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    border: none;
+    background-color: transparent; 
+}
