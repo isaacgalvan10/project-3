@@ -17,6 +17,8 @@ const Project = () => {
     const teamSize = 4;
     const [teamMembers, setMembers] = useState(['member1', 'member2', 'member3']);
 
+    const route = '/project';
+
     const spotsLeft = () => {
         const spots = teamSize - teamMembers.length;
         if (spots === 0) {
@@ -87,7 +89,7 @@ const Project = () => {
 
     return (
         <>
-            <Notification show={show} setShow={setShow} text={text} />
+            <Notification show={show} setShow={setShow} text={text} route={route}/>
             <Container fluid className='d-flex flex-column align-items-center'>
                 <h1 className='mb-3'>Job Tracker App</h1>
                 <Row className='align-items-center mb-3'>
