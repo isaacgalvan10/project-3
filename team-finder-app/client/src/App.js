@@ -17,8 +17,8 @@ import MyProject from './pages/projects/MyProject';
 import Profile from './pages/profiles/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
-import Signup from './components/Signup';
-import Login from './components/Login';
+// import Signup from './components/Signup';
+// import Login from './components/Login';
 
 const httpLink = createHttpLink({
   uri: 'graphql',
@@ -72,8 +72,8 @@ function App() {
               element={<MyProfile />}
             />
           </Routes>
-          <Signup />
-          {/* <Login /> */}
+          {/* <Signup />
+          <Login /> */}
           <Footer />
         </>
       </Router>
