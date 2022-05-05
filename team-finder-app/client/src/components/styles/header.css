@@ -1,0 +1,41 @@
+.login-btn {
+  margin-bottom: 30px;
+}
+
+.navbar-nav {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  margin-top: 40px;
+}
+
+.navbar-nav i {
+  font-size: 20px;
+}
+
+@media all and (min-width: 768px) {
+  .login-btn {
+    margin: 0;
+  }
+  .form {
+    margin-right: 40px;
+  }
+  .navbar-nav {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: end !important;
+        -ms-flex-pack: end !important;
+            justify-content: end !important;
+    margin-top: 0;
+  }
+  .navbar-nav i {
+    font-size: 20px;
+  }
+}
+/*# sourceMappingURL=header.css.map */
