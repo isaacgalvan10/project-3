@@ -30,10 +30,10 @@ const Header = () => {
                   />
                   <Button variant="outline-success">Search</Button>
                 </Form>
-                {/* <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Button className="login-btn">Login</Button>
-                </Nav> */}
-                <Nav className="justify-content-end align-items-center">
+                </Nav>
+                {/* <Nav className="justify-content-end align-items-center">
                   <div>
                     <i className="fa-solid fa-bell"></i>
                     <span className="notification-num">1</span>
@@ -41,7 +41,7 @@ const Header = () => {
                   <div style={{ marginLeft: 12 }}>
                     <i className="fa-solid fa-user"></i>
                   </div>
-                </Nav>
+                </Nav> */}
               </Offcanvas.Body>
             </Navbar.Offcanvas>
           </Container>
