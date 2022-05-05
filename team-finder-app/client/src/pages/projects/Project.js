@@ -1,8 +1,18 @@
 import { Container, Row, Col, Button, Image, ListGroup } from 'react-bootstrap';
-import '../../components/styles/project.css'
+import '../../components/styles/project.css';
+import swal from "sweetalert";
 
 
-const Project = () => {
+const Project =  () => {
+    const sendRequest = async () => {
+        const confirm = await swal({
+            title: "Are you sure you want to join this team?",
+            buttons: ["No", "Yes"],
+          });
+        
+        
+    }
+
     return (
         <Container fluid className='d-flex flex-column align-items-center'>
             <h1 className='mb-3'>Job Tracker App</h1>
@@ -13,7 +23,7 @@ const Project = () => {
                     <p>Lernantino</p>
                     <p>May 5, 2021</p>
                 </Col>
-                <Button>Ask to Join!</Button>
+                <Button variant="success" onClick={() => sendRequest()}>Ask to Join!</Button>
             </Row>
             <Image src="./project.png" alt="project" className='project-img mb-3'></Image>
             <ListGroup horizontal className='mb-3'>
