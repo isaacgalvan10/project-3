@@ -72,7 +72,7 @@ function App() {
               element={<MyProfile />}
             />
           </Routes>
-          {/* <Signup /> */}
+          <Signup />
           {/* <Login /> */}
           <Footer />
         </>

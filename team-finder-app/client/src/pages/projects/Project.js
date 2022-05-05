@@ -1,6 +1,7 @@
 import { Container, Row, Col, Button, Image, ListGroup } from 'react-bootstrap';
 import '../../components/styles/project.css'
 
+
 const Project = () => {
     return (
         <Container fluid className='d-flex flex-column align-items-center'>
