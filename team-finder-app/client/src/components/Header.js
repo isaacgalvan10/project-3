@@ -4,7 +4,8 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { NavDropdown, Offcanvas } from 'react-bootstrap';
+import { Offcanvas } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import './styles/header.css';
 
 const Header = () => {
@@ -13,7 +14,7 @@ const Header = () => {
       {['md'].map((expand) => (
         <Navbar key={expand} bg="light" expand={expand} className="mb-3">
           <Container fluid>
-            <Navbar.Brand href="#">Team Finder</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">Team Finder</Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
             <Navbar.Offcanvas
               id={`offcanvasNavbar-expand-md`}
