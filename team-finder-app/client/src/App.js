@@ -19,6 +19,9 @@ import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import { GlobalProvider } from './utils/GlobalState';
+import Notification from './components/Notification';
+
 
 const httpLink = createHttpLink({
   uri: 'graphql',
@@ -45,6 +48,7 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <>
+        <GlobalProvider>
           <Header />
           <Routes>
             <Route
@@ -75,6 +79,8 @@ function App() {
           {/* <Signup /> */}
           {/* <Login /> */}
           <Footer />
+          <Notification />
+          </GlobalProvider>
         </>
       </Router>
     </ApolloProvider>
