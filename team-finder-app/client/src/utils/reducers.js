@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { SHOW_NOTIF, HIDE_NOTIF, ADD_MEMBER, STATUS } from './actions';
+import { SHOW_NOTIF, HIDE_NOTIF, ADD_MEMBER, REMOVE_MEMBER, STATUS, SHOW_MODAL, HIDE_MODAL, SHOW_MODAL_NOTIF } from './actions';
 
 export const reducer = (state, action) => {
     switch (action.type) {
@@ -9,7 +9,19 @@ export const reducer = (state, action) => {
                 notif: {
                     show: true,
                     text: action.payload.text,
-                    route: action.payload.route
+                    route: action.payload.route,
+                    modal: false
+                }
+            };
+
+        case SHOW_MODAL_NOTIF:
+            return {
+                ...state,
+                notif: {
+                    show: true,
+                    text: action.payload.text,
+                    route: action.payload.route,
+                    modal: true
                 }
             };
 
@@ -24,26 +36,58 @@ export const reducer = (state, action) => {
             };
 
         case ADD_MEMBER:
-            const memberIndex = state.projects[0].members.findIndex((member) => member.id === action.payload.id);
-            const updatedMember = { ...state.projects[0].members[memberIndex], picture: action.payload.picture };
+            const updatedProject = {
+                ...state.projects[0], members: [...state.projects[0].members, {
+                    id: action.payload.id,
+                    username: action.payload.username,
+                    picture: action.payload.picture
+                }]
+            };
 
-            const membersCopy = [...state.projects[0].members];
-            membersCopy[memberIndex] = updatedMember;
+            const projectsCopy = [...state.projects];
+            projectsCopy[0] = updatedProject
             return {
                 ...state,
-                projects: [{
-                    ...state.projects[0],
-                    members: [...membersCopy]
+                projects: projectsCopy
+            };
 
-                }]
+        case REMOVE_MEMBER:
+            const membersLeft = state.projects[0].members.filter((member) => {
+                return member.id !== action.id;
+            });
 
+            const updatedProject2 = { ...state.projects[0], members: membersLeft };
+
+            const projectsCopy2 = [...state.projects];
+            projectsCopy2[0] = updatedProject2
+
+            return {
+                ...state,
+                projects: projectsCopy2
             };
 
         case STATUS:
             return {
                 ...state,
                 me: {
+                    ...state.me,
                     status: action.status,
+                }
+            };
+
+        case SHOW_MODAL:
+            return {
+                ...state,
+                modals: {
+                    request: true,
+                }
+            };
+
+        case HIDE_MODAL:
+            return {
+                ...state,
+                modals: {
+                    request: false,
                 }
             };
 

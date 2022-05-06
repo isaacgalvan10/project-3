@@ -1,5 +1,6 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../../utils/GlobalState';
+import { Link } from 'react-router-dom';
 import '../../components/styles/homepage.css';
 
 const Homepage = () => {
@@ -20,7 +21,7 @@ const Homepage = () => {
                   0,
                   70
                 )}...`}</Card.Text>
-                <Button variant="primary" href="/project">
+                <Button variant="primary" as={Link} to='/project'>
                   Go somewhere
                 </Button>
               </Card.Body>
