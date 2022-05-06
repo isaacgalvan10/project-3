@@ -13,6 +13,15 @@ const Project = () => {
 
     const teamSize = 4;
     const [teamMembers, setMembers] = useState(['member1', 'member2', 'member3']);
+    const [isPoster, setPoster] = useState(false);
+
+    const switchUser = () => {
+        if (!isPoster) {
+            setPoster(true);
+        } else {
+            setPoster(false);
+        }
+    };
 
     const setBtnText = () => {
         if (state.me.status === 'out') {
@@ -130,6 +139,7 @@ const Project = () => {
 
     return (
         <>
+            <Button variant="success" onClick={() => switchUser()}>Switch</Button>
             <Container fluid className='d-flex flex-column align-items-center'>
                 <h1 className='mb-3'>{state.projects[0].title}</h1>
                 <Row className='align-items-center mb-3'>

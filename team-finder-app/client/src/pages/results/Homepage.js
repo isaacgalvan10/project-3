@@ -1,5 +1,6 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../../utils/GlobalState';
+import { Link } from 'react-router-dom';
 import '../../components/styles/homepage.css';
 
 const Homepage = () => {
