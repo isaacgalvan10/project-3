@@ -196,7 +196,7 @@ const Project = () => {
                     )
                     )}
                     {emptySpots.map((emptySpot) => (
-                        <Image src={emptySpot} alt="user" roundedCircle className='profile-img'></Image>
+                        <Image key={emptySpot.id} src={emptySpot.pic} alt="user" roundedCircle className='profile-img'></Image>
                     ))}
                 </Row>
             </Container>

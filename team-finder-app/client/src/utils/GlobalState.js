@@ -58,7 +58,10 @@ const GlobalProvider = ({ value = [], ...props }) => {
           const spots = [];
           const spotsQty = this.teamSize - this.members.length;
           for (let i = 0; i < spotsQty; i++) {
-            spots.push('./no-profile-picture.jpeg');
+            spots.push({
+              id: i + 1,
+              pic:'./no-profile-picture.jpeg'}
+              );
           };
 
           return spots;
