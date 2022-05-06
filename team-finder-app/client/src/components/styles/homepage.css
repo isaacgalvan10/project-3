@@ -1,0 +1,9 @@
+.card {
+  min-width: none;
+}
+
+@media all and (min-width: 766px) {
+  .card {
+    width: 300px;
+  }
+}
