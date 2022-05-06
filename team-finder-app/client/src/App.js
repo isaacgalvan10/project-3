@@ -21,6 +21,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
+import RequestModal from './components/RequestModal';
 
 
 const httpLink = createHttpLink({
@@ -80,6 +81,7 @@ function App() {
           {/* <Login /> */}
           <Footer />
           <Notification />
+          <RequestModal />
           </GlobalProvider>
         </>
       </Router>
