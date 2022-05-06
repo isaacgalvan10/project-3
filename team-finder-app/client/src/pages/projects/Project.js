@@ -2,29 +2,33 @@ import { Container, Row, Col, Button, Image, ListGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import '../../components/styles/project.css';
 import swal from "sweetalert";
-import Notification from '../../components/Notification';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { useGlobalContext } from '../../utils/GlobalState';
+import { SHOW_NOTIF, ADD_MEMBER, STATUS } from '../../utils/actions';
 
 const Project = () => {
-    const [request, setRequest] = useState('Ask to Join!');
-    const [userPicture, setPicture] = useState('./no-profile-picture.jpeg');
-    const [show, setShow] = useState(false);
-    const [text, setText] = useState('');
     const [teamFull, setTeamFull] = useState(false);
-    const [joined, setJoined] = useState(false);
+    const [state, dispatch] = useGlobalContext();
 
     const teamSize = 4;
     const [teamMembers, setMembers] = useState(['member1', 'member2', 'member3']);
 
-    const route = '/project';
-
+    const setBtnText = () => {
+        if (state.me.status === 'out') {
+            return 'Ask to Join!'
+        } else if (state.me.status === 'pending') {
+            return 'Pending...'
+        } else {
+            return 'Dropout'
+        }
+    }
     const spotsLeft = () => {
         const spots = teamSize - teamMembers.length;
         if (spots === 0) {
             setTeamFull(true);
-        } 
-        
+        }
+
         return spots;
     }
 
@@ -39,26 +43,55 @@ const Project = () => {
                 swal({
                     text: "You have sent lernantino a request to join their team",
                 });
-                setRequest('Pending...');
+                dispatch({
+                    type: STATUS,
+                    status: 'pending'
+                });
 
                 const responseInterval = setInterval(() => {
-                    setShow(true);
-                    setText('lernantino has accepted your request, you are part of the team!');
-                    setRequest('Dropout');
-                    setPicture('./pamela.jpeg');
+                    dispatch({
+                        type: SHOW_NOTIF,
+                        payload: {
+                            text: 'lernantino has accepted your request, you are part of the team!',
+                            route: '/project'
+                        }
+                    });
+                    dispatch({
+                        type: ADD_MEMBER,
+                        payload: {
+                            id: 4,
+                            picture: './pamela.jpeg'
+                        }
+                    });
                     setMembers([...teamMembers, 'member4']);
-                    setJoined(true);
+                    dispatch({
+                        type: STATUS,
+                        status: 'joined'
+                    });
                     clearInterval(responseInterval);
                 }, 10000)
 
 
                 const kickedOut = setInterval(() => {
-                    setShow(true);
-                    setText('lernantino has kicked you out of their team')
-                    setRequest('Ask to Join!');
-                    setPicture('./no-profile-picture.jpeg');
+                    dispatch({
+                        type: SHOW_NOTIF,
+                        payload: {
+                            text: 'lernantino has kicked you out of the team',
+                            route: '/project'
+                        }
+                    });
+                    dispatch({
+                        type: ADD_MEMBER,
+                        payload: {
+                            id: 4,
+                            picture: './no-profile-picture.jpeg'
+                        }
+                    });
                     setMembers(['member1', 'member2', 'member3']);
-                    setJoined(false);
+                    dispatch({
+                        type: STATUS,
+                        status: 'out'
+                    });
                     setTeamFull(false);
                     clearInterval(kickedOut);
                 }, 25000)
@@ -77,10 +110,18 @@ const Project = () => {
                 swal({
                     text: "You have dropout of lernantino's team",
                 });
-                setRequest('Ask to Join!');
-                setPicture('./no-profile-picture.jpeg');
+                dispatch({
+                    type: ADD_MEMBER,
+                    payload: {
+                        id: 4,
+                        picture: './no-profile-picture.jpeg'
+                    }
+                });
                 setMembers(['member1', 'member2', 'member3']);
-                setJoined(false);
+                dispatch({
+                    type: STATUS,
+                    status: 'out'
+                });
                 setTeamFull(false);
             }
         }
@@ -89,39 +130,37 @@ const Project = () => {
 
     return (
         <>
-            <Notification show={show} setShow={setShow} text={text} route={route}/>
             <Container fluid className='d-flex flex-column align-items-center'>
-                <h1 className='mb-3'>Job Tracker App</h1>
+                <h1 className='mb-3'>{state.projects[0].title}</h1>
                 <Row className='align-items-center mb-3'>
-
-                    <Image src="./lernantino.jpeg" alt="user" roundedCircle className='profile-img'></Image>
+                    <Image src={state.projects[0].profile} alt="user" roundedCircle className='profile-img'></Image>
                     <Col>
-                        <p>Lernantino</p>
-                        <p>May 5, 2021</p>
+                        <p>{state.projects[0].poster}</p>
+                        <p>{state.projects[0].date}</p>
                     </Col>
-                    <Button variant="success" onClick={(e) => sendRequest(e.target.textContent)}>{request}</Button>
-                    {joined ? (
+                    <Button variant="success" onClick={(e) => sendRequest(e.target.textContent)}>{setBtnText()}</Button>
+                    {state.me.status === 'joined' ? (
                         <a href='https://github.com/isaacgalvan10/project-3' target='_blank' rel='noreferrer' className='text-reset' ><FontAwesomeIcon icon={faGithub} className="gh-icon" /></a>
                     ) : (
                         null
                     )}
                 </Row>
-                <Image src="./project.png" alt="project" className='project-img mb-3'></Image>
+                <Image src={state.projects[0].projectImg} alt="project" className='project-img mb-3'></Image>
                 <ListGroup horizontal className='mb-3'>
-                    <ListGroup.Item>HTML</ListGroup.Item>
-                    <ListGroup.Item>CSS</ListGroup.Item>
-                    <ListGroup.Item>JavaScript</ListGroup.Item>
+                    {state.projects[0].technologies.map((tech) => (
+                        <ListGroup.Item>{tech}</ListGroup.Item>
+                    ))}
                 </ListGroup>
                 <p>
-                    <span className='mx-5'><em>This post has been edited</em></span>
-                    <br></br>
-                    This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview.
-
-                    I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge.
-                    <br></br>
-                    Edit
-                    <br></br>
-                    We have two spots left! Preferably good with CSS.
+                    {state.projects[0].edited ? (
+                        <>
+                            <span className='mx-5'><em>edited</em></span>
+                            <br></br>
+                        </>
+                    ) : (
+                        null
+                    )}
+                    {state.projects[0].description}
                 </p>
                 <h3>Team Members</h3>
                 {!teamFull
@@ -131,18 +170,10 @@ const Project = () => {
                         null
                     )}
                 <Row>
-                    <Col>
-                        <Image src="./lernantino.jpeg" alt="user" roundedCircle className='profile-img'></Image>
-                    </Col>
-                    <Col>
-                        <Image src="./lernantino.jpeg" alt="user" roundedCircle className='profile-img'></Image>
-                    </Col>
-                    <Col>
-                        <Image src="./lernantino.jpeg" alt="user" roundedCircle className='profile-img'></Image>
-                    </Col>
-                    <Col>
-                        <Image src={userPicture} alt="empty" roundedCircle className='profile-img'></Image>
-                    </Col>
+                    {state.projects[0].members.map((member) => (
+                        <Image src={member.picture} alt="user" roundedCircle className='profile-img'></Image>
+                    )
+                    )}
                 </Row>
             </Container>
         </>
