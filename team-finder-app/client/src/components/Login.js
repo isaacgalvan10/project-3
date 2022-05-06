@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Form, Button } from "react-bootstrap";
+import { Container, Card, Form, Button, Nav } from "react-bootstrap";
 
 function Login(props) {
   const initialValues = { email: "", password: "" };
@@ -57,6 +57,16 @@ function Login(props) {
     <div className="App w-100 margin-left-64">
       <Container className="form-container">
         <Card className="p-2">
+
+          <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
+              <Nav.Item>
+                <Nav.Link activeKey="1" eventKey="link-1">Login</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link activeKey="2" eventKey="link-2">Sign Up</Nav.Link>
+              </Nav.Item>
+          </Nav>
+
           <p className="fs-5 m-1 fw-bold ">Login to your account</p>
           <Form onSubmit={handleSubmit}>
 
