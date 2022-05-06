@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+/* Global custom classes */
+
+.margin-0-auto {
+  margin: 0 auto;
+}
+
+.hover-cursor:hover {
+  cursor: pointer;
+}
