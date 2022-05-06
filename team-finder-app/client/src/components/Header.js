@@ -10,8 +10,6 @@ import './styles/header.css';
 import { useState } from 'react';
 
 const Header = () => {
-  const [notificationDropdown, setNotificationDropdown] = useState(false);
-
   return (
     <>
       {['md'].map((expand) => (
@@ -42,17 +40,9 @@ const Header = () => {
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
                 <Nav className="justify-content-end align-items-center">
-                  <div onClick={() => setNotificationDropdown(true)}>
+                  <div>
                     <i className="fa-solid fa-bell"></i>
                     <span className="notification-num">1</span>
-                    <div
-                      className={`notification-dropdown card ${
-                        notificationDropdown ? 'hidden' : ''
-                      }`}
-                    >
-                      <p>This is a notification</p>
-                      <p>{console.log(notificationDropdown)}</p>
-                    </div>
                   </div>
                   <div style={{ marginLeft: 12 }}>
                     <Image
