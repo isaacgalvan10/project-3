@@ -13,12 +13,11 @@ import Header from './components/Header';
 import Homepage from './pages/results/Homepage'
 import SearchResults from './pages/results/SearchResults';
 import Project from './pages/projects/Project';
-import MyProject from './pages/projects/MyProject';
 import Profile from './pages/profiles/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
-import Signup from './components/Signup';
-import Login from './components/Login';
+// import Signup from './components/Signup';
+// import Login from './components/Login';
 import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
 import RequestModal from './components/RequestModal';
@@ -63,10 +62,6 @@ function App() {
             <Route
               path='/project'
               element={<Project />}
-            />
-            <Route
-              path='/myProject'
-              element={<MyProject />}
             />
             <Route
               path='/profile'
