@@ -21,7 +21,7 @@ const Homepage = () => {
                   0,
                   70
                 )}...`}</Card.Text>
-                <Button variant="primary" href="/project">
+                <Button variant="primary" as={Link} to='/project'>
                   Go somewhere
                 </Button>
               </Card.Body>
