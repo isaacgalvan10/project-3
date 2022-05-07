@@ -26,10 +26,30 @@ type Tag {
     tags: [Tag]
   }
 
-  type Query {
+    type User {
+        _id: ID
+        username: String
+        email: String
+        password: String
+        github: String
+    }
+
+    type Auth {
+        token: ID!
+        user: User
+    }
+
+    type Query {
     projects: [Project]
     project(_id: ID!): Project
-  }
+    users: [User]
+    user(username: String!): User
+    }
+
+    type Mutation {
+        addUser(username: String!, email: String!, password: String!): Auth
+        login(email: String!, password: String!): Auth
+    }
 `;
 
 module.exports = typeDefs;

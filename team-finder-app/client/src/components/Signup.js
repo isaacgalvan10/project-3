@@ -2,14 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Container, Card, Form, Button, Nav } from "react-bootstrap";
 import swal from "sweetalert";
 
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../utils/mutations';
+
+import Auth from '../utils/auth';
+
 function Signup(props) {
   const initialValues = { name: "", github: "", email: "", password: "" };
-
   // Function that watches input information in form
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({ ...formValues, [id]: value });
   };
+
+  const [addUser, { error, data }] = useMutation(ADD_USER);
 
   // useStates for the input values, errors in the inputs and submit of a new signup respectively
   const [formValues, setFormValues] = useState(initialValues);
@@ -17,10 +23,20 @@ function Signup(props) {
   const [isSubmit, setIsSubmit] = useState(false);
 
   // Function for submition of new signup
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setIsSubmit(true);
+
+    try {
+      const { data } = await addUser({
+        variables: { ...formValues },
+      });
+
+      Auth.login(data.addUser.token);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   
