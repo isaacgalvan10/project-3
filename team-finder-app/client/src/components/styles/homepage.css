@@ -20,14 +20,6 @@
   background-color: #98c1d9;
 }
 
-.btn {
-  color: black;
-  background-color: #e0fbfc;
-  border-color: #e0fbfc;
-  box-shadow: 0, 5, 20, black;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-}
-
 .badge {
   background-color: #e0fbfc;
   color: black;

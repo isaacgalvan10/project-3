@@ -14,11 +14,14 @@ const Header = () => {
   const [state, dispatch] = useGlobalContext();
 
   const displayPostModal = () => {
-    dispatch({ type: SHOW_MODAL, payload: {
-      request: false,
-      post: true
-  } });
-  }
+    dispatch({
+      type: SHOW_MODAL,
+      payload: {
+        request: false,
+        post: true,
+      },
+    });
+  };
 
   return (
     <>
@@ -47,20 +50,27 @@ const Header = () => {
                     aria-label="Search"
                   />
                   <Button type="submit" className="search-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i className="fa-solid fa-magnifying-glass"></i>
                   </Button>
                 </Form>
-                {/* <Nav className="justify-content-end flex-grow-1 pe-3">
+                {/* LOGGED OUT HEADER */}
+                {/* <Nav className="justify-content-end align-items-center">
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
+                {/* LOGGED IN HEADER */}
                 <Nav className="justify-content-end align-items-center">
-                  <Button style={{ marginRight: '10px' }} onClick={() => displayPostModal()}>Create Post</Button>
+                  <Button
+                    style={{ marginRight: '10px' }}
+                    onClick={() => displayPostModal()}
+                  >
+                    Create Post
+                  </Button>
                   <Dropdown>
                     <Dropdown.Toggle className="position-relative">
                       <i className="fa-solid fa-bell"></i>
-                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         99+
-                        <span class="visually-hidden">Notifications</span>
+                        <span className="visually-hidden">Notifications</span>
                       </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
