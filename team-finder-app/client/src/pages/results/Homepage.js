@@ -36,9 +36,9 @@ const Homepage = () => {
                   0,
                   70
                 )}...`}</Card.Text>
-                <Link to="/project">
-                  <Button variant="primary">View Project</Button>
-                </Link>
+                <Button variant="primary" as={Link} to='/project'>
+                  View Project
+                </Button>
               </Card.Body>
             </Card>
           ))}
