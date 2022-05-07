@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Container, Card, Form, Button, Nav } from "react-bootstrap";
 import swal from "sweetalert";
 
-function Signup(props) {
-  const initialValues = { name: "", github: "", email: "", password: "" };
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../utils/mutations';
 
+import Auth from '../utils/auth';
+
+function Signup(props) {
+  const initialValues = { username: "", github: "", email: "", password: "" };
   // Function that watches input information in form
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -16,11 +20,22 @@ function Signup(props) {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
+  const [addUser, { error, data }] = useMutation(ADD_USER);
   // Function for submition of new signup
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setIsSubmit(true);
+
+    try {
+      const { data } = await addUser({
+        variables: { ...formValues },
+      });
+
+      Auth.login(data.addUser.token);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   
@@ -120,9 +135,9 @@ function Signup(props) {
 
             <Form.Group
               className="mb-3"
-              controlId="name"
-              name="name"
-              value={formValues.name}
+              controlId="username"
+              name="username"
+              value={formValues.username}
               onChange={handleChange}
             >
               <Form.Label>Username</Form.Label>
@@ -131,7 +146,7 @@ function Signup(props) {
                 placeholder="Create a username"
               />
               <Form.Text id="nameAlert" className="text-danger fs-6">
-                {formErrors.name}
+                {formErrors.username}
               </Form.Text>
             </Form.Group>
 

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card, Form, Button, Nav } from "react-bootstrap";
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER } from '../utils/mutations';
+
+import Auth from '../utils/auth';
 
 function Login(props) {
   const initialValues = { email: "", password: "" };
+  const [login, { error, data }] = useMutation(LOGIN_USER);
 
   // Function that watches input information in form
   const handleChange = (e) => {
@@ -16,10 +21,25 @@ function Login(props) {
   const [isSubmit, setIsSubmit] = useState(false);
 
   // Function for submition of new login
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setIsSubmit(true);
+
+    try {
+      const { data } = await login({
+        variables: { ...formValues },
+      });
+
+      Auth.login(data.login.token);
+    } catch (e) {
+      console.error(e);
+    }
+
+    setFormValues({
+      email: '',
+      password: '',
+    });
   };
 
   
