@@ -16,8 +16,8 @@ import Project from './pages/projects/Project';
 import Profile from './pages/profiles/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
-// import Signup from './components/Signup';
-// import Login from './components/Login';
+import Signup from './components/Signup';
+import Login from './components/Login';
 import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
 import RequestModal from './components/RequestModal';
@@ -71,9 +71,17 @@ function App() {
               path='/myProfile'
               element={<MyProfile />}
             />
-          </Routes>
           {/* <Signup /> */}
-          {/* <Login /> */}
+          <Route
+              path='/signUp'
+              element={<Signup />}
+            />
+            {/* <Login /> */}
+            <Route
+              path='/login'
+              element={<Login />}
+            />
+            </Routes>
           <Footer />
           <Notification />
           <RequestModal />
