@@ -13,6 +13,8 @@ const CreatePostModal = () => {
           event.preventDefault();
           event.stopPropagation();
         }
+
+        
     
         setValidated(true);
       };

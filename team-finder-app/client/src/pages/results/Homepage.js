@@ -6,23 +6,38 @@ import '../../components/styles/homepage.css';
 const Homepage = () => {
   const [state, dispatch] = useGlobalContext();
   return (
-    <Container style={{ marginTop: '30px' }}>
+    <Container style={{ marginTop: '30px' }} className="main-container">
       <Row>
         <Col
           className="d-flex flex-wrap justify-content-center"
           style={{ gap: '30px' }}
         >
-          {state.projects.map((project) => (
-            <Card key={project}>
+          {state.projects.map((project, index) => (
+            <Card key={`${project}${index}`}>
               <Card.Img variant="top" src={project.projectImg} />
               <Card.Body>
-                <Card.Title>{project.title}</Card.Title>
+                {project.tags.slice(0, 2).map((tag) => (
+                  <span
+                    key={`${index}${project.title}${tag.tagName}`}
+                    className="badge rounded-pill"
+                    style={{
+                      marginRight: '10px',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                    }}
+                  >
+                    {tag.tagName}
+                  </span>
+                ))}
+                <Card.Title style={{ marginTop: '10px' }}>
+                  {project.title}
+                </Card.Title>
                 <Card.Text>{`${project.description.substring(
                   0,
                   70
                 )}...`}</Card.Text>
                 <Button variant="primary" as={Link} to='/project'>
-                  Go somewhere
+                  View Project
                 </Button>
               </Card.Body>
             </Card>

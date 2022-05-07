@@ -21,7 +21,7 @@ import Footer from './components/Footer';
 import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
 import RequestModal from './components/RequestModal';
-
+import CreatePostModal from './components/CreatePostModal';
 
 const httpLink = createHttpLink({
   uri: 'graphql',
@@ -77,6 +77,7 @@ function App() {
           <Footer />
           <Notification />
           <RequestModal />
+          <CreatePostModal />
           </GlobalProvider>
         </>
       </Router>

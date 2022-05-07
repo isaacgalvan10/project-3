@@ -78,9 +78,7 @@ export const reducer = (state, action) => {
         case SHOW_MODAL:
             return {
                 ...state,
-                modals: {
-                    request: true,
-                }
+                modals: action.payload
             };
 
         case HIDE_MODAL:
