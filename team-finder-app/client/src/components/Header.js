@@ -9,8 +9,14 @@ import { Link } from 'react-router-dom';
 import './styles/header.css';
 import { SHOW_MODAL } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
+import Auth from '../utils/auth';
 
 const Header = () => {
+  const logout = (event) => {
+    event.preventDefault();
+    Auth.logout();
+  };
+
   const [state, dispatch] = useGlobalContext();
 
   const displayPostModal = () => {
@@ -51,6 +57,25 @@ const Header = () => {
                 {/* <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
+                <div>
+          {Auth.loggedIn() ? (
+            <>
+              <span>Hey there, {Auth.getProfile().data.username}!</span>
+              <button className="btn btn-lg btn-light m-2" onClick={logout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link className="btn btn-lg btn-info m-2" to="/login">
+                Login
+              </Link>
+              <Link className="btn btn-lg btn-light m-2" to="/signup">
+                Signup
+              </Link>
+            </>
+          )}
+        </div>
                 <Nav className="justify-content-end align-items-center">
                   <Button style={{ marginRight: '10px' }} onClick={() => displayPostModal()}>Create Post</Button>
                   <Dropdown>
