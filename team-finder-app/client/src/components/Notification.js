@@ -9,7 +9,10 @@ const Notification = () => {
     const [state, dispatch] = useGlobalContext();
     const showModal = (modal) => {
         if (modal) {
-            dispatch({ type: SHOW_MODAL })
+            dispatch({ type: SHOW_MODAL, payload: {
+                request: true,
+                post: false
+            } })
         }
     }
     return (

@@ -6,10 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../../utils/GlobalState';
 import { SHOW_NOTIF, REMOVE_MEMBER, STATUS, SHOW_MODAL_NOTIF } from '../../utils/actions';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const Project = () => {
     const [state, dispatch] = useGlobalContext();
+    const { id } = useParams();
 
     const [isPoster, setPoster] = useState(false);
     const emptySpots = state.projects[0].spotsLeft();
@@ -45,7 +46,7 @@ const Project = () => {
                     type: SHOW_NOTIF,
                     payload: {
                         text: 'lernantino has kicked you out of their team :(',
-                        route: '/project'
+                        route: `/project/${id}`
                     }
                 });
             }
@@ -78,7 +79,7 @@ const Project = () => {
                     type: SHOW_MODAL_NOTIF,
                     payload: {
                         text: `${state.me.username} has sent a request to join your team!`,
-                        route: '/project'
+                        route: `/project/${id}`
                     }
                 });
                 dispatch({
@@ -115,6 +116,7 @@ const Project = () => {
 
     return (
         <>
+        {console.log(state.projects[0])}
             <Button variant="success" onClick={() => switchUser()}>Switch</Button>
             <Container fluid className='d-flex flex-column align-items-center'>
                 <h1 className='mb-3'>{state.projects[0].title}</h1>
@@ -124,7 +126,7 @@ const Project = () => {
                     <p>POSTER SIDE</p>
                 )}
                 <Row className='align-items-center mb-3'>
-                    <Image src={state.projects[0].profile} alt="user" roundedCircle className='profile-img'></Image>
+                    <Image src={`../${state.projects[0].profile}`} alt="user" roundedCircle className='profile-img'></Image>
                     <Col>
                         <p>{state.projects[0].poster}</p>
                         <p>{state.projects[0].date}</p>
@@ -151,7 +153,7 @@ const Project = () => {
                         null
                     )}
                 </Row>
-                <Image src={state.projects[0].projectImg} alt="project" className='project-img mb-3'></Image>
+                <Image src={`../${state.projects[0].projectImg}`} alt="project" className='project-img mb-3'></Image>
                 <ListGroup horizontal className='mb-3'>
                     {state.projects[0].tags.map((tag) => (
                         <ListGroup.Item key={tag.id}>{tag.tagName}</ListGroup.Item>
@@ -180,7 +182,7 @@ const Project = () => {
                         <Col key={member.id}>
                             <Dropdown>
                                 <Dropdown.Toggle className='dropdown-custom'>
-                                    <Image src={member.picture} alt="user" roundedCircle className='profile-img'></Image>
+                                    <Image src={`../${member.picture}`} alt="user" roundedCircle className='profile-img'></Image>
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
@@ -196,7 +198,7 @@ const Project = () => {
                     )
                     )}
                     {emptySpots.map((emptySpot) => (
-                        <Image key={emptySpot.id} src={emptySpot.pic} alt="user" roundedCircle className='profile-img'></Image>
+                        <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
                     ))}
                 </Row>
             </Container>
