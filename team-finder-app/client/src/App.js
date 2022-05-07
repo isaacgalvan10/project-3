@@ -60,7 +60,7 @@ function App() {
               element={<SearchResults />}
             />
             <Route
-              path='/project'
+              path='/project/:id'
               element={<Project />}
             />
             <Route
