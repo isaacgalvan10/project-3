@@ -18,53 +18,54 @@ const Homepage = () => {
         type: UPDATE_PROJECTS,
         projects: data.projects,
       });
-    } 
+    }
   }, [data, loading, dispatch]);
 
   return (
     <Container style={{ marginTop: '30px' }} className="main-container">
       {state.projects.length ? (
-              <Row>
-              <Col
-                className="d-flex flex-wrap justify-content-center"
-                style={{ gap: '30px' }}
-              >
-                {state.projects.map((project, index) => (
-                  <Card key={`${project}${index}`}>
-                    {console.log(project)}
-                    <Card.Img variant="top" src={`./${project.projectImg}`} />
-                    <Card.Body>
-                      {project.tags.slice(0, 2).map((tag) => (
-                        <span
-                          key={`${index}${project.title}${tag.tagName}`}
-                          className="badge rounded-pill"
-                          style={{
-                            marginRight: '10px',
-                            fontSize: '12px',
-                            fontWeight: '500',
-                          }}
-                        >
-                          {tag.tagName}
-                        </span>
-                      ))}
-                      <Card.Title style={{ marginTop: '10px' }}>
-                        {project.title}
-                      </Card.Title>
-                      <Card.Text>{`${project.description.substring(
-                        0,
-                        70
-                      )}...`}</Card.Text>
-                      <Button variant="primary" as={Link} to={`/project/${project._id}`}>
-                        View Project
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                ))}
-              </Col>
-            </Row>
+        <Row>
+          <Col
+            className="d-flex flex-wrap justify-content-center"
+            style={{ gap: '30px' }}
+          >
+            {state.projects.map((project, index) => (
+              <Card key={`${project}${index}`}>
+                {/* {console.log(project)} */}
+                <Card.Img variant="top" src={`./${project.projectImg}`} />
+                <Card.Body>
+                  {project.tags.slice(0, 2).map((tag) => (
+                    <span
+                      key={`${index}${project.title}${tag.tagName}`}
+                      className="badge rounded-pill"
+                      style={{
+                        marginRight: '10px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                      }}
+                    >
+                      {tag.tagName}
+                    </span>
+                  ))}
+                  <Card.Title style={{ marginTop: '10px' }}>
+                    {project.title}
+                  </Card.Title>
+                  <Card.Text>{`${project.description.substring(
+                    0,
+                    70
+                  )}...`}</Card.Text>
+                  <Button variant="primary" as={Link} to={`/project/${project._id}`}>
+                    View Project
+                  </Button>
+                </Card.Body>
+              </Card>
+            ))}
+          </Col>
+        </Row>
       ) : (
-        <h1>{loading}</h1>
+        <h3>There are no posts yet 😱</h3>
       )}
+      {loading ? <h3>Loading...</h3> : null}
     </Container>
   );
 };
