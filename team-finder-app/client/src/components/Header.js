@@ -15,7 +15,7 @@ const Header = () => {
         <Navbar key={expand} expand={expand} className="mb-3">
           <Container>
             <Navbar.Brand as={Link} to="/">
-              Team Finder
+              &lt;Team Finder/&gt;
             </Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
             <Navbar.Offcanvas
@@ -32,10 +32,12 @@ const Header = () => {
                   <FormControl
                     type="search"
                     placeholder="Javascript"
-                    className="me-2"
+                    className="search-form"
                     aria-label="Search"
                   />
-                  <Button type="submit">Search</Button>
+                  <Button type="submit" className="search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </Button>
                 </Form>
                 {/* <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Button className="login-btn">Login</Button>
