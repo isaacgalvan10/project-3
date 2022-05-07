@@ -1,5 +1,16 @@
 import { useReducer } from 'react';
-import { SHOW_NOTIF, HIDE_NOTIF, ADD_MEMBER, REMOVE_MEMBER, STATUS, SHOW_MODAL, HIDE_MODAL, SHOW_MODAL_NOTIF } from './actions';
+import {
+    SHOW_NOTIF,
+    HIDE_NOTIF,
+    ADD_MEMBER,
+    REMOVE_MEMBER,
+    STATUS,
+    SHOW_MODAL,
+    HIDE_MODAL,
+    SHOW_MODAL_NOTIF,
+    ADD_PROJECT,
+    UPDATE_PROJECTS
+} from './actions';
 
 export const reducer = (state, action) => {
     switch (action.type) {
@@ -78,9 +89,7 @@ export const reducer = (state, action) => {
         case SHOW_MODAL:
             return {
                 ...state,
-                modals: {
-                    request: true,
-                }
+                modals: action.payload
             };
 
         case HIDE_MODAL:
@@ -89,6 +98,40 @@ export const reducer = (state, action) => {
                 modals: {
                     request: false,
                 }
+            };
+
+        case ADD_PROJECT:
+            return {
+                ...state,
+                projects: [
+                    ...state.projects,
+                    action.newProject
+                ]
+            };
+
+        case UPDATE_PROJECTS:
+            const requestedProjects = action.projects;
+
+            const updatedProjects = requestedProjects.map((project) => {
+                return {
+                    ...project,
+                    spotsLeft: function () {
+                        const spots = [];
+                        const spotsQty = this.teamSize - this.members.length;
+                        for (let i = 0; i < spotsQty; i++) {
+                            spots.push({
+                                id: i + 1,
+                                pic: './no-profile-picture.jpeg'
+                            }
+                            );
+                        };
+                        return spots;
+                    }
+                }
+            });
+            return {
+                ...state,
+                projects: updatedProjects
             };
 
         default:

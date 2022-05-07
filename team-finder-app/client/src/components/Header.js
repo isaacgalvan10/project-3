@@ -7,8 +7,19 @@ import Button from 'react-bootstrap/Button';
 import { Offcanvas, Image, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './styles/header.css';
+import { SHOW_MODAL } from '../utils/actions';
+import { useGlobalContext } from '../utils/GlobalState';
 
 const Header = () => {
+  const [state, dispatch] = useGlobalContext();
+
+  const displayPostModal = () => {
+    dispatch({ type: SHOW_MODAL, payload: {
+      request: false,
+      post: true
+  } });
+  }
+
   return (
     <>
       {['md'].map((expand) => (
@@ -41,7 +52,7 @@ const Header = () => {
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
                 <Nav className="justify-content-end align-items-center">
-                  <Button style={{ marginRight: '10px' }}>Create Post</Button>
+                  <Button style={{ marginRight: '10px' }} onClick={() => displayPostModal()}>Create Post</Button>
                   <Dropdown>
                     <Dropdown.Toggle className="position-relative">
                       <i className="fa-solid fa-bell"></i>

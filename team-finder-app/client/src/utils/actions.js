@@ -6,6 +6,9 @@ export const STATUS = "STATUS";
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
 export const SHOW_MODAL_NOTIF = "SHOW_MODAL_NOTIF";
+export const ADD_PROJECT = "ADD_PROJECT";
+export const UPDATE_PROJECTS = "UPDATE_PROJECTS";
+
 
 
 
