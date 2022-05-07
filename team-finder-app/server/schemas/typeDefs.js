@@ -41,7 +41,7 @@ type Tag {
 
     type Query {
     projects: [Project]
-    project(_id: ID!): Project
+    project(projectId: ID!): Project
     users: [User]
     user(username: String!): User
     }

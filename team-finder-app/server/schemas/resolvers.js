@@ -8,8 +8,8 @@ const resolvers = {
       projects: async () => {
         return await Project.find();
       },
-      project: async (parent, { _id }) => {
-        return await Project.findById(_id);
+      project: async (parent, { projectId }) => {
+        return await Project.findOne({ _id: projectId });
       },
     },
 
