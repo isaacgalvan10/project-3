@@ -18,19 +18,23 @@ const GlobalProvider = ({ value = [], ...props }) => {
         title: 'Job Tracker App',
         date: 'May 5, 2021',
         poster: 'lernantino',
-        technologies: [
+        tags: [
           {
             id: 100,
-            techName: 'HTML',
+            tagName: 'HTML',
           },
           {
             id: 200,
-            techName: 'CSS',
+            tagName: 'CSS',
           },
           {
             id: 300,
-            techName: 'JavaScript',
+            tagName: 'JavaScript',
           },
+          {
+            id: 400,
+            tagName: 'Beginner Friendly',
+          },                                       
         ],
         edited: true,
         description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
@@ -72,6 +76,7 @@ const GlobalProvider = ({ value = [], ...props }) => {
         date: 'May 5, 2022',
         poster: 'qwerty',
         technologies: ['HTML', 'CSS', 'JavaScript'],
+        tags: ['Beginner Friendly', 'Javascript'],
         edited: true,
         description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
         profile: './lernantino.jpeg',
@@ -82,6 +87,7 @@ const GlobalProvider = ({ value = [], ...props }) => {
         date: 'May 5, 2022',
         poster: 'qwerty 2',
         technologies: ['HTML', 'CSS', 'JavaScript'],
+        tags: ['Beginner Friendly', 'React', 'SASS'],
         edited: true,
         description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
         profile: './lernantino.jpeg',
@@ -92,6 +98,7 @@ const GlobalProvider = ({ value = [], ...props }) => {
         date: 'May 5, 2022',
         poster: 'qwerty 2',
         technologies: ['HTML', 'CSS', 'JavaScript'],
+        tags: ['Beginner Friendly', 'React', 'Javascript'],
         edited: true,
         description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
         profile: './lernantino.jpeg',
