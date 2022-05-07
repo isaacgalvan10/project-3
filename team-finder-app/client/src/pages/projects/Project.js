@@ -1,25 +1,41 @@
 import { Container, Row, Col, Button, Image, ListGroup, Dropdown } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../../components/styles/project.css';
 import swal from "sweetalert";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../../utils/GlobalState';
-import { SHOW_NOTIF, REMOVE_MEMBER, STATUS, SHOW_MODAL_NOTIF } from '../../utils/actions';
+import { SHOW_NOTIF, REMOVE_MEMBER, STATUS, SHOW_MODAL_NOTIF, UPDATE_PROJECTS } from '../../utils/actions';
 import { Link, useParams } from 'react-router-dom';
-import { QUERY_PROJECT } from '../../utils/queries';
+import { QUERY_PROJECTS } from '../../utils/queries';
 import { useQuery } from '@apollo/client';
 
 const Project = () => {
     const [state, dispatch] = useGlobalContext();
     const { id } = useParams();
-    console.log(id);
-    const { loading, data } = useQuery(QUERY_PROJECT, {
-        variables: { projectId: id }
-    });
+
+    const [currentProject, setCurrentProject] = useState({});
+
+    const { loading, data } = useQuery(QUERY_PROJECTS);
+
+    const { projects } = state;
+
+    const projectIndex = projects.findIndex((project) => project._id === id)
+    console.log(projectIndex);
+    useEffect(() => {
+        if (projects.length) {
+            setCurrentProject(projects.find((project) => project._id === id));
+            console.log(projects.find((project) => project._id === id));
+        } else if (data) {
+            dispatch({
+                type: UPDATE_PROJECTS,
+                projects: data.projects,
+            });
+        }
+    }, [projects, data, loading, dispatch, id]);
 
     const [isPoster, setPoster] = useState(false);
-    // const emptySpots = state.projects[0].spotsLeft();
+    // const emptySpots = currentProject.spotsLeft();
     const myId = state.me.id;
 
     const switchUser = () => {
@@ -122,24 +138,21 @@ const Project = () => {
 
     return (
         <>
-            {loading ? (
-                <h3>Loading...</h3>
-            ) : (
+            {currentProject ? (
                 <>
-                    {/* {console.log(state.projects[0])}
                     <Button variant="success" onClick={() => switchUser()}>Switch</Button>
                     <Container fluid className='d-flex flex-column align-items-center'>
-                        <h1 className='mb-3'>{state.projects[0].title}</h1>
+                        <h1 className='mb-3'>{currentProject.title}</h1>
                         {!isPoster ? (
                             <p>USER SIDE</p>
                         ) : (
                             <p>POSTER SIDE</p>
                         )}
                         <Row className='align-items-center mb-3'>
-                            <Image src={`../${state.projects[0].profile}`} alt="user" roundedCircle className='profile-img'></Image>
+                            <Image src={`../${currentProject.profile}`} alt="user" roundedCircle className='profile-img'></Image>
                             <Col>
-                                <p>{state.projects[0].poster}</p>
-                                <p>{state.projects[0].date}</p>
+                                <p>{currentProject.poster}</p>
+                                <p>{currentProject.date}</p>
                             </Col>
                             {!isPoster ? (
                                 <Button variant="success" onClick={(e) => sendRequest(e.target.textContent)}>{setBtnText()}</Button>
@@ -163,14 +176,14 @@ const Project = () => {
                                 null
                             )}
                         </Row>
-                        <Image src={`../${state.projects[0].projectImg}`} alt="project" className='project-img mb-3'></Image>
+                        <Image src={`../${currentProject.projectImg}`} alt="project" className='project-img mb-3'></Image>
                         <ListGroup horizontal className='mb-3'>
-                            {state.projects[0].tags.map((tag) => (
-                                <ListGroup.Item key={tag.id}>{tag.tagName}</ListGroup.Item>
+                            {projects[projectIndex].tags.map((tag, index) => (
+                                <ListGroup.Item key={index}>{tag.tagName}</ListGroup.Item>
                             ))}
                         </ListGroup>
                         <p>
-                            {state.projects[0].edited ? (
+                            {currentProject.edited ? (
                                 <>
                                     <span className='mx-5'><em>edited</em></span>
                                     <br></br>
@@ -178,17 +191,17 @@ const Project = () => {
                             ) : (
                                 null
                             )}
-                            {state.projects[0].description}
+                            {currentProject.description}
                         </p>
                         <h3>Team Members</h3>
-                        {emptySpots.length !== 0
+                        {/* {currentProject.spotsLeft().length !== 0
                             ? (
-                                <p>{emptySpots.length} Spots left!</p>
+                                <p>{currentProject.spotsLeft().length} Spots left!</p>
                             ) : (
                                 null
-                            )}
+                            )} */}
                         <Row>
-                            {state.projects[0].members.map((member) => (
+                            {projects[projectIndex].members.map((member) => (
                                 <Col key={member.id}>
                                     <Dropdown>
                                         <Dropdown.Toggle className='dropdown-custom'>
@@ -207,15 +220,14 @@ const Project = () => {
                                 </Col>
                             )
                             )}
-                            {emptySpots.map((emptySpot) => (
+                            {/* {currentProject.spotsLeft().map((emptySpot) => (
                                 <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
-                            ))}
+                            ))} */}
                         </Row>
-                    </Container> */}
-                    <h1>{data.project.title}</h1>
+                    </Container>
                 </>
-            )}
-
+            ) : null}
+            {loading ? <h3>Loading...</h3> : null}
         </>
     )
 }
