@@ -153,8 +153,8 @@ const Project = () => {
                 </Row>
                 <Image src={state.projects[0].projectImg} alt="project" className='project-img mb-3'></Image>
                 <ListGroup horizontal className='mb-3'>
-                    {state.projects[0].technologies.map((tech) => (
-                        <ListGroup.Item key={tech.id}>{tech.techName}</ListGroup.Item>
+                    {state.projects[0].tags.map((tag) => (
+                        <ListGroup.Item key={tag.id}>{tag.tagName}</ListGroup.Item>
                     ))}
                 </ListGroup>
                 <p>

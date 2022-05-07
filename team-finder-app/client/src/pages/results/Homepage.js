@@ -18,7 +18,7 @@ const Homepage = () => {
               <Card.Body>
                 {project.tags.slice(0, 2).map((tag) => (
                   <span
-                    key={`${index}${project.title}${tag}`}
+                    key={`${index}${project.title}${tag.tagName}`}
                     className="badge rounded-pill"
                     style={{
                       marginRight: '10px',
@@ -26,7 +26,7 @@ const Homepage = () => {
                       fontWeight: '500',
                     }}
                   >
-                    {tag}
+                    {tag.tagName}
                   </span>
                 ))}
                 <Card.Title style={{ marginTop: '10px' }}>
