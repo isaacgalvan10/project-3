@@ -1,15 +1,26 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User } = require('../models');
+const { Project, User } = require('../models');
 const { signToken } = require('../utils/auth');
-const { Project } = require('../models');
 
 const resolvers = {
     Query: {
       projects: async () => {
-        return await Project.find();
+        return await Project.find({}).populate('poster').populate('members');
       },
       project: async (parent, { projectId }) => {
         return await Project.findOne({ _id: projectId });
+      },
+      users: async () => {
+        return await User.find().populate;
+      },
+      user: async (parent, { username }) => {
+        return await User.findOne({ username: username });
+      },
+      me: async (parent, args, context) => {
+        if (context.user) {
+          return User.findOne({ _id: context.user._id });
+        }
+        throw new AuthenticationError('You need to be logged in!');
       },
     },
 

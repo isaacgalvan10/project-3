@@ -7,8 +7,9 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../../utils/GlobalState';
 import { SHOW_NOTIF, REMOVE_MEMBER, STATUS, SHOW_MODAL_NOTIF, UPDATE_PROJECTS } from '../../utils/actions';
 import { Link, useParams } from 'react-router-dom';
-import { QUERY_PROJECTS } from '../../utils/queries';
+import { QUERY_PROJECT } from '../../utils/queries';
 import { useQuery } from '@apollo/client';
+import Auth from '../../utils/auth';
 
 const Project = () => {
     const [state, dispatch] = useGlobalContext();
@@ -16,16 +17,15 @@ const Project = () => {
 
     const [currentProject, setCurrentProject] = useState({});
 
-    const { loading, data } = useQuery(QUERY_PROJECTS);
+    const { loading, data } = useQuery(QUERY_PROJECT);
 
     const { projects } = state;
 
     const projectIndex = projects.findIndex((project) => project._id === id)
-    console.log(projectIndex);
+
     useEffect(() => {
         if (projects.length) {
             setCurrentProject(projects.find((project) => project._id === id));
-            console.log(projects.find((project) => project._id === id));
         } else if (data) {
             dispatch({
                 type: UPDATE_PROJECTS,
@@ -56,10 +56,13 @@ const Project = () => {
         if (confirm) {
             dispatch({
                 type: REMOVE_MEMBER,
-                id: memberId
+                payload: {
+                    id: memberId,
+                    index: projectIndex
+                } 
             });
 
-            if (memberId === myId) {
+            if (memberId === Auth.getProfile().data._id) {
                 dispatch({
                     type: STATUS,
                     status: 'out'
@@ -67,7 +70,7 @@ const Project = () => {
                 dispatch({
                     type: SHOW_NOTIF,
                     payload: {
-                        text: 'lernantino has kicked you out of their team :(',
+                        text: `${projects[projectIndex].poster[0].username} has kicked you out of their team :(`,
                         route: `/project/${id}`
                     }
                 });
@@ -87,53 +90,64 @@ const Project = () => {
     }
 
     const sendRequest = async (btnText) => {
-        if (btnText === 'Ask to Join!') {
-            const confirm = await swal({
-                title: "Are you sure you want to join this team?",
-                buttons: ["No", "Yes"],
-            });
+        if (Auth.loggedIn()) {
+            if (btnText === 'Ask to Join!') {
+                const confirm = await swal({
+                    title: "Are you sure you want to join this team?",
+                    buttons: ["No", "Yes"],
+                });
 
-            if (confirm) {
+                if (confirm) {
+                    swal({
+                        text: `You have sent ${projects[projectIndex].poster[0].username} a request to join their team`,
+                    });
+                    dispatch({
+                        type: SHOW_MODAL_NOTIF,
+                        payload: {
+                            text: `${Auth.getProfile().data.username} has sent a request to join your team!`,
+                            route: `/project/${id}`,
+                            index: projectIndex
+                        }
+                    });
+                    dispatch({
+                        type: STATUS,
+                        status: 'pending'
+                    });
+                }
+            } else if (btnText === 'Pending...') {
                 swal({
-                    text: "You have sent lernantino a request to join their team",
+                    text: "You've already sent a request to join this team.",
                 });
-                dispatch({
-                    type: SHOW_MODAL_NOTIF,
-                    payload: {
-                        text: `${state.me.username} has sent a request to join your team!`,
-                        route: `/project/${id}`
-                    }
+            } else {
+                const confirm = await swal({
+                    title: "Are you sure you want to dropout of this team??",
+                    buttons: ["No", "Yes"],
                 });
-                dispatch({
-                    type: STATUS,
-                    status: 'pending'
-                });
+
+                if (confirm) {
+                    swal({
+                        text: `You have dropout of ${projects[projectIndex].poster[0].username}'s team`,
+                    });
+                    dispatch({
+                        type: REMOVE_MEMBER,
+                        payload: {
+                            id: Auth.getProfile().data._id,
+                            index: projectIndex
+                        }
+                    });
+                    dispatch({
+                        type: STATUS,
+                        status: 'out'
+                    });
+                }
             }
-        } else if (btnText === 'Pending...') {
-            swal({
-                text: "You've already sent a request to join this team.",
-            });
         } else {
-            const confirm = await swal({
-                title: "Are you sure you want to dropout of this team??",
-                buttons: ["No", "Yes"],
-            });
-
-            if (confirm) {
-                swal({
-                    text: "You have dropout of lernantino's team",
-                });
-                dispatch({
-                    type: REMOVE_MEMBER,
-                    id: myId
-                });
-                dispatch({
-                    type: STATUS,
-                    status: 'out'
-                });
-            }
+            alert('you need to log in to join a team!')
         }
+    }
 
+    if (loading) {
+        return <h2>LOADING...</h2>;
     }
 
     return (
@@ -149,10 +163,25 @@ const Project = () => {
                             <p>POSTER SIDE</p>
                         )}
                         <Row className='align-items-center mb-3'>
-                            <Image src={`../${currentProject.profile}`} alt="user" roundedCircle className='profile-img'></Image>
+                            {projects[projectIndex] ? (
+                                <Col as={Link} to='/profile'>
+                                    <Image src={`../${projects[projectIndex].poster[0].picture}`} alt="user" roundedCircle className='profile-img'></Image>
+                                </Col>
+                            ) : (
+                                <h3>Image dissapears on reload idk why 😠</h3>
+                            )}
                             <Col>
-                                <p>{currentProject.poster}</p>
-                                <p>{currentProject.date}</p>
+                                {projects[projectIndex] ? (
+                                    <>
+                                        <p>{projects[projectIndex].poster[0].username}</p>
+                                        <p>{currentProject.date}</p>
+                                    </>
+
+                                ) : (
+                                    <h3>all properties that are arrays dissapear 🤔</h3>
+
+                                )}
+
                             </Col>
                             {!isPoster ? (
                                 <Button variant="success" onClick={(e) => sendRequest(e.target.textContent)}>{setBtnText()}</Button>
@@ -176,11 +205,23 @@ const Project = () => {
                                 null
                             )}
                         </Row>
-                        <Image src={`../${currentProject.projectImg}`} alt="project" className='project-img mb-3'></Image>
+                        {currentProject.projectImg ? (
+                            <Image src={`../${currentProject.projectImg}`} alt="project" className='project-img mb-3'></Image>
+                        ) : (
+                            <h3>WE NEED TO FIX THIS 😩</h3>
+                        )}
                         <ListGroup horizontal className='mb-3'>
-                            {projects[projectIndex].tags.map((tag, index) => (
-                                <ListGroup.Item key={index}>{tag.tagName}</ListGroup.Item>
-                            ))}
+                            {currentProject.tags ? (
+                                <>
+                                    {
+                                        projects[projectIndex].tags.map((tag, index) => (
+                                            <ListGroup.Item key={index}>{tag.tagName}</ListGroup.Item>
+                                        ))
+                                    }
+                                </>
+                            ) : (
+                                <h3>The tags too 😣</h3>
+                            )}
                         </ListGroup>
                         <p>
                             {currentProject.edited ? (
@@ -201,24 +242,31 @@ const Project = () => {
                                 null
                             )} */}
                         <Row>
-                            {projects[projectIndex].members.map((member) => (
-                                <Col key={member.id}>
-                                    <Dropdown>
-                                        <Dropdown.Toggle className='dropdown-custom'>
-                                            <Image src={`../${member.picture}`} alt="user" roundedCircle className='profile-img'></Image>
-                                        </Dropdown.Toggle>
+                            {currentProject.members ? (
+                                <>
+                                {console.log(projects[projectIndex].members)}
+                                    {projects[projectIndex].members.map((member) => (
+                                        <Col key={member._id}>
+                                            <Dropdown>
+                                                <Dropdown.Toggle className='dropdown-custom'>
+                                                    <Image src={`../${member.picture}`} alt="user" roundedCircle className='profile-img'></Image>
+                                                </Dropdown.Toggle>
 
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item as={Link} to='/profile'>{member.username}</Dropdown.Item>
-                                            {!isPoster ? (
-                                                null
-                                            ) : (
-                                                <Dropdown.Item onClick={() => removeMember(member.id, member.username)}>Remove from team</Dropdown.Item>
-                                            )}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                </Col>
-                            )
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item as={Link} to='/profile'>{member.username}</Dropdown.Item>
+                                                    {!isPoster ? (
+                                                        null
+                                                    ) : (
+                                                        <Dropdown.Item onClick={() => removeMember(member._id, member.username)}>Remove from team</Dropdown.Item>
+                                                    )}
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                        </Col>
+                                    )
+                                    )}
+                                </>
+                            ) : (
+                                <h3>And the team members 😭 (images and arrays)</h3>
                             )}
                             {/* {currentProject.spotsLeft().map((emptySpot) => (
                                 <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
