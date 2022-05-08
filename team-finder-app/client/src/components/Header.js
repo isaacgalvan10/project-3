@@ -60,32 +60,27 @@ const Header = () => {
                   </Button>
                 </Form>
                 {/* LOGGED OUT HEADER */}
-                {/* <Nav className="justify-content-end align-items-center">
-                  <Button className="login-btn">Login</Button>
-                </Nav> */}
-                <div>
-                  {/* LOGGED OUT HEADER */}
-                  {Auth.loggedIn() ? (
-                    <>
-                      <span>Hey there, {Auth.getProfile().data.username}!</span>
-                      <button
-                        className="btn btn-lg btn-light m-2"
-                        onClick={logout}
-                      >
-                        Logout
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link className="btn btn-lg btn-info m-2" to="/login">
-                        Login
-                      </Link>
-                      <Link className="btn btn-lg btn-light m-2" to="/signup">
-                        Signup
-                      </Link>
-                    </>
-                  )}
-                </div>
+                {/* {Auth.loggedIn() ? (
+                  <>
+                    <span>Hey there, {Auth.getProfile().data.username}!</span>
+                    <button
+                      className="btn btn-lg btn-light m-2"
+                      onClick={logout}
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link className="btn btn-lg btn-info m-2" to="/login">
+                      Login
+                    </Link>
+                    <Link className="btn btn-lg btn-light m-2" to="/signup">
+                      Signup
+                    </Link>
+                  </>
+                )} */}
+                {/* LOGGED OUT HEADER */}
                 <Nav className="justify-content-end align-items-center">
                   <Button
                     style={{ marginRight: '10px' }}
