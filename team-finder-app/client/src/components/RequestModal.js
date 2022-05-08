@@ -3,13 +3,22 @@ import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_MEMBER, STATUS, SHOW_NOTIF } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import swal from "sweetalert";
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
 
 const RequestModal = () => {
     const [state, dispatch] = useGlobalContext();
+    const { loading, data } = useQuery(QUERY_ME);
 
-    const acceptRequest = async () => {
+    if (loading) {
+        return <h2>LOADING...</h2>;
+    }
+
+    const me = data.me;
+
+    const acceptRequest = async (projectIndex) => {
         const confirm = await swal({
-            title: `Are you sure you want to accept ${state.me.username} in your team?`,
+            title: `Are you sure you want to accept ${me.username} in your team?`,
             buttons: ["No", "Yes"],
         });
 
@@ -17,15 +26,16 @@ const RequestModal = () => {
             dispatch({
                 type: ADD_MEMBER,
                 payload: {
-                    id: state.me.id,
-                    picture: state.me.picture,
-                    username: state.me.username
+                    id: me._id,
+                    picture: me.picture,
+                    username: me.username,
+                    index: projectIndex
                 }
             });
             dispatch({
                 type: SHOW_NOTIF,
                 payload: {
-                    text: 'lernantino has accepted your request, you are part of the team!',
+                    text: 'Your request has been accepted, you are part of the team!',
                     route: '/project'
                 }
             });
@@ -39,7 +49,7 @@ const RequestModal = () => {
 
     const rejectRequest = async () => {
         const confirm = await swal({
-            title: `Are you sure you want to reject ${state.me.username}?`,
+            title: `Are you sure you want to reject ${me.username}?`,
             buttons: ["No", "Yes"],
         });
         if (confirm) {
@@ -51,7 +61,7 @@ const RequestModal = () => {
             dispatch({
                 type: SHOW_NOTIF,
                 payload: {
-                    text: 'lernantino has rejected your request :(',
+                    text: 'Your request has been rejected your request :(',
                     route: '/project'
                 }
             });
@@ -69,15 +79,15 @@ const RequestModal = () => {
             <Modal.Body>
                 <Row>
                     <Col as={Link} to='/profile' xs={2}>
-                        <Image src={state.me.picture} alt="user" roundedCircle className='profile-img me-5'></Image>
+                        <Image src={`../${me.picture}`} alt="user" roundedCircle className='profile-img me-5'></Image>
                     </Col>
                     <Col>
-                        <h1>{state.me.username} has sent a request to join your team!</h1>
+                        <h1>{me.username} has sent a request to join your team!</h1>
                     </Col>
                 </Row>
                 <Row className='mt-5 w-50 mx-auto'>
                     <Col><Button variant='danger' onClick={() => rejectRequest()}>REJECT</Button></Col>
-                    <Col><Button variant='success' onClick={() => acceptRequest()}>ACCEPT</Button></Col>
+                    <Col><Button variant='success' onClick={() => acceptRequest(state.modals.index)}>ACCEPT</Button></Col>
                 </Row>
             </Modal.Body>
         </Modal>

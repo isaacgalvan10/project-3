@@ -26,6 +26,10 @@ const userSchema = new Schema({
         type: String,
     },
 
+    picture: {
+        type: String,
+    },
+
     },
     {
         toJSON: {

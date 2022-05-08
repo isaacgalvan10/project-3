@@ -20,10 +20,12 @@ const Header = () => {
   const [state, dispatch] = useGlobalContext();
 
   const displayPostModal = () => {
-    dispatch({ type: SHOW_MODAL, payload: {
-      request: false,
-      post: true
-  } });
+    dispatch({
+      type: SHOW_MODAL, payload: {
+        request: false,
+        post: true
+      }
+    });
   }
 
   return (
@@ -58,26 +60,30 @@ const Header = () => {
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
                 <div>
-          {Auth.loggedIn() ? (
-            <>
-              <span>Hey there, {Auth.getProfile().data.username}!</span>
-              <button className="btn btn-lg btn-light m-2" onClick={logout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link className="btn btn-lg btn-info m-2" to="/login">
-                Login
-              </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/signup">
-                Signup
-              </Link>
-            </>
-          )}
-        </div>
+                  {Auth.loggedIn() ? (
+                    <>
+                      <span>Hey there, {Auth.getProfile().data.username}!</span>
+                      <button className="btn btn-lg btn-light m-2" onClick={logout}>
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link className="btn btn-lg btn-info m-2" to="/login">
+                        Login
+                      </Link>
+                      <Link className="btn btn-lg btn-light m-2" to="/signup">
+                        Signup
+                      </Link>
+                    </>
+                  )}
+                </div>
                 <Nav className="justify-content-end align-items-center">
-                  <Button style={{ marginRight: '10px' }} onClick={() => displayPostModal()}>Create Post</Button>
+                  {Auth.loggedIn() ? (
+                    <Button style={{ marginRight: '10px' }} onClick={() => displayPostModal()}>Create Post</Button>
+                  ) : (
+                    null
+                  )}
                   <Dropdown>
                     <Dropdown.Toggle className="position-relative">
                       <i className="fa-solid fa-bell"></i>
@@ -97,11 +103,15 @@ const Header = () => {
                     </Dropdown.Menu>
                   </Dropdown>
                   <div style={{ marginLeft: '25px' }}>
-                    <Image
-                      src="./lernantino.jpeg"
-                      alt="user"
-                      className="header-profile-img"
-                    ></Image>
+                    {Auth.loggedIn() ? (
+                      <Image
+                        src={`./${Auth.getProfile().data.picture}`}
+                        alt="user"
+                        className="header-profile-img"
+                      ></Image>
+                    ) : (
+                      null
+                    )}
                   </div>
                 </Nav>
               </Offcanvas.Body>

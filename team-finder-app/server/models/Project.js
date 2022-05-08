@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const memberSchema = require('./Member');
 const tagSchema = require('./Tag');
 
 const projectSchema = new Schema({
@@ -14,14 +13,14 @@ const projectSchema = new Schema({
     type: String,
   },
   poster: {
-    type: String,
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }]
   },
   edited: {
     type: Boolean,
     default: false
-  },
-  profile: {
-    type: String,
   },
   description: {
     type: String
@@ -34,10 +33,15 @@ const projectSchema = new Schema({
     required: true,
     min: 1
   },
-  members: [memberSchema],
+  members: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
   tags: [tagSchema],
 });
 
-const Project = mongoose.model('Product', projectSchema);
+const Project = mongoose.model('Project', projectSchema);
 
 module.exports = Project;
