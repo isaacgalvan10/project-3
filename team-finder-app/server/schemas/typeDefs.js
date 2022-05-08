@@ -43,7 +43,7 @@ type Tag {
     projects: [Project]
     project(projectId: ID!): Project
     users: [User]
-    user(username: String!): User
+    user(userId: ID!): User
     me: User
     }
 

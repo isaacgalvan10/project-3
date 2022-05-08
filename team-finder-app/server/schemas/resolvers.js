@@ -11,10 +11,10 @@ const resolvers = {
         return await Project.findOne({ _id: projectId });
       },
       users: async () => {
-        return await User.find().populate;
+        return await User.find();
       },
-      user: async (parent, { username }) => {
-        return await User.findOne({ username: username });
+      user: async (parent, { userId }) => {
+        return await User.findOne({ _id: userId });
       },
       me: async (parent, args, context) => {
         if (context.user) {

@@ -253,7 +253,7 @@ const Project = () => {
                                                 </Dropdown.Toggle>
 
                                                 <Dropdown.Menu>
-                                                    <Dropdown.Item as={Link} to='/profile'>{member.username}</Dropdown.Item>
+                                                    <Dropdown.Item as={Link} to={`/profile/${member._id}`}>{member.username}</Dropdown.Item>
                                                     {!isPoster ? (
                                                         null
                                                     ) : (
