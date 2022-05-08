@@ -16,13 +16,12 @@ type Tag {
     _id: ID
     title: String
     date: String
-    poster: String
+    poster: [User]
     edited: Boolean
-    profile: String
     description: String
     projectImg: String
     teamSize: Int
-    members: [Member]
+    members: [User]
     tags: [Tag]
   }
 
@@ -32,6 +31,7 @@ type Tag {
         email: String
         password: String
         github: String
+        picture: String
     }
 
     type Auth {
@@ -43,7 +43,8 @@ type Tag {
     projects: [Project]
     project(projectId: ID!): Project
     users: [User]
-    user(username: String!): User
+    user(userId: ID!): User
+    me: User
     }
 
     type Mutation {

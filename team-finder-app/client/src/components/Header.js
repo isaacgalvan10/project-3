@@ -59,35 +59,40 @@ const Header = () => {
                     <i className="fa-solid fa-magnifying-glass"></i>
                   </Button>
                 </Form>
-                {/* LOGGED OUT HEADER */}
-                {/* {Auth.loggedIn() ? (
-                  <>
-                    <span>Hey there, {Auth.getProfile().data.username}!</span>
-                    <button
-                      className="btn btn-lg btn-light m-2"
-                      onClick={logout}
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link className="btn btn-lg btn-info m-2" to="/login">
-                      Login
-                    </Link>
-                    <Link className="btn btn-lg btn-light m-2" to="/signup">
-                      Signup
-                    </Link>
-                  </>
-                )} */}
-                {/* LOGGED OUT HEADER */}
+                {/* <Nav className="justify-content-end flex-grow-1 pe-3">
+                  <Button className="login-btn">Login</Button>
+                </Nav> */}
+                <div>
+                  {Auth.loggedIn() ? (
+                    <>
+                      <span>Hey there, {Auth.getProfile().data.username}!</span>
+                      <button
+                        className="btn btn-lg btn-light m-2"
+                        onClick={logout}
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link className="btn btn-lg btn-info m-2" to="/login">
+                        Login
+                      </Link>
+                      <Link className="btn btn-lg btn-light m-2" to="/signup">
+                        Signup
+                      </Link>
+                    </>
+                  )}
+                </div>
                 <Nav className="justify-content-end align-items-center">
-                  <Button
-                    style={{ marginRight: '10px' }}
-                    onClick={() => displayPostModal()}
-                  >
-                    Create Post
-                  </Button>
+                  {Auth.loggedIn() ? (
+                    <Button
+                      style={{ marginRight: '10px' }}
+                      onClick={() => displayPostModal()}
+                    >
+                      Create Post
+                    </Button>
+                  ) : null}
                   <Dropdown>
                     <Dropdown.Toggle className="position-relative">
                       <i className="fa-solid fa-bell"></i>
@@ -107,11 +112,13 @@ const Header = () => {
                     </Dropdown.Menu>
                   </Dropdown>
                   <div style={{ marginLeft: '25px' }}>
-                    <Image
-                      src="./lernantino.jpeg"
-                      alt="user"
-                      className="header-profile-img"
-                    ></Image>
+                    {Auth.loggedIn() ? (
+                      <Image
+                        src={`./${Auth.getProfile().data.picture}`}
+                        alt="user"
+                        className="header-profile-img"
+                      ></Image>
+                    ) : null}
                   </div>
                 </Nav>
               </Offcanvas.Body>

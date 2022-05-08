@@ -32,7 +32,8 @@ export const reducer = (state, action) => {
                     show: true,
                     text: action.payload.text,
                     route: action.payload.route,
-                    modal: true
+                    modal: true,
+                    index: action.payload.index
                 }
             };
 
@@ -48,29 +49,33 @@ export const reducer = (state, action) => {
 
         case ADD_MEMBER:
             const updatedProject = {
-                ...state.projects[0], members: [...state.projects[0].members, {
-                    id: action.payload.id,
+                ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
+                    _id: action.payload.id,
                     username: action.payload.username,
                     picture: action.payload.picture
                 }]
             };
 
             const projectsCopy = [...state.projects];
-            projectsCopy[0] = updatedProject
+            projectsCopy[action.payload.index] = updatedProject
             return {
                 ...state,
                 projects: projectsCopy
             };
 
         case REMOVE_MEMBER:
-            const membersLeft = state.projects[0].members.filter((member) => {
-                return member.id !== action.id;
+            console.log(action);
+            console.log(state.projects[action.payload.index].members);
+            const membersLeft = state.projects[action.payload.index].members.filter((member) => {
+                return member._id !== action.payload.id;
             });
 
-            const updatedProject2 = { ...state.projects[0], members: membersLeft };
+            console.log(membersLeft);
+
+            const updatedProject2 = { ...state.projects[action.payload.index], members: membersLeft };
 
             const projectsCopy2 = [...state.projects];
-            projectsCopy2[0] = updatedProject2
+            projectsCopy2[action.payload.index] = updatedProject2
 
             return {
                 ...state,

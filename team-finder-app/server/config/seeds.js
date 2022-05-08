@@ -1,25 +1,7 @@
 const db = require('./connection');
-const { Project } = require('../models');
+const { Project, User } = require('../models');
 
 db.once('open', async () => {
-    const members = [
-        {
-            memberId: '1',
-            picture: 'lernantino.jpeg',
-            username: 'Andre',
-        },
-        {
-            memberId: '2',
-            picture: 'lernantino.jpeg',
-            username: 'Enoc',
-        },
-        {
-            memberId: '3',
-            picture: 'lernantino.jpeg',
-            username: 'Issac',
-        },
-    ];
-
     const tags = [
         {
             tagId: '100',
@@ -39,60 +21,145 @@ db.once('open', async () => {
         },
     ];
 
+    await User.deleteMany();
+
+    await User.create({
+        username: 'Pamela',
+        email: 'pamela@gmail.com',
+        password: 'password',
+        github: 'Pamela',
+        picture: 'pamela.jpeg'
+    });
+
+
+    await User.create({
+        username: 'Abi',
+        email: 'abi@gmail.com',
+        password: 'password',
+        github: 'Abimael1996',
+        picture: 'lernantino.jpeg'
+    });
+
+
+    await User.create({
+        username: 'Enoc',
+        email: 'enoc@gmail.com',
+        password: 'password',
+        github: 'Enrique-Rojas-Villegas',
+        picture: 'lernantino.jpeg'
+    });
+
+
+    await User.create({
+        username: 'Isaac',
+        email: 'isaac@gmail.com',
+        password: 'password',
+        github: 'isaacgalvan10',
+        picture: 'lernantino.jpeg'
+    });
+
+
+    await User.create({
+        username: 'Andre',
+        email: 'andre@gmail.com',
+        password: 'password',
+        github: 'AndreV96',
+        picture: 'lernantino.jpeg'
+    });
+
+    await User.create({
+        username: 'Pancho',
+        email: 'pancho@gmail.com',
+        password: 'password',
+        github: 'panchito',
+        picture: 'pancho.jpeg'
+    });
+
+    await User.create({
+        username: 'Romina',
+        email: 'romina@gmail.com',
+        password: 'password',
+        github: 'Romina',
+        picture: 'romina.jpeg'
+    });
+
+    await User.create({
+        username: 'Sandra',
+        email: 'sandra@gmail.com',
+        password: 'password',
+        github: 'Sandra',
+        picture: 'sandra.jpeg'
+    });
+
+    await User.create({
+        username: 'Goku',
+        email: 'goku@gmail.com',
+        password: 'password',
+        github: 'Goku',
+        picture: 'goku.jpeg'
+    });
+
+    console.log('users seeded');
+
+    const members = await User.find({ picture: 'lernantino.jpeg' });
+    const pancho = await User.find({ picture: 'pancho.jpeg' });
+    const romina = await User.find({ picture: 'romina.jpeg' });
+    const sandra = await User.find({ picture: 'sandra.jpeg' });
+    const goku = await User.find({ picture: 'goku.jpeg' });
+
     await Project.deleteMany();
 
-    await Project.insertMany([
+    const projects = await Project.insertMany([
         {
             title: 'Job Tracker App',
             date: 'May 5, 2021',
-            poster: 'lernantino',
+            poster: pancho,
             edited: true,
-            profile: 'lernantino.jpeg',
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            members: [...members],
-            tags: [...tags]
+            tags: tags
         },
         {
             title: 'Notes taker App',
             date: 'May 5, 2022',
-            poster: 'qwerty',
+            poster: romina,
             edited: true,
-            profile: 'lernantino.jpeg',
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            members: [...members],
-            tags: [...tags]
+            tags: tags
         },
         {
             title: 'Ecommerce shop',
             date: 'May 5, 2021',
-            poster: 'qwerty 2',
+            poster: sandra,
             edited: true,
-            profile: 'lernantino.jpeg',
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            members: [...members],
-            tags: [...tags]
+            tags: tags
         },
         {
             title: 'Random Project',
             date: 'May 5, 2021',
-            poster: 'qwerty 2',
+            poster: goku,
             edited: true,
-            profile: 'lernantino.jpeg',
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            members: [...members],
-            tags: [...tags]
+            tags: tags
         },
     ]);
 
     console.log('projects seeded');
+
+    for (member of members) {
+        projects[0].members.push(member);
+        await projects[0].save();
+    }
+
+    console.log("All done");
 
     process.exit();
 });
