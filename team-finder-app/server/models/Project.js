@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const tagSchema = require('./Tag');
-
 const projectSchema = new Schema({
   title: {
     type: String,
@@ -13,10 +11,12 @@ const projectSchema = new Schema({
     type: String,
   },
   poster: {
-    type: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }]
+    username: {
+      type: String,
+    },
+    picture: {
+      type: String,
+    }
   },
   edited: {
     type: Boolean,
@@ -35,11 +35,42 @@ const projectSchema = new Schema({
   },
   members: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      memberId: {
+        type: String
+      },
+      username: {
+        type: String,
+        required: true
+      },
+      picture: {
+        type: String
+      }
     }
   ],
-  tags: [tagSchema],
+  tags: [
+    {
+      tagName: {
+        type: String,
+        required: true
+      }
+    }
+  ],
+  requests: [
+    {
+      username: {
+        type: String,
+        required: true
+      },
+      picture: {
+        type: String,
+        required: true
+      },
+      userId: {
+        type: String,
+        required: true
+      },
+    }
+  ]
 });
 
 const Project = mongoose.model('Project', projectSchema);
