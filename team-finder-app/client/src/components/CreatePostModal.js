@@ -2,16 +2,19 @@ import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { ADD_POST } from '../utils/mutations';
 
 const CreatePostModal = () => {
     const [state, dispatch] = useGlobalContext();
     const [validated, setValidated] = useState(false);
+    const [addPost, { error, data }] = useMutation(ADD_POST);
 
     const [postFormData, setPostFormData] = useState({ 
         title: '',
-        tags: '', 
+        tagsString: '', 
         description: '',
-        team: '',
+        teamSize: '',
         projectImg: ''
     });
 
@@ -22,45 +25,57 @@ const CreatePostModal = () => {
 
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
-        event.preventDefault();
         if (form.checkValidity() === false) {
           event.preventDefault();
           event.stopPropagation();
         }
 
-        const tagsArr = postFormData.tags.split(', ');
+        // const tagsArr = postFormData.tags.split(', ');
 
-        const tagsArrObj = [];
+        // const tagsArrObj = [];
 
-        for (let tag in tagsArr) {
-            tagsArrObj.push({
-                id: +tag + 1,
-                tagName: tagsArr[tag]
-            });
-        };
+        // for (let tag in tagsArr) {
+        //     tagsArrObj.push({
+        //         id: +tag + 1,
+        //         tagName: tagsArr[tag]
+        //     });
+        // };
         
+        // const post = {
+        //     ...postFormData,
+        //     tags: tagsArrObj
+        // }
+
+
+        console.log(postFormData);
+
         const post = {
             ...postFormData,
-            tags: tagsArrObj
+            teamSize: +postFormData.teamSize
         }
 
         console.log(post);
 
-        const addProject = await dispatch({
-            type: ADD_PROJECT,
-            newProject: post
-        });
+        try {
+            const { data } = await addPost({
+              variables: { ...post },
+            });
+      
+          } catch (e) {
+            console.error(e);
+          }
+
+        // const addProject = await dispatch({
+        //     type: ADD_PROJECT,
+        //     newProject: postFormData
+        // });
 
         setPostFormData({ 
             title: '',
-            tags: '', 
+            tagsString: '', 
             description: '',
-            team: '',
+            teamSize: '',
             projectImg: ''
-        });
-
-        dispatch({
-            type: HIDE_MODAL,
         });
 
         setValidated(true);
@@ -96,7 +111,7 @@ const CreatePostModal = () => {
                         <Form.Control
                             type='text'
                             placeholder='HTML, CSS, JavaScript'
-                            name='tags'
+                            name='tagsString'
                             onChange={handleInputChange}
                             value={postFormData.tags}
                             required
@@ -125,7 +140,7 @@ const CreatePostModal = () => {
                             type='number'
                             min="1"
                             placeholder='Besides you, how many members do you want in your team?'
-                            name='team'
+                            name='teamSize'
                             onChange={handleInputChange}
                             value={postFormData.team}
                             required
