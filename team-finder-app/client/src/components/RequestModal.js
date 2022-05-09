@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 import swal from "sweetalert";
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
-import { ADD_MEMBER } from '../utils/mutations';
+import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 
 const RequestModal = () => {
     const [state, dispatch] = useGlobalContext();
     const { loading, data } = useQuery(QUERY_ME);
     const [addMember] = useMutation(ADD_MEMBER);
+    const [removeRequest] = useMutation(REMOVE_REQUEST);
 
     if (loading) {
         return <h2>LOADING...</h2>;
@@ -36,7 +37,7 @@ const RequestModal = () => {
                 }
             });
             try {
-                addMember({
+                await addMember({
                     variables: {
                         projectId: state.modals.projectId,
                         memberId: me._id,
@@ -47,7 +48,17 @@ const RequestModal = () => {
 
             } catch (e) {
                 console.error(e);
-                console.log('hi');
+            }
+            try {
+                removeRequest({
+                    variables: {
+                        projectId: state.modals.projectId,
+                        requestId: me._id
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
             }
             dispatch({
                 type: SHOW_NOTIF,
@@ -75,6 +86,17 @@ const RequestModal = () => {
                 type: STATUS,
                 status: 'out'
             });
+            try {
+                removeRequest({
+                    variables: {
+                        projectId: state.modals.projectId,
+                        requestId: me._id
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
+            }
             dispatch({
                 type: SHOW_NOTIF,
                 payload: {

@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 import swal from "sweetalert";
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
-import { ADD_MEMBER } from '../utils/mutations';
+import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 
 const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
     const [state, dispatch] = useGlobalContext();
     const { loading, data } = useQuery(QUERY_ME);
     const [addMember] = useMutation(ADD_MEMBER);
+    const [removeRequest] = useMutation(REMOVE_REQUEST);
 
     if (loading) {
         return <h2>LOADING...</h2>;
@@ -49,7 +50,17 @@ const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
                 console.error(e);
                 console.log('hi');
             }
+            try {
+                removeRequest({
+                    variables: {
+                        projectId: projectId,
+                        requestId: userId
+                    }
+                });
 
+            } catch (e) {
+                console.error(e);
+            }
            await dispatch({
                 type: SHOW_NOTIF,
                 payload: {
@@ -63,7 +74,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
         }
     };
 
-    const rejectRequest = async (username) => {
+    const rejectRequest = async (username, userId) => {
         const confirm = await swal({
             title: `Are you sure you want to reject ${username}?`,
             buttons: ["No", "Yes"],
@@ -74,6 +85,17 @@ const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
                 type: STATUS,
                 status: 'out'
             });
+            try {
+                removeRequest({
+                    variables: {
+                        projectId: projectId,
+                        requestId: userId
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
+            }
             dispatch({
                 type: SHOW_NOTIF,
                 payload: {
@@ -102,7 +124,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
                                 <Image src={`../${request.picture}`} alt="user" roundedCircle className='profile-img'></Image>
                                 <Col>{request.username}</Col>
                                 <Col><Button onClick={() => acceptRequest(request.username, request.picture, request.userId)}>Accept</Button></Col>
-                                <Col><Button onClick={() => rejectRequest(request.username)}>Reject</Button></Col>
+                                <Col><Button onClick={() => rejectRequest(request.username, request.userId)}>Reject</Button></Col>
                             </ListGroupItem>
                         </ListGroup>
                     ))}
