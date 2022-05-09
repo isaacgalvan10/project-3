@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card, Form, Button, Nav } from "react-bootstrap";
 import swal from "sweetalert";
+import { Link } from 'react-router-dom'
 
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
@@ -31,7 +32,7 @@ function Signup(props) {
       const { data } = await addUser({
         variables: { ...formValues },
       });
-
+      signUpAlert()
       Auth.login(data.addUser.token);
     } catch (e) {
       console.error(e);
@@ -91,10 +92,10 @@ function Signup(props) {
 
           <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
             <Nav.Item>
-              <Nav.Link activeKey="1" eventKey="link-1">Login</Nav.Link>
+              <Link to= '/login'>Login</Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link activeKey="2" eventKey="link-2">Sign Up</Nav.Link>
+              <Link to= '/signUp'>Sign Up</Link>
             </Nav.Item>
           </Nav>
 
