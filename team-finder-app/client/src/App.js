@@ -84,7 +84,7 @@ function App() {
                 element={<Login />}
               />
             </Routes>
-            <Footer />
+            {/* <Footer /> */}
             {Auth.loggedIn() ? (
               <>
                 <Notification />
