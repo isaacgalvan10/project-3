@@ -27,32 +27,24 @@ export const ADD_USER = gql`
 
 export const ADD_POST = gql`
 mutation AddPost($title: String!, $tagsString: String!, $description: String!, $teamSize: Int!, $projectImg: String!) {
-    addPost(title: $title, tagsString: $tagsString, description: $description, teamSize: $teamSize, projectImg: $projectImg) {
-      _id
-      title
-      date
-      poster {
-        username
-        picture
-      }
-      edited
-      description
-      projectImg
-      teamSize
-      members {
-        _id
-        username
-        email
-        password
-        github
-        picture
-      }
-      tags {
-        tagId
-        tagName
-      }
+  addPost(title: $title, tagsString: $tagsString, description: $description, teamSize: $teamSize, projectImg: $projectImg) {
+    _id
+    title
+    date
+    poster {
+      username
+      picture
+    }
+    edited
+    description
+    projectImg
+    teamSize
+    tags {
+      tagId
+      tagName
     }
   }
+}
 `;
 
 export const REMOVE_POST = gql`
