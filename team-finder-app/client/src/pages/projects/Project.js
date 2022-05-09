@@ -171,7 +171,10 @@ const Project = () => {
           <Button variant="success" onClick={() => switchUser()}>
             Switch
           </Button>
-          <Container fluid className="d-flex flex-column align-items-center">
+          <Container
+            fluid
+            className="main-container d-flex flex-column align-items-center"
+          >
             <h1 className="mb-3">{currentProject.title}</h1>
             {!isPoster ? <p>USER SIDE</p> : <p>POSTER SIDE</p>}
             <Row className="align-items-center mb-3">

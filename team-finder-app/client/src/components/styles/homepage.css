@@ -1,23 +1,12 @@
-/* Color Theme Swatches in Hex */
-.Kongsberg-Digital---Kognifai-1-hex {
-  color: #0f2859;
-}
-.Kongsberg-Digital---Kognifai-2-hex {
-  color: #7787a6;
-}
-.Kongsberg-Digital---Kognifai-3-hex {
-  color: #082040;
-}
-.Kongsberg-Digital---Kognifai-4-hex {
-  color: #384d59;
-}
-.Kongsberg-Digital---Kognifai-5-hex {
-  color: #80f2e7;
-}
-
 .card {
   min-width: none;
   background-color: #98c1d9;
+}
+
+.card-img-top {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
 }
 
 .badge {

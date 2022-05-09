@@ -1,37 +1,34 @@
 import { gql } from '@apollo/client';
 
 export const QUERY_PROJECTS = gql`
-query Projects {
-  projects {
-    _id
-    title
-    date
-    poster {
+  query Projects {
+    projects {
       _id
-      username
-      email
-      password
-      github
-      picture
-    }
-    edited
-    description
-    projectImg
-    teamSize
-    members {
-      _id
-      username
-      email
-      password
-      github
-      picture
-    }
-    tags {
-      tagId
-      tagName
+      title
+      date
+      poster {
+        _id
+        username
+        email
+        password
+        github
+        picture
+      }
+      edited
+      description
+      projectImg
+      teamSize
+      members {
+        _id
+        username
+        email
+        password
+        github
+        picture
+      }
+      tags
     }
   }
-}
 `;
 
 export const QUERY_PROJECT = gql`
@@ -51,10 +48,7 @@ export const QUERY_PROJECT = gql`
         picture
         username
       }
-      tags {
-        tagId
-        tagName
-      }
+      tags
     }
   }
 `;
@@ -68,6 +62,21 @@ export const QUERY_ME = gql`
       password
       github
       picture
+    }
+  }
+`;
+
+export const SEARCH_TAG = gql`
+  query Query($input: String) {
+    search(input: $input) {
+      _id
+      title
+      date
+      edited
+      description
+      projectImg
+      teamSize
+      tags
     }
   }
 `;

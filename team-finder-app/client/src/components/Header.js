@@ -10,6 +10,8 @@ import './styles/header.css';
 import { SHOW_MODAL } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
+import SearchResults from '../pages/results/SearchResults';
+import { useState } from 'react';
 
 const Header = () => {
   const logout = (event) => {
@@ -27,6 +29,22 @@ const Header = () => {
         post: true,
       },
     });
+  };
+
+  const [postFormData, setPostFormData] = useState({
+    search: '',
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setPostFormData({ ...postFormData, [name]: value });
+  };
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    const searchValue = document.getElementById('searchValue').value;
+    console.log(searchValue);
+    return <SearchResults tagSearch={searchValue} />;
   };
 
   return (
@@ -48,12 +66,14 @@ const Header = () => {
                 className="justify-content-end"
               ></Offcanvas.Header>
               <Offcanvas.Body className="justify-content-end">
-                <Form className="d-flex form">
+                <Form className="d-flex form" onSubmit={handleSearch}>
                   <FormControl
                     type="search"
+                    name="search"
                     placeholder="Javascript"
                     className="search-form"
                     aria-label="Search"
+                    id="searchValue"
                   />
                   <Button type="submit" className="search-btn">
                     <i className="fa-solid fa-magnifying-glass"></i>
@@ -62,29 +82,34 @@ const Header = () => {
                 {/* <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
-                <div>
+
+                <Nav className="justify-content-end align-items-center">
                   {Auth.loggedIn() ? (
-                    <>
-                      <span>Hey there, {Auth.getProfile().data.username}!</span>
-                      <button
-                        className="btn btn-lg btn-light m-2"
-                        onClick={logout}
-                      >
-                        Logout
-                      </button>
-                    </>
+                    <button
+                      className="btn"
+                      onClick={logout}
+                      style={{ marginRight: '10px' }}
+                    >
+                      Logout
+                    </button>
                   ) : (
                     <>
-                      <Link className="btn btn-lg btn-info m-2" to="/login">
+                      <Link
+                        className="btn"
+                        to="/login"
+                        style={{ marginRight: '10px' }}
+                      >
                         Login
                       </Link>
-                      <Link className="btn btn-lg btn-light m-2" to="/signup">
+                      <Link
+                        className="btn"
+                        to="/signup"
+                        style={{ marginRight: '10px' }}
+                      >
                         Signup
                       </Link>
                     </>
                   )}
-                </div>
-                <Nav className="justify-content-end align-items-center">
                   {Auth.loggedIn() ? (
                     <Button
                       style={{ marginRight: '10px' }}
