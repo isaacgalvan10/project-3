@@ -1,6 +1,6 @@
 export const SHOW_NOTIF = "SHOW_NOTIF";
 export const HIDE_NOTIF = "HIDE_NOTIF";
-export const ADD_MEMBER = "ADD_MEMBER";
+export const POST_MEMBER = "POST_MEMBER";
 export const REMOVE_MEMBER = "REMOVE_MEMBER";
 export const STATUS = "STATUS";
 export const SHOW_MODAL = "SHOW_MODAL";

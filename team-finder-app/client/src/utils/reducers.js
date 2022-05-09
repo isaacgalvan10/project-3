@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import {
     SHOW_NOTIF,
     HIDE_NOTIF,
-    ADD_MEMBER,
+    POST_MEMBER,
     REMOVE_MEMBER,
     STATUS,
     SHOW_MODAL,
@@ -33,7 +33,8 @@ export const reducer = (state, action) => {
                     text: action.payload.text,
                     route: action.payload.route,
                     modal: true,
-                    index: action.payload.index
+                    index: action.payload.index,
+                    projectId: action.payload.projectId
                 }
             };
 
@@ -47,10 +48,11 @@ export const reducer = (state, action) => {
 
             };
 
-        case ADD_MEMBER:
+        case POST_MEMBER:
+            console.log('hi');
             const updatedProject = {
                 ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
-                    _id: action.payload.id,
+                    memberId: action.payload.memberId,
                     username: action.payload.username,
                     picture: action.payload.picture
                 }]
