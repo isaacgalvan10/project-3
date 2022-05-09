@@ -5,14 +5,14 @@ import swal from "sweetalert";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../utils/GlobalState';
-import { SHOW_NOTIF, REMOVE_MEMBER, STATUS, SHOW_MODAL_NOTIF, UPDATE_PROJECTS } from '../utils/actions';
+import { SHOW_NOTIF, DELETE_MEMBER, STATUS, SHOW_MODAL_NOTIF, UPDATE_PROJECTS } from '../utils/actions';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import { REMOVE_POST, ADD_REQUEST } from '../utils/mutations';
+import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER } from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -26,7 +26,9 @@ const Project = () => {
     const [showModal, setShowModal] = useState(false);
     const [state, dispatch] = useGlobalContext();
 
-    const [addRequest, result] = useMutation(ADD_REQUEST);
+    const [addRequest] = useMutation(ADD_REQUEST);
+    const [removePost] = useMutation(REMOVE_POST);
+    const [deleteMember] = useMutation(REMOVE_MEMBER);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -39,8 +41,6 @@ const Project = () => {
             return Auth.getProfile().data.username === project.poster.username;
         }
     }
-
-    // const [removePost, result] = useMutation(REMOVE_POST);
 
     const projectIndex = state.projects.findIndex((project) => project._id === projectId)
     // const currentProject = state.projects[projectIndex];
@@ -56,20 +56,20 @@ const Project = () => {
     //     }
     // };
 
-    // const deletePost = async () => {
-    //     try {
-    //         removePost({
-    //           variables: { postId: id }
-    //         });
+    const deletePost = async () => {
+        try {
+            removePost({
+              variables: { postId: projectId }
+            });
 
-    //       } catch (e) {
-    //         console.error(e);
-    //         console.log('hi');
-    //       }
-    // }
+          } catch (e) {
+            console.error(e);
+            console.log('hi');
+          }
+    }
 
     const removeMember = async (memberId, username) => {
-
+        console.log(memberId);
         const confirm = await swal({
             title: `Are you sure you want to remove ${username} from your team?`,
             buttons: ["No", "Yes"],
@@ -77,12 +77,24 @@ const Project = () => {
 
         if (confirm) {
             dispatch({
-                type: REMOVE_MEMBER,
+                type: DELETE_MEMBER,
                 payload: {
                     id: memberId,
                     index: projectIndex
                 }
             });
+            try {
+                deleteMember({
+                  variables: { 
+                    projectId: projectId,
+                    memberId: memberId,
+                }
+                });
+    
+              } catch (e) {
+                console.error(e);
+                console.log('hi');
+              }
         }
 
         if (memberId === Auth.getProfile().data._id) {
@@ -206,7 +218,7 @@ const Project = () => {
                             <Row className='edit-close-delete'>
                                 <Button>Edit</Button>
                                 <Button>Close</Button>
-                                {/* <Button onClick={() => deletePost()}>Delete</Button> */}
+                                <Button onClick={() => deletePost()}>Delete</Button>
                             </Row>
                             <a href='https://github.com/isaacgalvan10/project-3' target='_blank' rel='noreferrer' className='text-reset' ><FontAwesomeIcon icon={faGithub} className="gh-icon" /></a>
                         </>
@@ -253,17 +265,18 @@ const Project = () => {
                                 null
                             )} */}
                 <Row>
+                    {console.log(project.members)}
                     {project.members.map((member) => (
-                        <Col key={member._id}>
+                        <Col key={member.memberId}>
                             <Dropdown>
                                 <Dropdown.Toggle className='dropdown-custom'>
                                     <Image src={`../${member.picture}`} alt="user" roundedCircle className='profile-img'></Image>
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
-                                    <Dropdown.Item as={Link} to={`/profile/${member._id}`}>{member.username}</Dropdown.Item>
+                                    <Dropdown.Item as={Link} to={`/profile/${member.memberId}`}>{member.username}</Dropdown.Item>
                                     {Auth.loggedIn() && isPoster() ? (
-                                        <Dropdown.Item onClick={() => removeMember(member._id, member.username)}>Remove from team</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => removeMember(member.memberId, member.username)}>Remove from team</Dropdown.Item>
                                     ) : (
                                         null
                                     )}
