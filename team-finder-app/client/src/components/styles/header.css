@@ -9,9 +9,6 @@
   color: #e0fbfc !important;
 }
 
-.btn-outline-success {
-}
-
 .bg-danger {
   background-color: #ee6c4d !important;
 }
@@ -35,6 +32,14 @@
   font-size: 20px;
 }
 
+.search-form {
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.search-btn {
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
 .header-profile-img {
   border-radius: 50%;
   height: 40px;
@@ -48,7 +53,7 @@
     margin: 0;
   }
   .form {
-    margin-right: 40px;
+    margin-right: 20px;
   }
   .navbar-nav {
     -webkit-box-orient: vertical;

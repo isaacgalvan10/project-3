@@ -20,7 +20,6 @@ query Projects {
       picture
     }
     tags {
-      tagId
       tagName
     }
   }
@@ -47,7 +46,6 @@ query Project($projectId: ID!) {
       picture
     }
     tags {
-      tagId
       tagName
     }
     requests {
@@ -71,3 +69,18 @@ export const QUERY_ME = gql`
     }
   }
 `;
+
+// export const SEARCH_TAG = gql`
+//   query Query($input: String) {
+//     search(input: $input) {
+//       _id
+//       title
+//       date
+//       edited
+//       description
+//       projectImg
+//       teamSize
+//       tags
+//     }
+//   }
+// `;

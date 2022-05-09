@@ -22,6 +22,18 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+    // search: async (parent, { input }) => {
+    //   const inputArray = input.split(', ');
+
+    //   return await Project.find({ tags: inputArray[0] }, (error, data) => {
+    //     if (error) {
+    //       console.log(error);
+    //     } else {
+    //       console.log(data);
+    //       return data;
+    //     }
+    //   });
+    // },
   },
 
   Mutation: {
@@ -47,7 +59,6 @@ const resolvers = {
 
       return { token, user };
     },
-
     addPost: async (parent, { title, tagsString, description, teamSize, projectImg }, context) => {
       if (context.user) {
 

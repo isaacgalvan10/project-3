@@ -4,6 +4,7 @@ import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { ADD_POST } from '../utils/mutations';
+import './styles/modal.css';
 
 const CreatePostModal = () => {
     const [state, dispatch] = useGlobalContext();
@@ -93,7 +94,7 @@ const CreatePostModal = () => {
             </Modal.Header>
             <Modal.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group>
+                    <Form.Group className="form-field">
                         <Form.Label htmlFor='title'>Post Title</Form.Label>
                         <Form.Control
                             type='text'
@@ -106,7 +107,7 @@ const CreatePostModal = () => {
                         <Form.Control.Feedback type='invalid'>Title is required!</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="form-field">
                         <Form.Label htmlFor='tags'>Tags</Form.Label>
                         <Form.Control
                             type='text'
@@ -119,7 +120,7 @@ const CreatePostModal = () => {
                         <Form.Control.Feedback type='invalid'>At least one tag is required!</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="form-field">
                         <Form.Label htmlFor='description'>Description</Form.Label>
                         <FloatingLabel controlId="floatingTextarea2">
                             <Form.Control
@@ -134,7 +135,7 @@ const CreatePostModal = () => {
                         </FloatingLabel>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="form-field">
                         <Form.Label htmlFor='tags'>Team Size</Form.Label>
                         <Form.Control
                             type='number'
@@ -148,7 +149,7 @@ const CreatePostModal = () => {
                         <Form.Control.Feedback type='invalid'>A number is required!</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="form-field">
                         <Form.Label htmlFor='tags'>Image</Form.Label>
                         <Form.Control
                             type='text'
@@ -168,6 +169,6 @@ const CreatePostModal = () => {
             </Modal.Body>
         </Modal>
     )
-}
+};
 
 export default CreatePostModal;

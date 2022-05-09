@@ -20,18 +20,18 @@ const projectSchema = new Schema({
   },
   edited: {
     type: Boolean,
-    default: false
+    default: false,
   },
   description: {
-    type: String
+    type: String,
   },
   projectImg: {
-    type: String
+    type: String,
   },
   teamSize: {
     type: Number,
     required: true,
-    min: 1
+    min: 1,
   },
   members: [
     {
