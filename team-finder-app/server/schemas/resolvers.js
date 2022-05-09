@@ -88,46 +88,86 @@ const resolvers = {
     removePost: async (parent, { postId }, context) => {
       if (context.user) {
 
-        const thought = await Project.findOneAndDelete({
+        const project = await Project.findOneAndDelete({
           _id: postId
         });
 
-        return thought;
+        return project;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
 
     addMember: async (parent, { projectId, memberId, username, picture }, context) => {
       // if (context.user) {
-        return Project.findOneAndUpdate(
-          { _id: projectId },
-          {
-            $addToSet: {
-              members: { memberId, username, picture },
-            },
+      return Project.findOneAndUpdate(
+        { _id: projectId },
+        {
+          $addToSet: {
+            members: { memberId, username, picture },
           },
-          {
-            new: true,
-            runValidators: true,
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate('members');
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    removeMember: async (parent, { projectId, memberId }, context) => {
+      // if (context.user) {
+
+      const project = await Project.findOneAndUpdate(
+        { _id: projectId },
+        {
+          $pull: {
+            members: { memberId: memberId }
           }
-        ).populate('members');
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return project;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },
     addRequest: async (parent, { userId, username, projectId, picture }, context) => {
       // if (context.user) {
-        return Project.findOneAndUpdate(
-          { _id: projectId },
-          {
-            $addToSet: {
-              requests: { userId, username, picture },
-            },
+      return Project.findOneAndUpdate(
+        { _id: projectId },
+        {
+          $addToSet: {
+            requests: { userId, username, picture },
           },
-          {
-            new: true,
-            runValidators: true,
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate('requests');
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    removeRequest: async (parent, { projectId, requestId }, context) => {
+      // if (context.user) {
+
+      const project = await Project.findOneAndUpdate(
+        { _id: projectId },
+        {
+          $pull: {
+            requests: { userId: requestId }
           }
-        ).populate('requests');
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return project;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },

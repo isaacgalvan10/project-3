@@ -65,7 +65,9 @@ type Poster {
         addPost(title: String!, tagsString: String!, description: String!, teamSize: Int!, projectImg: String!): Project
         removePost(postId: ID!): Project
         addMember(projectId: ID!, memberId: String!, username: String!, picture: String!): Project
+        removeMember(projectId: ID!, memberId: String!): Project
         addRequest(projectId: ID!, username: String!, userId: String!, picture: String!): Project
+        removeRequest(projectId: ID!, requestId: String!): Project
     }
 `;
 
