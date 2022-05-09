@@ -37,7 +37,7 @@ db.once('open', async () => {
         email: 'abi@gmail.com',
         password: 'password',
         github: 'Abimael1996',
-        picture: 'lernantino.jpeg'
+        picture: 'abi.JPG'
     });
 
 
@@ -102,10 +102,6 @@ db.once('open', async () => {
     console.log('users seeded');
 
     const members = await User.find({ picture: 'lernantino.jpeg' });
-    const pancho = await User.find({ picture: 'pancho.jpeg' });
-    const romina = await User.find({ picture: 'romina.jpeg' });
-    const sandra = await User.find({ picture: 'sandra.jpeg' });
-    const goku = await User.find({ picture: 'goku.jpeg' });
 
     await Project.deleteMany();
 
@@ -113,17 +109,52 @@ db.once('open', async () => {
         {
             title: 'Job Tracker App',
             date: 'May 5, 2021',
-            poster: pancho,
+            poster: {
+                username: 'Pancho',
+                picture: 'pancho.jpeg'
+            },
             edited: true,
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            tags: tags
+            tags: tags,
+            members: [
+                {
+                    username: 'Enoc',
+                    picture: 'lernantino.jpeg',
+                    memberId: members[0]._id
+                },
+                {
+                    username: 'Isaac',
+                    picture: 'lernantino.jpeg',
+                    memberId: members[1]._id
+                },
+                {
+                    username: 'Andre',
+                    picture: 'lernantino.jpeg',
+                    memberId: members[2]._id
+                },
+            ],
+            requests: [
+                {
+                    userId: members[0]._id,
+                    username: 'Enoc',
+                    picture: 'lernantino.jpeg'
+                },
+                {
+                    userId: members[1]._id,
+                    username: 'Isaac',
+                    picture: 'lernantino.jpeg'
+                },
+            ]
         },
         {
             title: 'Notes taker App',
             date: 'May 5, 2022',
-            poster: romina,
+            poster: {
+                username: 'Romina',
+                picture: 'romina.jpeg'
+            },
             edited: true,
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
@@ -133,7 +164,10 @@ db.once('open', async () => {
         {
             title: 'Ecommerce shop',
             date: 'May 5, 2021',
-            poster: sandra,
+            poster: {
+                username: 'Sandra',
+                picture: 'sandra.jpeg'
+            },
             edited: true,
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
@@ -143,7 +177,10 @@ db.once('open', async () => {
         {
             title: 'Random Project',
             date: 'May 5, 2021',
-            poster: goku,
+            poster: {
+                username: 'Goku',
+                picture: 'goku.jpeg'
+            },
             edited: true,
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
@@ -152,12 +189,9 @@ db.once('open', async () => {
         },
     ]);
 
-    console.log('projects seeded');
+    console.log(projects[0]);
 
-    for (member of members) {
-        projects[0].members.push(member);
-        await projects[0].save();
-    }
+    console.log('projects seeded');
 
     console.log("All done");
 
