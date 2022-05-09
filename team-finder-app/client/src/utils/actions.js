@@ -1,7 +1,7 @@
 export const SHOW_NOTIF = "SHOW_NOTIF";
 export const HIDE_NOTIF = "HIDE_NOTIF";
 export const POST_MEMBER = "POST_MEMBER";
-export const REMOVE_MEMBER = "REMOVE_MEMBER";
+export const DELETE_MEMBER = "DELETE_MEMBER";
 export const STATUS = "STATUS";
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";

@@ -68,6 +68,19 @@ mutation AddMember($projectId: ID!, $username: String!, $picture: String!, $memb
 }
 `;
 
+export const REMOVE_MEMBER = gql`
+mutation RemoveMember($projectId: ID!, $memberId: String!) {
+  removeMember(projectId: $projectId, memberId: $memberId) {
+    _id
+    title
+    members {
+      memberId
+      username
+    }
+  }
+}
+`;
+
 export const ADD_REQUEST = gql`
 mutation Mutation($projectId: ID!, $username: String!, $userId: String!, $picture: String!) {
   addRequest(projectId: $projectId, username: $username, userId: $userId, picture: $picture) {
@@ -75,6 +88,19 @@ mutation Mutation($projectId: ID!, $username: String!, $userId: String!, $pictur
       userId
       username
       picture
+    }
+  }
+}
+`;
+
+export const REMOVE_REQUEST = gql`
+mutation RemoveRequest($projectId: ID!, $requestId: String!) {
+  removeRequest(projectId: $projectId, requestId: $requestId) {
+    _id
+    title
+    requests {
+      userId
+      username
     }
   }
 }

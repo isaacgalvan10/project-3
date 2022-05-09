@@ -2,25 +2,6 @@ const db = require('./connection');
 const { Project, User } = require('../models');
 
 db.once('open', async () => {
-    const tags = [
-        {
-            tagId: '100',
-            tagName: 'HTML',
-        },
-        {
-            tagId: '200',
-            tagName: 'CSS',
-        },
-        {
-            tagId: '300',
-            tagName: 'JavaScript',
-        },
-        {
-            tagId: '400',
-            tagName: 'Beginner Friendly',
-        },
-    ];
-
     await User.deleteMany();
 
     await User.create({
@@ -144,18 +125,6 @@ db.once('open', async () => {
                     memberId: members[2]._id
                 },
             ],
-            requests: [
-                {
-                    userId: members[0]._id,
-                    username: 'Enoc',
-                    picture: 'lernantino.jpeg'
-                },
-                {
-                    userId: members[1]._id,
-                    username: 'Isaac',
-                    picture: 'lernantino.jpeg'
-                },
-            ]
         },
         {
             title: 'Notes taker App',
@@ -224,8 +193,6 @@ db.once('open', async () => {
         ],
           },
     ]);
-
-    console.log(projects[0]);
 
     console.log('projects seeded');
 
