@@ -13,33 +13,40 @@ const projectSchema = new Schema({
     type: String,
   },
   poster: {
-    type: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }]
+    type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   edited: {
     type: Boolean,
-    default: false
+    default: false,
   },
   description: {
-    type: String
+    type: String,
   },
   projectImg: {
-    type: String
+    type: String,
   },
   teamSize: {
     type: Number,
     required: true,
-    min: 1
+    min: 1,
   },
   members: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'User'
-    }
+      ref: 'User',
+    },
   ],
-  tags: [tagSchema],
+  tags: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
 const Project = mongoose.model('Project', projectSchema);

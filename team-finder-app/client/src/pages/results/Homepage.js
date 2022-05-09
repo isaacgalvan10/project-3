@@ -34,9 +34,9 @@ const Homepage = () => {
                 {/* {console.log(project)} */}
                 <Card.Img variant="top" src={`./${project.projectImg}`} />
                 <Card.Body>
-                  {project.tags.slice(0, 2).map((tag) => (
+                  {project.tags.slice(0, 2).map((tag, index) => (
                     <span
-                      key={`${index}${project.title}${tag.tagName}`}
+                      key={`${index}${project.title}${project.tags[index]}`}
                       className="badge rounded-pill"
                       style={{
                         marginRight: '10px',
@@ -44,7 +44,7 @@ const Homepage = () => {
                         fontWeight: '500',
                       }}
                     >
-                      {tag.tagName}
+                      {project.tags[index]}
                     </span>
                   ))}
                   <Card.Title style={{ marginTop: '10px' }}>
@@ -54,7 +54,11 @@ const Homepage = () => {
                     0,
                     70
                   )}...`}</Card.Text>
-                  <Button variant="primary" as={Link} to={`/project/${project._id}`}>
+                  <Button
+                    variant="primary"
+                    as={Link}
+                    to={`/project/${project._id}`}
+                  >
                     View Project
                   </Button>
                 </Card.Body>

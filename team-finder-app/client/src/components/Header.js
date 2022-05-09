@@ -10,6 +10,8 @@ import './styles/header.css';
 import { SHOW_MODAL } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
+import SearchResults from '../pages/results/SearchResults';
+import { useState } from 'react';
 
 const Header = () => {
   const logout = (event) => {
@@ -21,12 +23,29 @@ const Header = () => {
 
   const displayPostModal = () => {
     dispatch({
-      type: SHOW_MODAL, payload: {
+      type: SHOW_MODAL,
+      payload: {
         request: false,
-        post: true
-      }
+        post: true,
+      },
     });
-  }
+  };
+
+  const [postFormData, setPostFormData] = useState({
+    search: '',
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setPostFormData({ ...postFormData, [name]: value });
+  };
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    const searchValue = document.getElementById('searchValue').value;
+    console.log(searchValue);
+    return <SearchResults tagSearch={searchValue} />;
+  };
 
   return (
     <>
@@ -34,7 +53,7 @@ const Header = () => {
         <Navbar key={expand} expand={expand} className="mb-3">
           <Container>
             <Navbar.Brand as={Link} to="/">
-              Team Finder
+              &lt;Team Finder/&gt;
             </Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
             <Navbar.Offcanvas
@@ -47,49 +66,64 @@ const Header = () => {
                 className="justify-content-end"
               ></Offcanvas.Header>
               <Offcanvas.Body className="justify-content-end">
-                <Form className="d-flex form">
+                <Form className="d-flex form" onSubmit={handleSearch}>
                   <FormControl
                     type="search"
+                    name="search"
                     placeholder="Javascript"
-                    className="me-2"
+                    className="search-form"
                     aria-label="Search"
+                    id="searchValue"
                   />
-                  <Button type="submit">Search</Button>
+                  <Button type="submit" className="search-btn">
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                  </Button>
                 </Form>
                 {/* <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Button className="login-btn">Login</Button>
                 </Nav> */}
-                <div>
+
+                <Nav className="justify-content-end align-items-center">
                   {Auth.loggedIn() ? (
-                    <>
-                      <span>Hey there, {Auth.getProfile().data.username}!</span>
-                      <button className="btn btn-lg btn-light m-2" onClick={logout}>
-                        Logout
-                      </button>
-                    </>
+                    <button
+                      className="btn"
+                      onClick={logout}
+                      style={{ marginRight: '10px' }}
+                    >
+                      Logout
+                    </button>
                   ) : (
                     <>
-                      <Link className="btn btn-lg btn-info m-2" to="/login">
+                      <Link
+                        className="btn"
+                        to="/login"
+                        style={{ marginRight: '10px' }}
+                      >
                         Login
                       </Link>
-                      <Link className="btn btn-lg btn-light m-2" to="/signup">
+                      <Link
+                        className="btn"
+                        to="/signup"
+                        style={{ marginRight: '10px' }}
+                      >
                         Signup
                       </Link>
                     </>
                   )}
-                </div>
-                <Nav className="justify-content-end align-items-center">
                   {Auth.loggedIn() ? (
-                    <Button style={{ marginRight: '10px' }} onClick={() => displayPostModal()}>Create Post</Button>
-                  ) : (
-                    null
-                  )}
+                    <Button
+                      style={{ marginRight: '10px' }}
+                      onClick={() => displayPostModal()}
+                    >
+                      Create Post
+                    </Button>
+                  ) : null}
                   <Dropdown>
                     <Dropdown.Toggle className="position-relative">
                       <i className="fa-solid fa-bell"></i>
-                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         99+
-                        <span class="visually-hidden">Notifications</span>
+                        <span className="visually-hidden">Notifications</span>
                       </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
@@ -109,9 +143,7 @@ const Header = () => {
                         alt="user"
                         className="header-profile-img"
                       ></Image>
-                    ) : (
-                      null
-                    )}
+                    ) : null}
                   </div>
                 </Nav>
               </Offcanvas.Body>
