@@ -7,11 +7,7 @@ query Projects {
     title
     date
     poster {
-      _id
       username
-      email
-      password
-      github
       picture
     }
     edited
@@ -19,11 +15,8 @@ query Projects {
     projectImg
     teamSize
     members {
-      _id
+      memberId
       username
-      email
-      password
-      github
       picture
     }
     tags {
@@ -35,28 +28,35 @@ query Projects {
 `;
 
 export const QUERY_PROJECT = gql`
-  query Project($projectId: ID!) {
-    project(projectId: $projectId) {
-      _id
-      title
-      date
-      poster
-      edited
-      profile
-      description
-      projectImg
-      teamSize
-      members {
-        memberId
-        picture
-        username
-      }
-      tags {
-        tagId
-        tagName
-      }
+query Project($projectId: ID!) {
+  project(projectId: $projectId) {
+    _id
+    title
+    date
+    poster {
+      username
+      picture
+    }
+    edited
+    description
+    projectImg
+    teamSize
+    members {
+      memberId
+      username
+      picture
+    }
+    tags {
+      tagId
+      tagName
+    }
+    requests {
+      userId
+      username
+      picture
     }
   }
+}
 `;
 
 export const QUERY_ME = gql`
