@@ -1,14 +1,17 @@
 import { Modal, Row, Col, Image, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
-import { HIDE_MODAL, ADD_MEMBER, STATUS, SHOW_NOTIF } from '../utils/actions';
+import { HIDE_MODAL, STATUS, POST_MEMBER, SHOW_NOTIF } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import swal from "sweetalert";
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
+import { ADD_MEMBER } from '../utils/mutations';
+import { useMutation } from '@apollo/client';
 
 const RequestModal = () => {
     const [state, dispatch] = useGlobalContext();
     const { loading, data } = useQuery(QUERY_ME);
+    const [addMember] = useMutation(ADD_MEMBER);
 
     if (loading) {
         return <h2>LOADING...</h2>;
@@ -24,14 +27,28 @@ const RequestModal = () => {
 
         if (confirm) {
             dispatch({
-                type: ADD_MEMBER,
+                type: POST_MEMBER,
                 payload: {
-                    id: me._id,
-                    picture: me.picture,
+                    index: projectIndex,
+                    memberId: me._id,
                     username: me.username,
-                    index: projectIndex
+                    picture: me.picture
                 }
             });
+            try {
+                addMember({
+                    variables: {
+                        projectId: state.modals.projectId,
+                        memberId: me._id,
+                        username: me.username,
+                        picture: me.picture
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
+                console.log('hi');
+            }
             dispatch({
                 type: SHOW_NOTIF,
                 payload: {

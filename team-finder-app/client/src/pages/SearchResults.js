@@ -1,25 +1,25 @@
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { UPDATE_PROJECTS } from '../../utils/actions';
-import { SEARCH_TAG } from '../../utils/queries';
+import { UPDATE_PROJECTS } from '../utils/actions';
+// import { SEARCH_TAG } from '../utils/queries';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useGlobalContext } from '../../utils/GlobalState';
+import { useGlobalContext } from '../utils/GlobalState';
 import { Link } from 'react-router-dom';
-import '../../components/styles/homepage.css';
+import '../components/styles/homepage.css';
 
 const SearchResults = (props) => {
   const [state, dispatch] = useGlobalContext();
 
-  const { loading, data } = useQuery(SEARCH_TAG);
+  // const { loading, data } = useQuery(SEARCH_TAG);
 
-  useEffect(() => {
-    if (data) {
-      dispatch({
-        type: UPDATE_PROJECTS,
-        projects: data.projects,
-      });
-    }
-  }, [data, loading, dispatch]);
+  // useEffect(() => {
+  //   if (data) {
+  //     dispatch({
+  //       type: UPDATE_PROJECTS,
+  //       projects: data.projects,
+  //     });
+  //   }
+  // }, [data, loading, dispatch]);
 
   return (
     <Container style={{ marginTop: '30px' }} className="main-container">
@@ -69,7 +69,7 @@ const SearchResults = (props) => {
       ) : (
         <h3>There are no posts yet 😱</h3>
       )}
-      {loading ? <h3>Loading...</h3> : null}
+      {/* {loading ? <h3>Loading...</h3> : null} */}
     </Container>
   );
 };

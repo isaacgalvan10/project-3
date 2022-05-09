@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import {
   ApolloClient,
@@ -10,9 +11,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Header from './components/Header';
-import Homepage from './pages/results/Homepage'
-import SearchResults from './pages/results/SearchResults';
-import Project from './pages/projects/Project';
+import Homepage from './pages/Homepage'
+import SearchResults from './pages/SearchResults';
+import Project from './pages/Project';
 import Profile from './pages/profiles/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
@@ -25,7 +26,7 @@ import CreatePostModal from './components/CreatePostModal';
 import Auth from './utils/auth';
 
 const httpLink = createHttpLink({
-  uri: 'graphql',
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -61,7 +62,7 @@ function App() {
                 element={<SearchResults />}
               />
               <Route
-                path='/project/:id'
+                path='/project/:projectId'
                 element={<Project />}
               />
               <Route
@@ -83,7 +84,7 @@ function App() {
                 element={<Login />}
               />
             </Routes>
-            <Footer />
+            {/* <Footer /> */}
             {Auth.loggedIn() ? (
               <>
                 <Notification />

@@ -10,7 +10,7 @@ import './styles/header.css';
 import { SHOW_MODAL } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
-import SearchResults from '../pages/results/SearchResults';
+import SearchResults from '../pages/SearchResults';
 import { useState } from 'react';
 
 const Header = () => {

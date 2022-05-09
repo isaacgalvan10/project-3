@@ -1,16 +1,21 @@
+import React from 'react';
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { UPDATE_PROJECTS } from '../../utils/actions';
-import { QUERY_PROJECTS } from '../../utils/queries';
+import { UPDATE_PROJECTS } from '../utils/actions';
+import { QUERY_PROJECTS } from '../utils/queries';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useGlobalContext } from '../../utils/GlobalState';
+import { useGlobalContext } from '../utils/GlobalState';
 import { Link } from 'react-router-dom';
-import '../../components/styles/homepage.css';
+import '../components/styles/homepage.css';
+import { useMutation } from '@apollo/client';
+import { REMOVE_POST } from '../utils/mutations';
 
 const Homepage = () => {
   const [state, dispatch] = useGlobalContext();
 
   const { loading, data } = useQuery(QUERY_PROJECTS);
+
+  const [removePost] = useMutation(REMOVE_POST);
 
   useEffect(() => {
     if (data) {
@@ -20,6 +25,17 @@ const Homepage = () => {
       });
     }
   }, [data, loading, dispatch]);
+
+  const deletePost = async (projectId) => {
+    try {
+        removePost({
+          variables: { postId: projectId }
+        });
+  
+      } catch (e) {
+        console.error(e);
+      }
+}
 
   return (
     <Container style={{ marginTop: '30px' }} className="main-container">
@@ -44,7 +60,7 @@ const Homepage = () => {
                         fontWeight: '500',
                       }}
                     >
-                      {project.tags[index]}
+                      {project.tags[index].tagName}
                     </span>
                   ))}
                   <Card.Title style={{ marginTop: '10px' }}>
@@ -60,6 +76,9 @@ const Homepage = () => {
                     to={`/project/${project._id}`}
                   >
                     View Project
+                  </Button>
+                  <Button variant="primary" onClick={() => deletePost(project._id)}>
+                    Delete Project
                   </Button>
                 </Card.Body>
               </Card>

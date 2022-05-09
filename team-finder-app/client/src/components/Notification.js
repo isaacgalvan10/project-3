@@ -12,7 +12,8 @@ const Notification = () => {
             dispatch({ type: SHOW_MODAL, payload: {
                 request: true,
                 post: false,
-                index: notif.index
+                index: notif.index,
+                projectId: notif.projectId
             } })
         }
     }
