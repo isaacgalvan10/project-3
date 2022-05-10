@@ -70,6 +70,19 @@ export const QUERY_ME = gql`
   }
 `;
 
+export const QUERY_USER = gql`
+  query user($userId: ID!) {
+    user(userId: $userId) {
+      _id
+      username
+      email
+      password
+      github
+      picture
+    }
+  }
+`;
+
 // export const SEARCH_TAG = gql`
 //   query Query($input: String) {
 //     search(input: $input) {

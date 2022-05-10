@@ -22,6 +22,7 @@ const Project = () => {
         variables: { projectId: projectId },
     });
 
+    console.log(projectId)
     // const [isPoster, setPoster] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [state, dispatch] = useGlobalContext();
@@ -56,6 +57,8 @@ const Project = () => {
     //     }
     // };
 
+
+    
     const deletePost = async () => {
         try {
             removePost({
@@ -196,6 +199,7 @@ const Project = () => {
         }
     }
 
+    console.log(project)
     return (
         <>
             <Container fluid className='d-flex flex-column align-items-center'>
