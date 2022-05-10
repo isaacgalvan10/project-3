@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Form, Button, Nav } from "react-bootstrap";
+import { Container, Card, Form, Button, Nav, Modal } from "react-bootstrap";
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 
@@ -75,9 +75,9 @@ function Login(props) {
   return (
     // Form for new logins
     <div className="App w-100 margin-left-64">
+      <Modal>
       <Container className="form-container">
         <Card className="p-2">
-
           <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
               <Nav.Item>
                 <Nav.Link activeKey="1" eventKey="link-1">Login</Nav.Link>
@@ -132,6 +132,7 @@ function Login(props) {
           </Form>
         </Card>
       </Container>
+      </Modal>
     </div>
   );
 }
