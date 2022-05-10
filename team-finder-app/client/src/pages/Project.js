@@ -83,7 +83,7 @@ const Project = () => {
             console.error(e);
             console.log('hi');
         }
-    };
+    }
 
     const removeMember = async (memberId, username) => {
         console.log(memberId);
@@ -250,8 +250,17 @@ const Project = () => {
 
     return (
         <>
-            <Container className="main-container d-flex flex-column align-items-start">
-                <Row className="align-items-center mb-3">
+            <Container fluid className='d-flex flex-column align-items-center'>
+                <h1 className='mb-3'>{project.title}</h1>
+                {Auth.loggedIn() && isPoster() ? (
+                    <h3>POSTER SIDE</h3>
+                ) : (
+                    <h3>{state.me.username} SIDE</h3>
+                )}
+                <Row className='align-items-center mb-3'>
+                    <Col as={Link} to='/profile'>
+                        <Image src={`../${project.poster.picture}`} alt="user" roundedCircle className='profile-img'></Image>
+                    </Col>
                     <Col>
                         <h1 className="mb-3">{project.title}</h1>
                         {Auth.loggedIn() && isPoster() ? (
