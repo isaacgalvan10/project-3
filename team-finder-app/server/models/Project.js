@@ -51,14 +51,7 @@ const projectSchema = new Schema({
       }
     }
   ],
-  tags: [
-    {
-      tagName: {
-        type: String,
-        required: true
-      }
-    }
-  ],
+  tags: [String],
   requests: [
     {
       username: {

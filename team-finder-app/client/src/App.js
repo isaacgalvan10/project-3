@@ -54,7 +54,7 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Homepage />} />
-              <Route path="/searchResults" element={<SearchResults />} />
+              <Route path="/searchResults/:input" element={<SearchResults />} />
               <Route path="/project/:projectId" element={<Project />} />
               <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/myProfile" element={<MyProfile />} />

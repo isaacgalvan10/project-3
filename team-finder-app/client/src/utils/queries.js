@@ -20,10 +20,7 @@ query Projects {
       picture
       username
     }
-    tags {
-      tagId
-      tagName
-    }
+    tags
     requests {
       userId
       username
@@ -54,10 +51,7 @@ query Project($projectId: ID!) {
       picture
       username
     }
-    tags {
-      tagId
-      tagName
-    }
+    tags
     requests {
       userId
       username
@@ -81,30 +75,40 @@ query Me {
     userPosts {
       projectId
       title
-      tagsString
+      tags
       description
     }
     userProjects {
       projectId
       title
-      tagsString
+      tags
       description
     }
   }
 }
 `;
 
-// export const SEARCH_TAG = gql`
-//   query Query($input: String) {
-//     search(input: $input) {
-//       _id
-//       title
-//       date
-//       edited
-//       description
-//       projectImg
-//       teamSize
-//       tags
-//     }
-//   }
-// `;
+export const QUERY_USER = gql`
+  query user($userId: ID!) {
+    user(userId: $userId) {
+      _id
+      username
+      email
+      password
+      github
+      picture
+  }
+}
+`;
+
+export const SEARCH_TAG = gql`
+query Search($input: String!) {
+  search(input: $input) {
+    _id
+    title
+    description
+    projectImg
+    tags
+  }
+}
+`;

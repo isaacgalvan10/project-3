@@ -9,7 +9,7 @@ import './styles/modal.css';
 const CreatePostModal = () => {
     const [state, dispatch] = useGlobalContext();
     const [validated, setValidated] = useState(false);
-    const [addPost] = useMutation(ADD_POST);
+    const [addPost, { error, data }] = useMutation(ADD_POST);
     const [addUserPost] = useMutation(ADD_USER_POST);
     const [postFormData, setPostFormData] = useState({ 
         title: '',
@@ -58,25 +58,41 @@ const CreatePostModal = () => {
         console.log(post);
 
         try {
-            await addPost({
+            const { data } = await addPost({
               variables: { ...post },
             });
-      
+
+            console.log(data)
+            const newPost = data.addPost;
+            console.log(newPost);
+            const projectId = newPost._id;
+            console.log(projectId);
+            console.log(typeof projectId);
+
+            addUserPost({
+                variables: { 
+                    userId: state.me._id,
+                    title: newPost.title,
+                    description: newPost.title,
+                    tags: newPost.tags,
+                    projectId: newPost._id
+               },
+              });
           } catch (e) {
             console.error(e);
           }
 
-          try {
-            await addUserPost({
-              variables: { 
-                  ...post,
-                  userId: state.me._id
-             },
-            });
+        //   try {
+        //     await addUserPost({
+        //       variables: { 
+        //           ...post,
+        //           userId: state.me._id
+        //      },
+        //     });
       
-          } catch (e) {
-            console.error(e);
-          }
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
 
         // const addProject = await dispatch({
         //     type: ADD_PROJECT,

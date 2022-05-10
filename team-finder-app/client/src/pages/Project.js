@@ -250,17 +250,8 @@ const Project = () => {
 
     return (
         <>
-            <Container fluid className='d-flex flex-column align-items-center'>
-                <h1 className='mb-3'>{project.title}</h1>
-                {Auth.loggedIn() && isPoster() ? (
-                    <h3>POSTER SIDE</h3>
-                ) : (
-                    <h3>{state.me.username} SIDE</h3>
-                )}
-                <Row className='align-items-center mb-3'>
-                    <Col as={Link} to='/profile'>
-                        <Image src={`../${project.poster.picture}`} alt="user" roundedCircle className='profile-img'></Image>
-                    </Col>
+            <Container className="main-container d-flex flex-column align-items-start">
+                <Row className="align-items-center mb-3">
                     <Col>
                         <h1 className="mb-3">{project.title}</h1>
                         {Auth.loggedIn() && isPoster() ? (
@@ -384,7 +375,7 @@ const Project = () => {
                                         fontWeight: '500',
                                     }}
                                 >
-                                    {project.tags[index].tagName}
+                                    {project.tags[index]}
                                 </span>
                             ))}
                         </ListGroup>

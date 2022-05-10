@@ -44,10 +44,7 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
-            tagsString: {
-                type: String,
-                required: true
-            },
+            tags: [String],
             description: {
                 type: String,
                 required: true
@@ -61,10 +58,7 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
-            tagsString: {
-                type: String,
-                required: true
-            },
+            tags: [String],
             description: {
                 type: String,
                 required: true

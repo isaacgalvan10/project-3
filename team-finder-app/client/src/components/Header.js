@@ -18,9 +18,7 @@ import { QUERY_ME } from '../utils/queries';
 const Header = () => {
   const [state, dispatch] = useGlobalContext();
 
-  const [postFormData, setPostFormData] = useState({
-    search: '',
-  });
+  const [searchValue, setSearchValue] = useState('');
 
   const { loading, data } = useQuery(QUERY_ME);
 
@@ -49,15 +47,8 @@ const Header = () => {
   };
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setPostFormData({ ...postFormData, [name]: value });
-  };
-
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    const searchValue = document.getElementById('searchValue').value;
-    console.log(searchValue);
-    return <SearchResults tagSearch={searchValue} />;
+    const { value } = event.target;
+    setSearchValue(value);
   };
 
   return (
@@ -83,16 +74,17 @@ const Header = () => {
                 className="justify-content-end"
               ></Offcanvas.Header>
               <Offcanvas.Body className="justify-content-end">
-                <Form className="d-flex form" onSubmit={handleSearch}>
+                <Form className="d-flex form">
                   <FormControl
-                    type="search"
+                    type="text"
                     name="search"
+                    onChange={handleInputChange}
+                    value={searchValue}
                     placeholder="Javascript"
                     className="search-form"
                     aria-label="Search"
-                    id="searchValue"
-                  />
-                  <Button type="submit" className="search-btn">
+                  />                 
+                  <Button as={Link} to={`/searchResults/${searchValue}`}type="submit" className="search-btn">
                     <i className="fa-solid fa-magnifying-glass"></i>
                   </Button>
                 </Form>
@@ -156,7 +148,7 @@ const Header = () => {
                   <div style={{ marginLeft: '25px' }}>
                     {Auth.loggedIn() ? (
                       <Image
-                        src={`./${state.me.picture}`}
+                        src={`../${state.me.picture}`}
                         alt="user"
                         className="header-profile-img"
                       ></Image>

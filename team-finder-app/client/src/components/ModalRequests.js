@@ -75,7 +75,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
                         projectId: projectId,
                         userId: userId,
                         title: currentProject.title,
-                        tagsString: tagsString,
+                        tags: currentProject.tags,
                         description: currentProject.description
                     }
                 });
