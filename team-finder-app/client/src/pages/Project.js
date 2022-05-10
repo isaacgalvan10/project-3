@@ -76,14 +76,13 @@ const Project = () => {
     const deletePost = async () => {
         try {
             removePost({
-                variables: { postId: projectId }
+                variables: { postId: projectId },
             });
-
         } catch (e) {
             console.error(e);
             console.log('hi');
         }
-    }
+    };
 
     const removeMember = async (memberId, username) => {
         console.log(memberId);
@@ -93,21 +92,20 @@ const Project = () => {
         });
 
         if (confirm) {
-            // dispatch({
+            //   dispatch({
             //     type: DELETE_MEMBER,
             //     payload: {
-            //         id: memberId,
-            //         index: projectIndex
-            //     }
-            // });
+            //       id: memberId,
+            //       index: projectIndex,
+            //     },
+            //   });
             try {
-                await deleteMember({
+                deleteMember({
                     variables: {
                         projectId: projectId,
                         memberId: memberId,
-                    }
+                    },
                 });
-
             } catch (e) {
                 console.error(e);
             }
@@ -122,7 +120,6 @@ const Project = () => {
             } catch (e) {
                 console.error(e);
             }
-        }
 
             dispatch({
                 type: SHOW_NOTIF,
@@ -131,27 +128,6 @@ const Project = () => {
                     route: `/project/${projectId}`,
                 },
             });
-        }
-    }
-
-
-    const setBtnText = () => {
-        if (Auth.loggedIn()) {
-            const meInProject = state.me.userProjects.find((project) => project.projectId === projectId);
-            console.log(meInProject);
-            if (meInProject) {
-                return 'Dropout'
-            }
-            else {
-                const meInRequests = project.requests.find((request) => request.userId === state.me._id);
-                if (meInRequests) {
-                    return 'Pending...'
-                } else {
-                    return 'Ask to Join!'
-                }
-            }
-        } else {
-            return 'Ask to Join!'
         }
     }
 
@@ -209,21 +185,20 @@ const Project = () => {
                     swal({
                         text: `You have dropout of ${project.poster.username}'s team`,
                     });
-                    // dispatch({
-                    //     type: DELETE_MEMBER,
-                    //     payload: {
-                    //         id: Auth.getProfile().data._id,
-                    //         index: projectIndex
-                    //     }
-                    // });
+                    dispatch({
+                        type: REMOVE_MEMBER,
+                        payload: {
+                            id: Auth.getProfile().data._id,
+                            index: projectIndex,
+                        },
+                    });
                     try {
-                        await deleteMember({
+                        deleteMember({
                             variables: {
                                 projectId: projectId,
-                                memberId: state.me._id,
-                            }
+                                memberId: state.me.id,
+                            },
                         });
-
                     } catch (e) {
                         console.error(e);
                     }
@@ -234,6 +209,7 @@ const Project = () => {
                                 projectId: projectId,
                             }
                         });
+        
                     } catch (e) {
                         console.error(e);
                     }
@@ -247,6 +223,27 @@ const Project = () => {
             alert('you need to log in to join a team!');
         }
     };
+
+    const setBtnText = () => {
+        if (Auth.loggedIn()) {
+            const meInProject = state.me.userProjects.find((project) => project.projectId === projectId);
+            console.log(meInProject);
+            if (meInProject) {
+                return 'Dropout'
+            }
+            else {
+                const meInRequests = project.requests.find((request) => request.userId === state.me._id);
+                if (meInRequests) {
+                    return 'Pending...'
+                } else {
+                    return 'Ask to Join!'
+                }
+            }
+        } else {
+            return 'Ask to Join!'
+        }
+    }
+
 
     return (
         <>
@@ -393,21 +390,17 @@ const Project = () => {
                     </Col>
                 </Row>
             </Container>
-            {
-                Auth.loggedIn() ? (
-                    <>
-                        <ModalRequests
-                            show={showModal}
-                            setShowModal={setShowModal}
-                            requests={project.requests}
-                            projectId={projectId}
-                            currentProject={project}
-                        />
-                    </>
-                ) : (
-                    null
-                )
-            }
+            {Auth.loggedIn() ? (
+                <>
+                    <ModalRequests
+                        show={showModal}
+                        setShowModal={setShowModal}
+                        requests={project.requests}
+                        projectId={projectId}
+                        currentProject={project}
+                    />
+                </>
+            ) : null}
         </>
     );
 };
