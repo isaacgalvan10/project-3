@@ -108,10 +108,10 @@ const GlobalProvider = ({ value = [], ...props }) => {
     // ],
 
     me: {
-      id: 4,
-      status: 'out',
+      // id: 4,
+      // status: 'out',
       // username: 'Pamela',
-      picture: './pamela.jpeg'
+      // picture: './pamela.jpeg'
     },
     
     modals: {

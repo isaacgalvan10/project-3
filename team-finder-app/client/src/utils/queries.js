@@ -14,13 +14,21 @@ query Projects {
     description
     projectImg
     teamSize
+    closed
     members {
       memberId
-      username
       picture
+      username
     }
     tags {
+      tagId
       tagName
+    }
+    requests {
+      userId
+      username
+      picture
+      status
     }
   }
 }
@@ -40,34 +48,50 @@ query Project($projectId: ID!) {
     description
     projectImg
     teamSize
+    closed
     members {
       memberId
-      username
       picture
+      username
     }
     tags {
+      tagId
       tagName
     }
     requests {
       userId
       username
       picture
+      status
     }
   }
 }
 `;
 
 export const QUERY_ME = gql`
-  query me {
-    me {
-      _id
-      username
-      email
-      password
-      github
-      picture
+query Me {
+  me {
+    _id
+    username
+    email
+    password
+    github
+    picture
+    bio
+    userPosts {
+      projectId
+      title
+      tagsString
+      description
+    }
+    userProjects {
+      projectId
+      title
+      tagsString
+      description
     }
   }
+}
 `;
 
 export const QUERY_USER = gql`

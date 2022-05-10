@@ -7,19 +7,36 @@ import Button from 'react-bootstrap/Button';
 import { Offcanvas, Image, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './styles/header.css';
-import { SHOW_MODAL } from '../utils/actions';
+import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
 import SearchResults from '../pages/SearchResults';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
 
 const Header = () => {
+  const [state, dispatch] = useGlobalContext();
+
+  const [postFormData, setPostFormData] = useState({
+    search: '',
+  });
+
+  const { loading, data } = useQuery(QUERY_ME);
+
+  useEffect(() => {
+    if (data) {
+      dispatch({
+        type: UPDATE_ME,
+        me: data.me,
+      });
+    }
+  }, [data, loading, dispatch]);
+
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
   };
-
-  const [state, dispatch] = useGlobalContext();
 
   const displayPostModal = () => {
     dispatch({
@@ -30,10 +47,6 @@ const Header = () => {
       },
     });
   };
-
-  const [postFormData, setPostFormData] = useState({
-    search: '',
-  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -49,6 +62,10 @@ const Header = () => {
 
   return (
     <>
+    {loading ? (
+      <h3>Loading...</h3>
+    ) : (
+      <>
       {['md'].map((expand) => (
         <Navbar key={expand} expand={expand} className="mb-3">
           <Container>
@@ -139,7 +156,7 @@ const Header = () => {
                   <div style={{ marginLeft: '25px' }}>
                     {Auth.loggedIn() ? (
                       <Image
-                        src={`./${Auth.getProfile().data.picture}`}
+                        src={`./${state.me.picture}`}
                         alt="user"
                         className="header-profile-img"
                       ></Image>
@@ -151,6 +168,8 @@ const Header = () => {
           </Container>
         </Navbar>
       ))}
+      </>
+    )}
     </>
   );
 };

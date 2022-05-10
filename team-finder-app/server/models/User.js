@@ -30,12 +30,54 @@ const userSchema = new Schema({
         type: String,
     },
 
+    bio: {
+        type: String,
     },
-    {
-        toJSON: {
-            virtuals: true,
+
+    userProjects: [
+        {
+            projectId: {
+                type: String,
+                required: true
+            },
+            title: {
+                type: String,
+                required: true
+            },
+            tagsString: {
+                type: String,
+                required: true
+            },
+            description: {
+                type: String,
+                required: true
+            }
+        }   
+    ],
+
+    userPosts: [
+        {
+            title: {
+                type: String,
+                required: true
+            },
+            tagsString: {
+                type: String,
+                required: true
+            },
+            description: {
+                type: String,
+                required: true
+            }
+        }   
+    ]
+
+},
+{
+    toJSON: {
+        virtuals: true,
         },
-    }
+}
 );
 
 // hash user password
@@ -46,13 +88,13 @@ userSchema.pre('save', async function (next) {
     }
 
     next();
-    });
+});
 
-  // custom method to compare and validate password for logging in
-    userSchema.methods.isCorrectPassword = async function (password) {
+// custom method to compare and validate password for logging in
+userSchema.methods.isCorrectPassword = async function (password) {
     return bcrypt.compare(password, this.password);
-    };
+};
 
-    const User = model('User', userSchema);
+const User = model('User', userSchema);
 
-    module.exports = User;
+module.exports = User;

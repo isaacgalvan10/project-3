@@ -12,7 +12,7 @@ import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER } from '../utils/mutations';
+import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER, REMOVE_USER_PROJECT } from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -22,7 +22,6 @@ const Project = () => {
         variables: { projectId: projectId },
     });
 
-    console.log(projectId)
     // const [isPoster, setPoster] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [state, dispatch] = useGlobalContext();
@@ -30,6 +29,7 @@ const Project = () => {
     const [addRequest] = useMutation(ADD_REQUEST);
     const [removePost] = useMutation(REMOVE_POST);
     const [deleteMember] = useMutation(REMOVE_MEMBER);
+    const [removeProject] = useMutation(REMOVE_USER_PROJECT);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -62,13 +62,13 @@ const Project = () => {
     const deletePost = async () => {
         try {
             removePost({
-              variables: { postId: projectId }
+                variables: { postId: projectId }
             });
 
-          } catch (e) {
+        } catch (e) {
             console.error(e);
             console.log('hi');
-          }
+        }
     }
 
     const removeMember = async (memberId, username) => {
@@ -79,25 +79,36 @@ const Project = () => {
         });
 
         if (confirm) {
-            dispatch({
-                type: DELETE_MEMBER,
-                payload: {
-                    id: memberId,
-                    index: projectIndex
-                }
-            });
+            // dispatch({
+            //     type: DELETE_MEMBER,
+            //     payload: {
+            //         id: memberId,
+            //         index: projectIndex
+            //     }
+            // });
             try {
-                deleteMember({
-                  variables: { 
-                    projectId: projectId,
-                    memberId: memberId,
-                }
+                await deleteMember({
+                    variables: {
+                        projectId: projectId,
+                        memberId: memberId,
+                    }
                 });
-    
-              } catch (e) {
+
+            } catch (e) {
                 console.error(e);
                 console.log('hi');
-              }
+            }
+            try {
+                removeProject({
+                    variables: {
+                        userId: memberId,
+                        projectId: projectId,
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         if (memberId === Auth.getProfile().data._id) {
@@ -117,12 +128,22 @@ const Project = () => {
 
 
     const setBtnText = () => {
-        if (state.me.status === 'out') {
-            return 'Ask to Join!'
-        } else if (state.me.status === 'pending') {
-            return 'Pending...'
+        if (Auth.loggedIn()) {
+            const meInProject = state.me.userProjects.find((project) => project.projectId === projectId);
+            console.log(meInProject);
+            if (meInProject) {
+                return 'Dropout'
+            }
+            else {
+                const meInRequests = project.requests.find((request) => request.userId === state.me._id);
+                if (meInRequests) {
+                    return 'Pending...'
+                } else {
+                    return 'Ask to Join!'
+                }
+            }
         } else {
-            return 'Dropout'
+            return 'Ask to Join!'
         }
     }
 
@@ -181,13 +202,35 @@ const Project = () => {
                     swal({
                         text: `You have dropout of ${project.poster.username}'s team`,
                     });
-                    dispatch({
-                        type: REMOVE_MEMBER,
-                        payload: {
-                            id: Auth.getProfile().data._id,
-                            index: projectIndex
-                        }
-                    });
+                    // dispatch({
+                    //     type: DELETE_MEMBER,
+                    //     payload: {
+                    //         id: Auth.getProfile().data._id,
+                    //         index: projectIndex
+                    //     }
+                    // });
+                    try {
+                        await deleteMember({
+                            variables: {
+                                projectId: projectId,
+                                memberId: state.me._id,
+                            }
+                        });
+
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    try {
+                        removeProject({
+                            variables: {
+                                userId: state.me._id,
+                                projectId: projectId,
+                            }
+                        });
+
+                    } catch (e) {
+                        console.error(e);
+                    }
                     dispatch({
                         type: STATUS,
                         status: 'out'
@@ -207,7 +250,7 @@ const Project = () => {
                 {Auth.loggedIn() && isPoster() ? (
                     <h3>POSTER SIDE</h3>
                 ) : (
-                    <h3>USER SIDE</h3>
+                    <h3>{state.me.username} SIDE</h3>
                 )}
                 <Row className='align-items-center mb-3'>
                     <Col as={Link} to='/profile'>
@@ -302,6 +345,7 @@ const Project = () => {
                             setShowModal={setShowModal}
                             requests={project.requests}
                             projectId={projectId}
+                            currentProject={project}
                         />
                     </>
                 ) : (

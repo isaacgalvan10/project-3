@@ -33,6 +33,10 @@ const projectSchema = new Schema({
     required: true,
     min: 1,
   },
+  closed: {
+    type: Boolean,
+    default: false
+  },
   members: [
     {
       memberId: {
