@@ -11,29 +11,29 @@ const resolvers = {
       return await Project.findOne({ _id: projectId }).populate('members').populate('requests');
     },
     users: async () => {
-      return await User.find();
+      return await User.find().populate('userPosts').populate('userProjects');
     },
     user: async (parent, { userId }) => {
-      return await User.findOne({ _id: userId });
+      return await User.findOne({ _id: userId }).populate('userPosts').populate('userProjects');
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id });
+        return User.findOne({ _id: context.user._id }).populate('posts').populate('projects');
       }
       throw new AuthenticationError('You need to be logged in!');
     },
-    // search: async (parent, { input }) => {
-    //   const inputArray = input.split(', ');
+    search: async (parent, { input }) => {
+      const inputArray = input.split(', ');
 
-    //   return await Project.find({ tags: inputArray[0] }, (error, data) => {
-    //     if (error) {
-    //       console.log(error);
-    //     } else {
-    //       console.log(data);
-    //       return data;
-    //     }
-    //   });
-    // },
+      return await Project.find({ tags: { $in: [inputArray[0]] } }, (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data);
+          return data;
+        }
+      });
+    },
   },
 
   Mutation: {
@@ -62,12 +62,7 @@ const resolvers = {
     addPost: async (parent, { title, tagsString, description, teamSize, projectImg }, context) => {
       if (context.user) {
 
-        const tags = tagsString.split(', ').map((tag, index) => {
-          return {
-            tagId: index + '00',
-            tagName: tag
-          }
-        });
+        const tags = tagsString.split(', ');
 
         const me = await User.findOne({ _id: context.user._id });
 
@@ -168,6 +163,62 @@ const resolvers = {
       );
 
       return project;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    addUserPost: async (parent, { projectId, userId, title, tags, description }, context) => {
+      // if (context.user) {
+
+      return User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $addToSet: {
+            userPosts: { projectId, title, tags, description },
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate('requests').populate('userPosts');
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    addUserProject: async (parent, { projectId, userId, title, tags, description }, context) => {
+      // if (context.user) {
+
+      return User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $addToSet: {
+            userProjects: { projectId, title, tags, description },
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate('requests').populate('userProjects');
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    removeUserProject: async (parent, { userId, projectId }, context) => {
+      // if (context.user) {
+
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $pull: {
+            userProjects: { projectId: projectId }
+          }
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return user;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },

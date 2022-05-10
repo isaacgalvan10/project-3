@@ -7,19 +7,34 @@ import Button from 'react-bootstrap/Button';
 import { Offcanvas, Image, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './styles/header.css';
-import { SHOW_MODAL } from '../utils/actions';
+import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
 import SearchResults from '../pages/SearchResults';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
 
 const Header = () => {
+  const [state, dispatch] = useGlobalContext();
+
+  const [searchValue, setSearchValue] = useState('');
+
+  const { loading, data } = useQuery(QUERY_ME);
+
+  useEffect(() => {
+    if (data) {
+      dispatch({
+        type: UPDATE_ME,
+        me: data.me,
+      });
+    }
+  }, [data, loading, dispatch]);
+
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
   };
-
-  const [state, dispatch] = useGlobalContext();
 
   const displayPostModal = () => {
     dispatch({
@@ -31,24 +46,17 @@ const Header = () => {
     });
   };
 
-  const [postFormData, setPostFormData] = useState({
-    search: '',
-  });
-
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setPostFormData({ ...postFormData, [name]: value });
-  };
-
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    const searchValue = document.getElementById('searchValue').value;
-    console.log(searchValue);
-    return <SearchResults tagSearch={searchValue} />;
+    const { value } = event.target;
+    setSearchValue(value);
   };
 
   return (
     <>
+    {loading ? (
+      <h3>Loading...</h3>
+    ) : (
+      <>
       {['md'].map((expand) => (
         <Navbar key={expand} expand={expand} className="mb-3">
           <Container>
@@ -66,16 +74,17 @@ const Header = () => {
                 className="justify-content-end"
               ></Offcanvas.Header>
               <Offcanvas.Body className="justify-content-end">
-                <Form className="d-flex form" onSubmit={handleSearch}>
+                <Form className="d-flex form">
                   <FormControl
-                    type="search"
+                    type="text"
                     name="search"
+                    onChange={handleInputChange}
+                    value={searchValue}
                     placeholder="Javascript"
                     className="search-form"
                     aria-label="Search"
-                    id="searchValue"
-                  />
-                  <Button type="submit" className="search-btn">
+                  />                 
+                  <Button as={Link} to={`/searchResults/${searchValue}`}type="submit" className="search-btn">
                     <i className="fa-solid fa-magnifying-glass"></i>
                   </Button>
                 </Form>
@@ -139,7 +148,7 @@ const Header = () => {
                   <div style={{ marginLeft: '25px' }}>
                     {Auth.loggedIn() ? (
                       <Image
-                        src={`./${Auth.getProfile().data.picture}`}
+                        src={`../${state.me.picture}`}
                         alt="user"
                         className="header-profile-img"
                       ></Image>
@@ -151,6 +160,8 @@ const Header = () => {
           </Container>
         </Navbar>
       ))}
+      </>
+    )}
     </>
   );
 };

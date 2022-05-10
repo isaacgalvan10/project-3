@@ -5,20 +5,28 @@ import { Link } from 'react-router-dom';
 import swal from "sweetalert";
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
-import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
+import { ADD_MEMBER, REMOVE_REQUEST, ADD_USER_PROJECT, REMOVE_USER_PROJECT } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 
-const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
+const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject }) => {
     const [state, dispatch] = useGlobalContext();
     const { loading, data } = useQuery(QUERY_ME);
     const [addMember] = useMutation(ADD_MEMBER);
     const [removeRequest] = useMutation(REMOVE_REQUEST);
+    const [addUserProject] = useMutation(ADD_USER_PROJECT);
+    const [removeProject] = useMutation(REMOVE_USER_PROJECT);
 
     if (loading) {
         return <h2>LOADING...</h2>;
     }
 
     const me = data.me;
+
+    const tagArr = [...currentProject.tags.map((tag) => {
+        return tag.tagName;
+    })];
+    const tagsString = tagArr.join(', ')
+    console.log(tagsString);
 
     const acceptRequest = async (username, picture, userId) => {
         const confirm = await swal({
@@ -51,10 +59,24 @@ const ModalRequests = ({ show, setShowModal, requests, projectId }) => {
                 console.log('hi');
             }
             try {
-                removeRequest({
+                await removeRequest({
                     variables: {
                         projectId: projectId,
                         requestId: userId
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
+            }
+            try {
+                await addUserProject({
+                    variables: {
+                        projectId: projectId,
+                        userId: userId,
+                        title: currentProject.title,
+                        tags: currentProject.tags,
+                        description: currentProject.description
                     }
                 });
 

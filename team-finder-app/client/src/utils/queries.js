@@ -14,13 +14,18 @@ query Projects {
     description
     projectImg
     teamSize
+    closed
     members {
       memberId
+      picture
+      username
+    }
+    tags
+    requests {
+      userId
       username
       picture
-    }
-    tags {
-      tagName
+      status
     }
   }
 }
@@ -40,34 +45,47 @@ query Project($projectId: ID!) {
     description
     projectImg
     teamSize
+    closed
     members {
       memberId
-      username
       picture
+      username
     }
-    tags {
-      tagName
-    }
+    tags
     requests {
       userId
       username
       picture
+      status
     }
   }
 }
 `;
 
 export const QUERY_ME = gql`
-  query me {
-    me {
-      _id
-      username
-      email
-      password
-      github
-      picture
+query Me {
+  me {
+    _id
+    username
+    email
+    password
+    github
+    picture
+    bio
+    userPosts {
+      projectId
+      title
+      tags
+      description
+    }
+    userProjects {
+      projectId
+      title
+      tags
+      description
     }
   }
+}
 `;
 
 export const QUERY_USER = gql`
@@ -79,21 +97,18 @@ export const QUERY_USER = gql`
       password
       github
       picture
-    }
   }
+}
 `;
 
-// export const SEARCH_TAG = gql`
-//   query Query($input: String) {
-//     search(input: $input) {
-//       _id
-//       title
-//       date
-//       edited
-//       description
-//       projectImg
-//       teamSize
-//       tags
-//     }
-//   }
-// `;
+export const SEARCH_TAG = gql`
+query Search($input: String!) {
+  search(input: $input) {
+    _id
+    title
+    description
+    projectImg
+    tags
+  }
+}
+`;

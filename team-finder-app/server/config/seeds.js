@@ -98,16 +98,7 @@ db.once('open', async () => {
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            tags: [{
-                tagName: 'HTML' 
-            },
-            {
-                tagName: 'CSS' 
-            },
-            {
-                tagName: 'JavaScript' 
-            },
-        ],
+            tags: ['HTML', 'CSS', 'JAVASCRIPT'],
             members: [
                 {
                     username: 'Enoc',
@@ -137,16 +128,7 @@ db.once('open', async () => {
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            tags: [{
-                tagName: 'HTML' 
-            },
-            {
-                tagName: 'CSS' 
-            },
-            {
-                tagName: 'JavaScript' 
-            },
-        ],
+            tags: ['HTML', 'CSS', 'JAVASCRIPT'],
           },
         {
             title: 'Ecommerce shop',
@@ -159,16 +141,7 @@ db.once('open', async () => {
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            tags: [{
-                tagName: 'HTML' 
-            },
-            {
-                tagName: 'CSS' 
-            },
-            {
-                tagName: 'JavaScript' 
-            },
-        ],
+            tags: ['HTML', 'CSS', 'JAVASCRIPT'],
           },
         {
             title: 'Random Project',
@@ -181,19 +154,11 @@ db.once('open', async () => {
             description: `This is an app that helps the user keep track of their job applications and reminds them what jobs they have applied to and update the status on their job applications and will remind them to follow up after a interview. I’m looking for a team of 5 with basic HTML, CSS, and JAVASCRIPT knowledge. \n Edit \n We have two spots left! Preferably good with CSS.`,
             projectImg: 'project.png',
             teamSize: 5,
-            tags: [{
-                tagName: 'HTML' 
-            },
-            {
-                tagName: 'CSS' 
-            },
-            {
-                tagName: 'JavaScript' 
-            },
-        ],
+            tags: ['HTML', 'CSS', 'JAVASCRIPT'],
           },
     ]);
 
+    console.log(projects[0]);
     console.log('projects seeded');
 
     console.log("All done");

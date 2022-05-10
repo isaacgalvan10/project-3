@@ -33,6 +33,10 @@ const projectSchema = new Schema({
     required: true,
     min: 1,
   },
+  closed: {
+    type: Boolean,
+    default: false
+  },
   members: [
     {
       memberId: {
@@ -47,14 +51,7 @@ const projectSchema = new Schema({
       }
     }
   ],
-  tags: [
-    {
-      tagName: {
-        type: String,
-        required: true
-      }
-    }
-  ],
+  tags: [String],
   requests: [
     {
       username: {
