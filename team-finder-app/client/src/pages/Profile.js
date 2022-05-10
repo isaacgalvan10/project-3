@@ -2,9 +2,30 @@ import React, { useState, useEffect } from "react";
 import { Container, Card, Nav, Button, Image } from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faGithub} from '@fortawesome/free-brands-svg-icons'
-import '../../components/styles/profile.css';
+import '../components/styles/profile.css';
+import { Link, useParams } from 'react-router-dom';
+import { QUERY_USER } from "../utils/queries";
+import { useQuery } from "@apollo/client";
+
 
 const MyProfile = () => {
+
+  const { userId } = useParams();
+  console.log(userId)
+  // const userId = "6279aa574eea1e4d8c95a783"
+
+  const {loading, data} = useQuery(QUERY_USER, {
+    variables: {userId: userId},
+  })
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const user = data?.user || "";
+
+  console.log(user)
+
     return (
       <Container>
       <Card className="mb-3">
@@ -14,15 +35,15 @@ const MyProfile = () => {
               <Nav.Link className="link-primary text-decoration-underline d-none">Edit</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Image src="./lernantino.jpeg" alt="user" roundedCircle className='profile-img'></Image>
+              <Image src={`../${user.picture}`} alt="user" roundedCircle className='profile-img'></Image>
             </Nav.Item>
             <Nav.Item>
-              <a href="https://github.com/AndreV96" target="_blank"><FontAwesomeIcon icon={faGithub}  className=" fa-icons"/></a> 
+              <a href={"https://github.com/" + user.github} target="_blank"><FontAwesomeIcon icon={faGithub}  className=" fa-icons"/></a> 
             </Nav.Item>
           </Nav>
         </Card.Header>
         <Card.Body className="text-center">
-          <Card.Title>Pamela</Card.Title>
+          <Card.Title>{user.username} </Card.Title>
           <Card.Text >
             Hi, I’m Pamela. I recently graduated from a 6-month full-stack web-development bootcamp and I’m looking to collab on interesting ideas in order to expand my portfolio.
           </Card.Text>
@@ -34,10 +55,10 @@ const MyProfile = () => {
       {/* I don't know how to set a default value without using href as it is seen in documentation */}
       <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
         <Nav.Item>
-          <Nav.Link activeKey="1" eventKey="link-1">Posted Projects</Nav.Link>
+          <Nav.Link  eventKey="link-1">Posted Projects</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link activeKey="2" eventKey="link-2">Joined Projects</Nav.Link>
+          <Nav.Link  eventKey="link-2">Joined Projects</Nav.Link>
         </Nav.Item>
       </Nav>
 

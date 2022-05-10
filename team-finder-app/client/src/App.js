@@ -14,7 +14,7 @@ import Header from './components/Header';
 import Homepage from './pages/Homepage'
 import SearchResults from './pages/SearchResults';
 import Project from './pages/Project';
-import Profile from './pages/profiles/Profile';
+import Profile from './pages/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
 import Signup from './components/Signup';
@@ -66,7 +66,7 @@ function App() {
                 element={<Project />}
               />
               <Route
-                path='/profile'
+                path='/profile/:userId'
                 element={<Profile />}
               />
               <Route
