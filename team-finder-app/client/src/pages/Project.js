@@ -290,27 +290,32 @@ const Project = () => {
             <Row className="d-flex">
               {console.log(project.members)}
               {project.members.map((member) => (
-                <div key={member.memberId}>
-                  <Link as={Link} to={`/profile/${member.memberId}`}>
-                    <Image
-                      src={`../${member.picture}`}
-                      alt="user"
-                      roundedCircle
-                      className="sm-profile-img"
-                    ></Image>
-                  </Link>
-                  <p style={{ textAlign: 'center' }}>{member.username}</p>
+                <Col md={2}>
+                  <div
+                    key={member.memberId}
+                    className="d-flex flex-column align-items-center"
+                  >
+                    <Link as={Link} to={`/profile/${member.memberId}`}>
+                      <Image
+                        src={`../${member.picture}`}
+                        alt="user"
+                        roundedCircle
+                        className="sm-profile-img"
+                      ></Image>
+                    </Link>
+                    <p style={{ textAlign: 'center' }}>{member.username}</p>
 
-                  {Auth.loggedIn() && isPoster() ? (
-                    <Button
-                      onClick={() =>
-                        removeMember(member.memberId, member.username)
-                      }
-                    >
-                      Remove from team
-                    </Button>
-                  ) : null}
-                </div>
+                    {Auth.loggedIn() && isPoster() ? (
+                      <Button
+                        onClick={() =>
+                          removeMember(member.memberId, member.username)
+                        }
+                      >
+                        Remove from team
+                      </Button>
+                    ) : null}
+                  </div>
+                </Col>
               ))}
               {/* {currentProject.spotsLeft().map((emptySpot) => (
                                 <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
