@@ -22,13 +22,15 @@ const MyProfile = () => {
     return <div>Loading...</div>;
   }
 
-  const user = data?.user || "";
+  const user = data.user
 
   console.log(user)
 
     return (
       <Container>
-      <Card className="mb-3">
+        {data ?
+        <div>
+        <Card className="mb-3 margin-0-auto">
         <Card.Header>
           <Nav className="justify-content-between">
             <Nav.Item>
@@ -52,8 +54,7 @@ const MyProfile = () => {
       
       <h2 className="text-center mb-3 fw-bold">Projects</h2>
 
-      {/* I don't know how to set a default value without using href as it is seen in documentation */}
-      <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
+      {/* <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
         <Nav.Item>
           <Nav.Link  eventKey="link-1">Posted Projects</Nav.Link>
         </Nav.Item>
@@ -83,7 +84,10 @@ const MyProfile = () => {
             <Button variant="danger">Closed</Button>
           </Card.Body>
         </Card>
+      </div>  */}
       </div>
+      : ""}
+      
       
       </Container>
     )
