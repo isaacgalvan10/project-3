@@ -9,7 +9,8 @@ import {
     HIDE_MODAL,
     SHOW_MODAL_NOTIF,
     ADD_PROJECT,
-    UPDATE_PROJECTS
+    UPDATE_PROJECTS,
+    UPDATE_ME
 } from './actions';
 
 export const reducer = (state, action) => {
@@ -136,6 +137,13 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 projects: updatedProjects
+            };
+
+        case UPDATE_ME:
+            const requestedMe = action.me;
+            return {
+                ...state,
+                me: requestedMe
             };
 
         default:

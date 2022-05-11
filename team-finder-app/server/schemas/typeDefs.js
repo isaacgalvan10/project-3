@@ -7,10 +7,18 @@ const typeDefs = gql`
     username: String
 }
 
+type UserPosts {
+  projectId: String
+  title: String
+  tags: [String]
+  description: String
+}
+
 type Request {
     userId: String
     username: String
     picture: String
+    status: String
 }
 
 type Tag {
@@ -32,8 +40,9 @@ type Poster {
     description: String
     projectImg: String
     teamSize: Int
+    closed: Boolean
     members: [Member]
-    tags: [Tag]
+    tags: [String]
     requests: [Request]
   }
 
@@ -44,6 +53,9 @@ type Poster {
     password: String
     github: String
     picture: String
+    bio: String
+    userPosts: [UserPosts]
+    userProjects: [UserPosts]
   }
 
   type Auth {
@@ -57,6 +69,7 @@ type Poster {
     users: [User]
     user(userId: ID!): User
     me: User
+    search(input: String!): [Project] 
   }
 
     type Mutation {
@@ -68,7 +81,11 @@ type Poster {
         removeMember(projectId: ID!, memberId: String!): Project
         addRequest(projectId: ID!, username: String!, userId: String!, picture: String!): Project
         removeRequest(projectId: ID!, requestId: String!): Project
+        addUserPost(projectId: String!, userId: ID!, title: String!, tags: [String!], description: String!): User
+        addUserProject(projectId: String!, userId: ID!, title: String!, tags: [String!], description: String!): User
+        removeUserProject(userId: String!, projectId: String!): User
     }
 `;
 
-module.exports = typeDefs;
+module.exports = typeDefs;             
+

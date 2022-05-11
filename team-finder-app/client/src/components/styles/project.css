@@ -1,51 +1,67 @@
+h1,
+h2,
+h3,
+p {
+  color: white;
+}
+
 .profile-img {
-    height: 100px;
-    width: 100px;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+}
+
+.sm-profile-img {
+  height: 80px;
+  width: 80px;
+  object-fit: cover;
 }
 
 .project-img {
-    height: 200px;
-    width: 300px;
+  height: 250px;
+  width: 450px;
+  object-fit: cover;
 }
 
 .edited {
-    text-align: center;
+  text-align: center;
 }
 
 .edit-close-delete {
-    position: relative;
-    left: 15px;
-    bottom: 15px;
+  position: relative;
+  left: 15px;
+  bottom: 15px;
 }
 
 .gh-icon {
-    height: 50px;
-    position: relative;
-    top: 15px;
-    right: 70px;
+  height: 50px;
+  position: relative;
+  top: 15px;
+  right: 70px;
 }
 
 .dropdown-custom {
-    border: none;
-    background-color: transparent;
+  border: none;
+  background-color: transparent;
 }
 
-.show>.btn-primary.dropdown-toggle  {
-    border: none;
-    background-color: transparent; 
+.show > .btn-primary.dropdown-toggle {
+  border: none;
+  background-color: transparent;
 }
 
 .btn-primary:focus {
-    border: none;
-    background-color: transparent; 
+  border: none;
+  background-color: transparent;
 }
 
 .btn-primary:hover {
-    border: none;
-    background-color: transparent; 
+  border: none;
+  background-color: transparent;
 }
 
-.btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
-    border: none;
-    background-color: transparent; 
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
+  border: none;
+  background-color: transparent;
 }

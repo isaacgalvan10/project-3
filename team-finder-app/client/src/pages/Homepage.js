@@ -44,7 +44,7 @@ const Homepage = () => {
                         fontWeight: '500',
                       }}
                     >
-                      {project.tags[index].tagName}
+                      {project.tags[index]}
                     </span>
                   ))}
                   <Card.Title style={{ marginTop: '10px' }}>

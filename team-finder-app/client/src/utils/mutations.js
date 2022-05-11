@@ -39,10 +39,7 @@ mutation AddPost($title: String!, $tagsString: String!, $description: String!, $
     description
     projectImg
     teamSize
-    tags {
-      tagId
-      tagName
-    }
+    tags 
   }
 }
 `;
@@ -82,8 +79,10 @@ mutation RemoveMember($projectId: ID!, $memberId: String!) {
 `;
 
 export const ADD_REQUEST = gql`
-mutation Mutation($projectId: ID!, $username: String!, $userId: String!, $picture: String!) {
+mutation AddRequest($projectId: ID!, $username: String!, $userId: String!, $picture: String!) {
   addRequest(projectId: $projectId, username: $username, userId: $userId, picture: $picture) {
+    _id
+    title
     requests {
       userId
       username
@@ -101,6 +100,51 @@ mutation RemoveRequest($projectId: ID!, $requestId: String!) {
     requests {
       userId
       username
+    }
+  }
+}
+`;
+
+export const ADD_USER_POST = gql`
+mutation AddUserPost($projectId: String!, $userId: ID!, $title: String!, $tags: [String!], $description: String!) {
+  addUserPost(projectId: $projectId, userId: $userId, title: $title, tags: $tags, description: $description) {
+    _id
+    username
+    userPosts {
+      projectId
+      title
+      tags
+      description
+    }
+  }
+}
+`;
+
+export const ADD_USER_PROJECT = gql`
+mutation AddUserProject($projectId: String!, $userId: ID!, $title: String!, $tags: [String!], $description: String!) {
+  addUserProject(projectId: $projectId, userId: $userId, title: $title, tags: $tags, description: $description) {
+    _id
+    username
+    userProjects {
+      projectId
+      title
+      tags
+      description
+    }
+  }
+}
+`;
+
+export const REMOVE_USER_PROJECT = gql`
+mutation RemoveUserProject($userId: String!, $projectId: String!) {
+  removeUserProject(userId: $userId, projectId: $projectId) {
+    _id
+    username
+    userProjects {
+      projectId
+      title
+      tags
+      description
     }
   }
 }
