@@ -3,14 +3,13 @@ import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { ADD_POST, ADD_USER_POST } from '../utils/mutations';
+import { ADD_POST } from '../utils/mutations';
 import './styles/modal.css';
 
 const CreatePostModal = () => {
     const [state, dispatch] = useGlobalContext();
     const [validated, setValidated] = useState(false);
     const [addPost, { error, data }] = useMutation(ADD_POST);
-    const [addUserPost] = useMutation(ADD_USER_POST);
     const [postFormData, setPostFormData] = useState({ 
         title: '',
         tagsString: '', 
@@ -62,22 +61,6 @@ const CreatePostModal = () => {
               variables: { ...post },
             });
 
-            console.log(data)
-            const newPost = data.addPost;
-            console.log(newPost);
-            const projectId = newPost._id;
-            console.log(projectId);
-            console.log(typeof projectId);
-
-            addUserPost({
-                variables: { 
-                    userId: state.me._id,
-                    title: newPost.title,
-                    description: newPost.title,
-                    tags: newPost.tags,
-                    projectId: newPost._id
-               },
-              });
           } catch (e) {
             console.error(e);
           }

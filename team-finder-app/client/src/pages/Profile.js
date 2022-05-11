@@ -27,7 +27,32 @@ const MyProfile = () => {
   console.log(user)
 
     return (
+      
       <Container>
+
+      <h1>POSTED PROJECTS</h1>
+      {console.log(user.posts)}
+      {user.posts.length > 0 ? (
+        <>
+        {user.posts.map((post) => (
+          <p>{post.title}</p>
+        ))}
+        </>
+      ) : (
+        <p>no tiene proyectos o algo así</p>
+      )}
+
+      <h1>JOINED PROJECTS</h1>
+
+      {user.joinedProjects.length > 0 ? (
+        <>
+        {user.joinedProjects.map((project) => (
+          <p>{project.title}</p>
+        ))}
+        </>
+      ) : (
+        <p>no tiene proyectos o algo así</p>
+      )}
       <Card className="mb-3">
         <Card.Header>
           <Nav className="justify-content-between">
@@ -84,7 +109,7 @@ const MyProfile = () => {
           </Card.Body>
         </Card>
       </div>
-      
+
       </Container>
     )
 }

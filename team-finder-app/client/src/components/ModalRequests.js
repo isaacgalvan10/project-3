@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import swal from "sweetalert";
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
-import { ADD_MEMBER, REMOVE_REQUEST, ADD_USER_PROJECT, REMOVE_USER_PROJECT } from '../utils/mutations';
+import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 
 const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject }) => {
@@ -13,8 +13,6 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
     const { loading, data } = useQuery(QUERY_ME);
     const [addMember] = useMutation(ADD_MEMBER);
     const [removeRequest] = useMutation(REMOVE_REQUEST);
-    const [addUserProject] = useMutation(ADD_USER_PROJECT);
-    const [removeProject] = useMutation(REMOVE_USER_PROJECT);
 
     if (loading) {
         return <h2>LOADING...</h2>;
@@ -28,7 +26,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
     const tagsString = tagArr.join(', ')
     console.log(tagsString);
 
-    const acceptRequest = async (username, picture, userId) => {
+    const acceptRequest = async (username, userId) => {
         const confirm = await swal({
             title: `Are you sure you want to accept ${username} in your team?`,
             buttons: ["No", "Yes"],
@@ -48,9 +46,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
                 await addMember({
                     variables: {
                         projectId: projectId,
-                        memberId: userId,
-                        username: username,
-                        picture: picture,
+                        userId: userId
                     }
                 });
 
@@ -62,21 +58,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
                 await removeRequest({
                     variables: {
                         projectId: projectId,
-                        requestId: userId
-                    }
-                });
-
-            } catch (e) {
-                console.error(e);
-            }
-            try {
-                await addUserProject({
-                    variables: {
-                        projectId: projectId,
-                        userId: userId,
-                        title: currentProject.title,
-                        tags: currentProject.tags,
-                        description: currentProject.description
+                        userId: userId
                     }
                 });
 
@@ -111,7 +93,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
                 removeRequest({
                     variables: {
                         projectId: projectId,
-                        requestId: userId
+                        userId: userId
                     }
                 });
 
@@ -141,12 +123,12 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
             <Modal.Body>
                 <Row>
                     {requests.map((request) => (
-                        <ListGroup key={request.userId}>
+                        <ListGroup key={request._id}>
                             <ListGroupItem>
                                 <Image src={`../${request.picture}`} alt="user" roundedCircle className='profile-img'></Image>
                                 <Col>{request.username}</Col>
-                                <Col><Button onClick={() => acceptRequest(request.username, request.picture, request.userId)}>Accept</Button></Col>
-                                <Col><Button onClick={() => rejectRequest(request.username, request.userId)}>Reject</Button></Col>
+                                <Col><Button onClick={() => acceptRequest(request.username, request._id)}>Accept</Button></Col>
+                                <Col><Button onClick={() => rejectRequest(request.username, request._id)}>Reject</Button></Col>
                             </ListGroupItem>
                         </ListGroup>
                     ))}

@@ -7,6 +7,7 @@ query Projects {
     title
     date
     poster {
+      _id
       username
       picture
     }
@@ -16,16 +17,18 @@ query Projects {
     teamSize
     closed
     members {
-      memberId
-      picture
+      _id
       username
+      email
+      github
+      picture
+      bio
     }
     tags
     requests {
-      userId
+      _id
       username
       picture
-      status
     }
   }
 }
@@ -38,6 +41,7 @@ query Project($projectId: ID!) {
     title
     date
     poster {
+      _id
       username
       picture
     }
@@ -47,16 +51,15 @@ query Project($projectId: ID!) {
     teamSize
     closed
     members {
-      memberId
-      picture
+      _id
       username
+      picture
     }
     tags
     requests {
-      userId
+      _id
       username
       picture
-      status
     }
   }
 }
@@ -68,35 +71,96 @@ query Me {
     _id
     username
     email
-    password
     github
     picture
     bio
-    userPosts {
-      projectId
+    posts {
+      _id
       title
-      tags
+      date
+      poster {
+        _id
+        username
+        picture
+      }
+      edited
       description
+      projectImg
+      teamSize
+      closed
+      members {
+        _id
+        username
+        email
+        github
+        picture
+        bio
+      }
+      tags
+      requests {
+        _id
+        username
+        picture
+      }
     }
-    userProjects {
-      projectId
+    joinedProjects {
+      _id
       title
-      tags
+      date
+      edited
       description
+      projectImg
+      teamSize
+      closed
+      tags
     }
   }
-}
+} 
 `;
 
 export const QUERY_USER = gql`
-  query user($userId: ID!) {
-    user(userId: $userId) {
+query User($userId: ID!) {
+  user(userId: $userId) {
+    _id
+    username
+    email
+    github
+    picture
+    bio
+    posts {
       _id
-      username
-      email
-      password
-      github
-      picture
+      title
+      date
+      description
+      projectImg
+      teamSize
+      closed
+      members {
+        _id
+        username
+        email
+        github
+        picture
+        bio
+      }
+      tags
+      requests {
+        _id
+        username
+        picture
+      }
+    }
+    joinedProjects {
+      _id
+      title
+      date
+      edited
+      description
+      projectImg
+      teamSize
+      closed
+      tags
+    }
   }
 }
 `;
