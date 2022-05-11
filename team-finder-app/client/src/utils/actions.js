@@ -8,6 +8,7 @@ export const HIDE_MODAL = "HIDE_MODAL";
 export const SHOW_MODAL_NOTIF = "SHOW_MODAL_NOTIF";
 export const ADD_PROJECT = "ADD_PROJECT";
 export const UPDATE_PROJECTS = "UPDATE_PROJECTS";
+export const UPDATE_ME = "UPDATE_ME";
 
 
 

@@ -10,7 +10,6 @@ const CreatePostModal = () => {
     const [state, dispatch] = useGlobalContext();
     const [validated, setValidated] = useState(false);
     const [addPost, { error, data }] = useMutation(ADD_POST);
-
     const [postFormData, setPostFormData] = useState({ 
         title: '',
         tagsString: '', 
@@ -61,10 +60,22 @@ const CreatePostModal = () => {
             const { data } = await addPost({
               variables: { ...post },
             });
-      
+
           } catch (e) {
             console.error(e);
           }
+
+        //   try {
+        //     await addUserPost({
+        //       variables: { 
+        //           ...post,
+        //           userId: state.me._id
+        //      },
+        //     });
+      
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
 
         // const addProject = await dispatch({
         //     type: ADD_PROJECT,
