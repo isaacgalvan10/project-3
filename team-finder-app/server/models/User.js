@@ -34,44 +34,26 @@ const userSchema = new Schema({
         type: String,
     },
 
-    userProjects: [
+    joinedProjects: [
         {
-            projectId: {
-                type: String,
-                required: true
-            },
-            title: {
-                type: String,
-                required: true
-            },
-            tags: [String],
-            description: {
-                type: String,
-                required: true
-            }
-        }   
+            type: Schema.Types.ObjectId,
+            ref: 'Project'
+        }
     ],
 
-    userPosts: [
+    posts: [
         {
-            title: {
-                type: String,
-                required: true
-            },
-            tags: [String],
-            description: {
-                type: String,
-                required: true
-            }
-        }   
-    ]
+            type: Schema.Types.ObjectId,
+            ref: 'Project'
+        }
+    ],
 
 },
-{
-    toJSON: {
-        virtuals: true,
+    {
+        toJSON: {
+            virtuals: true,
         },
-}
+    }
 );
 
 // hash user password

@@ -7,6 +7,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
 import { Link } from 'react-router-dom';
 import '../components/styles/homepage.css';
+import { useState } from 'react';
 
 const Homepage = () => {
   const [state, dispatch] = useGlobalContext();
@@ -23,7 +24,7 @@ const Homepage = () => {
   }, [data, loading, dispatch]);
 
   return (
-    <Container style={{ marginTop: '30px' }} className="main-container">
+    <Container className="main-container">
       {state.projects.length ? (
         <Row>
           <Col
@@ -32,7 +33,7 @@ const Homepage = () => {
           >
             {state.projects.map((project, index) => (
               <Card key={`${project}${index}`}>
-                <Card.Img variant="top" src={`./${project.projectImg}`} />
+                <Card.Img variant="top" src={project.projectImg} />
                 <Card.Body>
                   {project.tags.slice(0, 2).map((tag, index) => (
                     <span

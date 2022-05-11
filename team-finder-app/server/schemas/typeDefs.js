@@ -1,49 +1,19 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-  type Member {
-    memberId: String
-    picture: String
-    username: String
-}
-
-type UserPosts {
-  projectId: String
-  title: String
-  tags: [String]
-  description: String
-}
-
-type Request {
-    userId: String
-    username: String
-    picture: String
-    status: String
-}
-
-type Tag {
-    tagId: String
-    tagName: String
-}
-
-type Poster {
-    username: String
-    picture: String
-}
-
   type Project {
     _id: ID
     title: String
     date: String
-    poster: Poster
+    poster: User
     edited: Boolean
     description: String
     projectImg: String
     teamSize: Int
     closed: Boolean
-    members: [Member]
+    members: [User]
     tags: [String]
-    requests: [Request]
+    requests: [User]
   }
 
   type User {
@@ -54,8 +24,8 @@ type Poster {
     github: String
     picture: String
     bio: String
-    userPosts: [UserPosts]
-    userProjects: [UserPosts]
+    posts: [Project]
+    joinedProjects: [Project]
   }
 
   type Auth {
@@ -77,13 +47,12 @@ type Poster {
         login(email: String!, password: String!): Auth
         addPost(title: String!, tagsString: String!, description: String!, teamSize: Int!, projectImg: String!): Project
         removePost(postId: ID!): Project
-        addMember(projectId: ID!, memberId: String!, username: String!, picture: String!): Project
-        removeMember(projectId: ID!, memberId: String!): Project
-        addRequest(projectId: ID!, username: String!, userId: String!, picture: String!): Project
-        removeRequest(projectId: ID!, requestId: String!): Project
-        addUserPost(projectId: String!, userId: ID!, title: String!, tags: [String!], description: String!): User
-        addUserProject(projectId: String!, userId: ID!, title: String!, tags: [String!], description: String!): User
-        removeUserProject(userId: String!, projectId: String!): User
+        addMember(userId: ID!, projectId: ID!): Project
+        removeMember(projectId: ID!, userId: ID!): Project
+        addRequest(userId: ID!, projectId: ID!): Project
+        removeRequest(projectId: ID!, userId: ID!): Project
+        removeProject(userId: ID!, projectId: ID!): User
+        editProfile(userId: ID!, newUsername: String!, newBio: String!): User
     }
 `;
 

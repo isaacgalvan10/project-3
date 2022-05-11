@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Card, Nav, Button, Image } from "react-bootstrap";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faGithub} from '@fortawesome/free-brands-svg-icons'
 import '../components/styles/profile.css';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { QUERY_USER } from "../utils/queries";
 import { useQuery } from "@apollo/client";
-
+import Auth from '../utils/auth';
+import ProfileCard from '../components/ProfileCard';
+import EditProfileForm from '../components/EditProfileForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 const MyProfile = () => {
 
   const { userId } = useParams();
-  console.log(userId)
-  // const userId = "6279aa574eea1e4d8c95a783"
 
-  const {loading, data} = useQuery(QUERY_USER, {
-    variables: {userId: userId},
+  const [editMode, setEditMode] = useState(false);
+
+  const { loading, data } = useQuery(QUERY_USER, {
+    variables: { userId: userId },
   })
 
   if (loading) {
@@ -24,7 +26,11 @@ const MyProfile = () => {
 
   const user = data.user
 
-  console.log(user)
+  const isMe = () => {
+    if (Auth.loggedIn()) {
+      return Auth.getProfile().data._id === user._id;
+    }
+  };
 
     return (
       <Container>
@@ -55,11 +61,28 @@ const MyProfile = () => {
       <h2 className="text-center mb-3 fw-bold">Projects</h2>
 
       {/* <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
+  return (
+
+    <Container className="main-container">
+      {Auth.loggedIn() && isMe() && !editMode ? (
+        <Button onClick={() => setEditMode(true)}>Edit</Button>
+      ) : (
+        null
+      )}
+      {!editMode ? (
+        <ProfileCard user={user} />
+      ) : (
+        <EditProfileForm user={user} setEditMode={setEditMode} />
+      )}
+      <h2 className="text-center mb-3 fw-bold">Projects</h2>
+
+      {/* I don't know how to set a default value without using href as it is seen in documentation */}
+      <Nav fill variant="tabs" className="mb-3 fw-bold" defaultActiveKey="1">
         <Nav.Item>
-          <Nav.Link  eventKey="link-1">Posted Projects</Nav.Link>
+          <Nav.Link eventKey="link-1">Posted Projects</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link  eventKey="link-2">Joined Projects</Nav.Link>
+          <Nav.Link eventKey="link-2">Joined Projects</Nav.Link>
         </Nav.Item>
       </Nav>
 
@@ -84,7 +107,7 @@ const MyProfile = () => {
             <Button variant="danger">Closed</Button>
           </Card.Body>
         </Card>
-      </div>  */}
+      </div>  
       </div>
       : ""}
       

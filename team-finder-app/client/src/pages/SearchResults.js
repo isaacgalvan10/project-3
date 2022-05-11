@@ -43,7 +43,7 @@ const SearchResults = (props) => {
             {projects.map((project, index) => (
               <Card key={`${project}${index}`}>
                 {/* {console.log(project)} */}
-                <Card.Img variant="top" src={`../${project.projectImg}`} />
+                <Card.Img variant="top" src={project.projectImg} />
                 <Card.Body>
                   {project.tags.slice(0, 2).map((tag, index) => (
                     <span
@@ -78,7 +78,7 @@ const SearchResults = (props) => {
           </Col>
         </Row>
       ) : (
-        <h3>There are no posts yet 😱</h3>
+        <h3>No results</h3>
       )}
     </Container>
   );

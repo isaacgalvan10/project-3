@@ -3,33 +3,39 @@ import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { ADD_POST, ADD_USER_POST } from '../utils/mutations';
+import { ADD_POST } from '../utils/mutations';
 import './styles/modal.css';
+import ImageUpload from '../components/ImageUpload';
 
 const CreatePostModal = () => {
     const [state, dispatch] = useGlobalContext();
     const [validated, setValidated] = useState(false);
+    const [projectImage, setProjectImg] = useState('');
     const [addPost, { error, data }] = useMutation(ADD_POST);
-    const [addUserPost] = useMutation(ADD_USER_POST);
-    const [postFormData, setPostFormData] = useState({ 
+    const [postFormData, setPostFormData] = useState({
         title: '',
-        tagsString: '', 
+        tagsString: '',
         description: '',
         teamSize: '',
-        projectImg: ''
+        projectImg: projectImage
     });
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setPostFormData({ ...postFormData, [name]: value });
-      };
+    };
 
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
         }
+
+        // event.preventDefault();
+
+        const retrievedImg = JSON.parse(localStorage.getItem('image'));
+        console.log(retrievedImg);
 
         // const tagsArr = postFormData.tags.split(', ');
 
@@ -41,7 +47,7 @@ const CreatePostModal = () => {
         //         tagName: tagsArr[tag]
         //     });
         // };
-        
+
         // const post = {
         //     ...postFormData,
         //     tags: tagsArrObj
@@ -52,35 +58,20 @@ const CreatePostModal = () => {
 
         const post = {
             ...postFormData,
-            teamSize: +postFormData.teamSize
+            teamSize: +postFormData.teamSize,
+            projectImg: retrievedImg
         }
 
         console.log(post);
 
         try {
             const { data } = await addPost({
-              variables: { ...post },
+                variables: { ...post },
             });
 
-            console.log(data)
-            const newPost = data.addPost;
-            console.log(newPost);
-            const projectId = newPost._id;
-            console.log(projectId);
-            console.log(typeof projectId);
-
-            addUserPost({
-                variables: { 
-                    userId: state.me._id,
-                    title: newPost.title,
-                    description: newPost.title,
-                    tags: newPost.tags,
-                    projectId: newPost._id
-               },
-              });
-          } catch (e) {
+        } catch (e) {
             console.error(e);
-          }
+        }
 
         //   try {
         //     await addUserPost({
@@ -89,7 +80,7 @@ const CreatePostModal = () => {
         //           userId: state.me._id
         //      },
         //     });
-      
+
         //   } catch (e) {
         //     console.error(e);
         //   }
@@ -99,17 +90,17 @@ const CreatePostModal = () => {
         //     newProject: postFormData
         // });
 
-        setPostFormData({ 
+        setPostFormData({
             title: '',
-            tagsString: '', 
+            tagsString: '',
             description: '',
             teamSize: '',
             projectImg: ''
         });
 
         setValidated(true);
-      };
-    
+    };
+
 
     return (
         <Modal
@@ -118,6 +109,7 @@ const CreatePostModal = () => {
             onHide={() => dispatch({ type: HIDE_MODAL })}
             aria-labelledby='signup-modal'>
             <Modal.Header closeButton>
+                <ImageUpload />
                 <h1>Create a Post</h1>
             </Modal.Header>
             <Modal.Body>
@@ -177,7 +169,7 @@ const CreatePostModal = () => {
                         <Form.Control.Feedback type='invalid'>A number is required!</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="form-field">
+                    {/* <Form.Group className="form-field">
                         <Form.Label htmlFor='tags'>Image</Form.Label>
                         <Form.Control
                             type='text'
@@ -186,8 +178,8 @@ const CreatePostModal = () => {
                             onChange={handleInputChange}
                             value={postFormData.projectImg}
                         />
-                    </Form.Group>
-                    
+                    </Form.Group> */}
+
                     <Button
                         type='submit'
                         variant='success'>
