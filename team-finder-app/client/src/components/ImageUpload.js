@@ -23,7 +23,6 @@ export default function ImageUpload() {
         {({
           imageList,
           onImageUpload,
-          onImageRemoveAll,
           onImageUpdate,
           onImageRemove,
           isDragging,
@@ -39,7 +38,6 @@ export default function ImageUpload() {
               Click or Drop here
             </button>
             &nbsp;
-            <button onClick={onImageRemoveAll}>Remove all images</button>
             {imageList.map((image, index) => (
               <div key={index} className="image-item">
                 <img src={image['data_url']} alt="" width="100" />

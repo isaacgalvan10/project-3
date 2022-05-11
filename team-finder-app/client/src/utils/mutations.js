@@ -117,3 +117,13 @@ mutation RemoveProject($userId: ID!, $projectId: ID!) {
   }
 }
 `;
+
+export const EDIT_PROFILE = gql`
+mutation EditProfile($userId: ID!, $newUsername: String!, $newBio: String!) {
+  editProfile(userId: $userId, newUsername: $newUsername, newBio: $newBio) {
+    _id
+    username
+    bio
+  }
+}
+`;
