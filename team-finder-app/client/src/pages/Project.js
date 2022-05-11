@@ -27,7 +27,7 @@ import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER, REMOVE_USER_PROJECT } from '../utils/mutations';
+import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER, REMOVE_PROJECT } from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -43,7 +43,7 @@ const Project = () => {
     const [addRequest] = useMutation(ADD_REQUEST);
     const [removePost] = useMutation(REMOVE_POST);
     const [deleteMember] = useMutation(REMOVE_MEMBER);
-    const [removeProject] = useMutation(REMOVE_USER_PROJECT);
+    const [removeProject] = useMutation(REMOVE_PROJECT);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -104,7 +104,7 @@ const Project = () => {
                 await deleteMember({
                     variables: {
                         projectId: projectId,
-                        memberId: memberId,
+                        userId: memberId,
                     }
                 });
 
@@ -137,13 +137,13 @@ const Project = () => {
 
     const setBtnText = () => {
         if (Auth.loggedIn()) {
-            const meInProject = state.me.userProjects.find((project) => project.projectId === projectId);
+            const meInProject = state.me.joinedProjects.find((project) => project._id === projectId);
             console.log(meInProject);
             if (meInProject) {
                 return 'Dropout'
             }
             else {
-                const meInRequests = project.requests.find((request) => request.userId === state.me._id);
+                const meInRequests = project.requests.find((request) => request._id === state.me._id);
                 if (meInRequests) {
                     return 'Pending...'
                 } else {
@@ -172,9 +172,7 @@ const Project = () => {
                         addRequest({
                             variables: {
                                 projectId: projectId,
-                                picture: Auth.getProfile().data.picture,
-                                username: Auth.getProfile().data.username,
-                                userId: Auth.getProfile().data._id,
+                                userId: state.me._id,
                             },
                         });
                     } catch (e) {
@@ -220,7 +218,7 @@ const Project = () => {
                         await deleteMember({
                             variables: {
                                 projectId: projectId,
-                                memberId: state.me._id,
+                                userId: state.me._id,
                             }
                         });
 
@@ -261,7 +259,7 @@ const Project = () => {
                         )}
                         <div className="d-flex align-items-center">
                             <div>
-                                <Link as={Link} to="/profile">
+                                <Link as={Link} to={`/profile/${project.poster._id}`}>
                                     <Image
                                         src={`../${project.poster.picture}`}
                                         alt="user"
@@ -328,10 +326,10 @@ const Project = () => {
                             {project.members.map((member) => (
                                 <Col md={2}>
                                     <div
-                                        key={member.memberId}
+                                        key={member._id}
                                         className="d-flex flex-column align-items-center"
                                     >
-                                        <Link as={Link} to={`/profile/${member.memberId}`}>
+                                        <Link as={Link} to={`/profile/${member._id}`}>
                                             <Image
                                                 src={`../${member.picture}`}
                                                 alt="user"
@@ -344,7 +342,7 @@ const Project = () => {
                                         {Auth.loggedIn() && isPoster() ? (
                                             <Button
                                                 onClick={() =>
-                                                    removeMember(member.memberId, member.username)
+                                                    removeMember(member._id, member.username)
                                                 }
                                             >
                                                 Remove from team

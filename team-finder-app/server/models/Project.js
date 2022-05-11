@@ -11,12 +11,8 @@ const projectSchema = new Schema({
     type: String,
   },
   poster: {
-    username: {
-      type: String,
-    },
-    picture: {
-      type: String,
-    }
+    type: Schema.Types.ObjectId,
+    ref: 'User'   
   },
   edited: {
     type: Boolean,
@@ -39,35 +35,17 @@ const projectSchema = new Schema({
   },
   members: [
     {
-      memberId: {
-        type: String
-      },
-      username: {
-        type: String,
-        required: true
-      },
-      picture: {
-        type: String
-      }
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     }
   ],
   tags: [String],
   requests: [
     {
-      username: {
-        type: String,
-        required: true
-      },
-      picture: {
-        type: String,
-        required: true
-      },
-      userId: {
-        type: String,
-        required: true
-      },
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     }
-  ]
+  ],
 });
 
 const Project = mongoose.model('Project', projectSchema);
