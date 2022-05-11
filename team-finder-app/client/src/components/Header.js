@@ -118,7 +118,7 @@ const Header = () => {
                       Create Post
                     </Button>
                   ) : null}
-                  <Dropdown>
+                  {/* <Dropdown>
                     <Dropdown.Toggle className="position-relative">
                       <i className="fa-solid fa-bell"></i>
                       <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -135,14 +135,16 @@ const Header = () => {
                         Something else
                       </Dropdown.Item>
                     </Dropdown.Menu>
-                  </Dropdown>
-                  <div style={{ marginLeft: '25px' }}>
+                  </Dropdown> */}
+                  <div style={{ marginLeft: '5px' }}>
                     {Auth.loggedIn() ? (
-                      <Image
-                        src={`./${Auth.getProfile().data.picture}`}
-                        alt="user"
-                        className="header-profile-img"
-                      ></Image>
+                      <Link to={`/profile/${Auth.getProfile().data._id}`}>
+                        <Image
+                          src={`./${Auth.getProfile().data.picture}`}
+                          alt="user"
+                          className="header-profile-img"
+                        ></Image>
+                      </Link>
                     ) : null}
                   </div>
                 </Nav>

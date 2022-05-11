@@ -52,6 +52,10 @@
   object-fit: cover;
 }
 
+.navbar-light .navbar-toggler {
+  background-color: #e0fbfc !important;
+}
+
 @media all and (min-width: 768px) {
   .login-btn {
     margin: 0;

@@ -214,18 +214,19 @@ const Project = () => {
   return (
     <>
       <Container className="main-container d-flex flex-column align-items-start">
-        <Row className="align-items-center mb-3">
-          <Col>
+        <Row className=" mb-3 flex-wrap">
+          <Col className="responsive-col">
             <h1 className="mb-3">{project.title}</h1>
 
-            {Auth.loggedIn() && isPoster() ? (
+            {/* {Auth.loggedIn() && isPoster() ? (
               <h3>POSTER SIDE</h3>
             ) : (
               <h3>USER SIDE</h3>
-            )}
+            )} */}
             <div className="d-flex align-items-center">
               <div>
                 <Link as={Link} to="/profile">
+                  {console.log(project)}
                   <Image
                     src={`../${project.poster.picture}`}
                     alt="user"
@@ -241,94 +242,54 @@ const Project = () => {
             </div>
 
             {Auth.loggedIn() && isPoster() ? (
-              <>
-                <Row className="edit-close-delete">
-                  <Button>Edit</Button>
-                  <Button>Close</Button>
-                  <Button onClick={() => deletePost()}>Delete</Button>
-                </Row>
-                <a
-                  href="https://github.com/isaacgalvan10/project-3"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-reset"
+              <div className="d-flex" style={{ marginTop: '20px' }}>
+                <Button
+                  onClick={() => deletePost()}
+                  className="delete-btn"
+                  style={{ marginRight: '10px' }}
                 >
-                  <FontAwesomeIcon icon={faGithub} className="gh-icon" />
-                </a>
-              </>
+                  Delete
+                </Button>
+                <div style={{ marginRight: '10px' }}>
+                  <a
+                    href="https://github.com/isaacgalvan10/project-3"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-reset"
+                  >
+                    <Button>Repository</Button>
+                  </a>
+                </div>
+                <Button onClick={() => setShowModal(true)}>
+                  View Requests
+                </Button>
+              </div>
             ) : (
               <Button
                 variant="success"
                 onClick={(e) => sendRequest(e.target.textContent)}
+                style={{ marginTop: '20px' }}
               >
                 {setBtnText()}
               </Button>
             )}
-            {Auth.loggedIn() && isPoster() ? (
-              state.me.status === 'joined' ? (
-                <a
-                  href="https://github.com/isaacgalvan10/project-3"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-reset"
-                >
-                  <FontAwesomeIcon icon={faGithub} className="gh-icon" />
-                </a>
-              ) : null
-            ) : null}
-            {Auth.loggedIn() && isPoster() ? (
-              <Button onClick={() => setShowModal(true)}>View Requests</Button>
-            ) : null}
-
-            <h3>Team Members</h3>
-            {/* {currentProject.spotsLeft().length !== 0
-                            ? (
-                                <p>{currentProject.spotsLeft().length} Spots left!</p>
-                            ) : (
-                                null
-                            )} */}
-            <Row className="d-flex">
-              {console.log(project.members)}
-              {project.members.map((member) => (
-                <Col md={2}>
-                  <div
-                    key={member.memberId}
-                    className="d-flex flex-column align-items-center"
-                  >
-                    <Link as={Link} to={`/profile/${member.memberId}`}>
-                      <Image
-                        src={`../${member.picture}`}
-                        alt="user"
-                        roundedCircle
-                        className="sm-profile-img"
-                      ></Image>
-                    </Link>
-                    <p style={{ textAlign: 'center' }}>{member.username}</p>
-
-                    {Auth.loggedIn() && isPoster() ? (
-                      <Button
-                        onClick={() =>
-                          removeMember(member.memberId, member.username)
-                        }
-                      >
-                        Remove from team
-                      </Button>
-                    ) : null}
-                  </div>
-                </Col>
-              ))}
-              {/* {currentProject.spotsLeft().map((emptySpot) => (
-                                <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
-                            ))} */}
-            </Row>
           </Col>
-          <Col>
+          <Col className="responsive-col">
             <Image
               src={`../${project.projectImg}`}
               alt="project"
               className="project-img mb-3"
             ></Image>
-            <ListGroup horizontal className="mb-3">
+            <div className="mb-3">
+              <span
+                style={{
+                  color: 'white',
+                  marginRight: '10px',
+                  fontSize: '16px',
+                }}
+              >
+                Tags:{' '}
+              </span>
               {project.tags.map((tag, index) => (
                 <span
                   key={`${index}${project.title}${project.tags[index]}`}
@@ -342,19 +303,59 @@ const Project = () => {
                   {project.tags[index].tagName}
                 </span>
               ))}
-            </ListGroup>
+            </div>
             <p>
-              {project.edited ? (
+              {/* {project.edited ? (
                 <>
                   <span className="">
                     <em>edited</em>
                   </span>
                   <br></br>
                 </>
-              ) : null}
+              ) : null} */}
               {project.description}
             </p>
           </Col>
+        </Row>
+
+        {/* {currentProject.spotsLeft().length !== 0
+                            ? (
+                                <p>{currentProject.spotsLeft().length} Spots left!</p>
+                            ) : (
+                                null
+                            )} */}
+        <Row className="d-flex">
+          <h3>Team Members</h3>
+          {console.log(project.members)}
+          {project.members.map((member) => (
+            <Col className="xs-col" xs={2} key={member.memberId}>
+              <div className="d-flex flex-column align-items-center">
+                <Link as={Link} to={`/profile/${member.memberId}`}>
+                  <Image
+                    src={`../${member.picture}`}
+                    alt="user"
+                    roundedCircle
+                    className="sm-profile-img"
+                  ></Image>
+                </Link>
+                <p style={{ textAlign: 'center' }}>{member.username}</p>
+
+                {Auth.loggedIn() && isPoster() ? (
+                  <Button
+                    onClick={() =>
+                      removeMember(member.memberId, member.username)
+                    }
+                    className="delete-btn"
+                  >
+                    Remove
+                  </Button>
+                ) : null}
+              </div>
+            </Col>
+          ))}
+          {/* {currentProject.spotsLeft().map((emptySpot) => (
+                                <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
+                            ))} */}
         </Row>
       </Container>
       {Auth.loggedIn() ? (
