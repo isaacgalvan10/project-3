@@ -23,7 +23,7 @@ const Homepage = () => {
   }, [data, loading, dispatch]);
 
   return (
-    <Container style={{ marginTop: '30px' }} className="main-container">
+    <Container className="main-container">
       {state.projects.length ? (
         <Row>
           <Col

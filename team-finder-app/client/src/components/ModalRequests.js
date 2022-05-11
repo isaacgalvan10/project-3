@@ -21,7 +21,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
     const me = data.me;
 
     const tagArr = [...currentProject.tags.map((tag) => {
-        return tag.tagName;
+        return tag;
     })];
     const tagsString = tagArr.join(', ')
     console.log(tagsString);
@@ -108,7 +108,7 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
                 }
             });
         }
-    }
+    };
 
     return (
         <Modal
@@ -139,3 +139,4 @@ const ModalRequests = ({ show, setShowModal, requests, projectId, currentProject
 }
 
 export default ModalRequests;
+
