@@ -206,6 +206,24 @@ const resolvers = {
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },
+    editProfile: async (parent, { userId, newUsername, newBio }, context) => {
+      // if (context.user) {
+
+        const user = await User.findOneAndUpdate(
+          { _id: userId },
+          { 
+            username: newUsername,
+            bio: newBio,
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+        return user;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    }
 
   },
 };
