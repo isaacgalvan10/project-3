@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import { Offcanvas, Image, Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './styles/header.css';
 import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
@@ -17,8 +17,10 @@ import { QUERY_ME } from '../utils/queries';
 
 const Header = () => {
   const [state, dispatch] = useGlobalContext();
+  const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState('');
+  const [isSearch, setSearch] = useState(false);
 
   const { loading, data } = useQuery(QUERY_ME);
 
@@ -51,6 +53,15 @@ const Header = () => {
     setSearchValue(value);
   };
 
+
+  const handleSubmit = (event) => {
+
+    event.preventDefault();
+
+    navigate(`/searchResults/${searchValue}`);
+
+  }
+
   return (
     <>
       {loading ? (
@@ -74,7 +85,7 @@ const Header = () => {
                     className="justify-content-end"
                   ></Offcanvas.Header>
                   <Offcanvas.Body className="justify-content-end">
-                    <Form className="d-flex form">
+                    <Form className="d-flex form" onSubmit={handleSubmit}>
                       <FormControl
                         type="text"
                         name="search"
@@ -84,7 +95,7 @@ const Header = () => {
                         className="search-form"
                         aria-label="Search"
                       />
-                      <Button as={Link} to={`/searchResults/${searchValue}`} type="submit" className="search-btn">
+                      <Button type="submit" className="search-btn">
                         <i className="fa-solid fa-magnifying-glass"></i>
                       </Button>
                     </Form>
@@ -162,6 +173,11 @@ const Header = () => {
               </Container>
             </Navbar>
           ))}
+          {!isSearch ? (
+            null
+          ) : (
+            <SearchResults input={searchValue} />
+          )}
         </>
       )}
     </>

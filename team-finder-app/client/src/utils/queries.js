@@ -11,6 +11,7 @@ query Projects {
       username
       picture
     }
+    repo
     edited
     description
     projectImg
@@ -45,6 +46,7 @@ query Project($projectId: ID!) {
       username
       picture
     }
+    repo
     edited
     description
     projectImg
@@ -78,6 +80,7 @@ query Me {
       _id
       title
       date
+      repo
       poster {
         _id
         username
@@ -107,6 +110,7 @@ query Me {
       _id
       title
       date
+      repo
       edited
       description
       projectImg
@@ -131,6 +135,7 @@ query User($userId: ID!) {
       _id
       title
       date
+      repo
       description
       projectImg
       teamSize
@@ -154,6 +159,7 @@ query User($userId: ID!) {
       _id
       title
       date
+      repo
       edited
       description
       projectImg

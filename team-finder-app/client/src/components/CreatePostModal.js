@@ -17,7 +17,8 @@ const CreatePostModal = () => {
         tagsString: '',
         description: '',
         teamSize: '',
-        projectImg: projectImage
+        projectImg: projectImage,
+        repo: '',
     });
 
     const handleInputChange = (event) => {
@@ -59,7 +60,7 @@ const CreatePostModal = () => {
         const post = {
             ...postFormData,
             teamSize: +postFormData.teamSize,
-            projectImg: retrievedImg
+            projectImg: retrievedImg,
         }
 
         console.log(post);
@@ -95,7 +96,8 @@ const CreatePostModal = () => {
             tagsString: '',
             description: '',
             teamSize: '',
-            projectImg: ''
+            projectImg: '',
+            repo: '',
         });
 
         setValidated(true);
@@ -169,16 +171,18 @@ const CreatePostModal = () => {
                         <Form.Control.Feedback type='invalid'>A number is required!</Form.Control.Feedback>
                     </Form.Group>
 
-                    {/* <Form.Group className="form-field">
-                        <Form.Label htmlFor='tags'>Image</Form.Label>
+                    <Form.Group className="form-field">
+                        <Form.Label htmlFor='tags'>Your Project Repo URL</Form.Label>
                         <Form.Control
                             type='text'
-                            placeholder='Image link'
-                            name='projectImg'
+                            placeholder='https://github.com/isaacgalvan10/project-3'
+                            name='repo'
                             onChange={handleInputChange}
-                            value={postFormData.projectImg}
+                            value={postFormData.repo}
+                            required
                         />
-                    </Form.Group> */}
+                        <Form.Control.Feedback type='invalid'>You need to provide a link to your project repo</Form.Control.Feedback>
+                    </Form.Group>
 
                     <Button
                         type='submit'

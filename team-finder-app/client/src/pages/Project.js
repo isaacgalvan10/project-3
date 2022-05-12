@@ -22,7 +22,7 @@ import {
   UPDATE_PROJECTS,
 } from '../utils/actions';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
@@ -38,6 +38,8 @@ const Project = () => {
   });
 
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
 
   const [state, dispatch] = useGlobalContext();
 
@@ -76,7 +78,7 @@ const Project = () => {
 
   const deletePost = async () => {
     try {
-      removePost({
+      await removePost({
         variables: { postId: projectId }
       });
 
@@ -84,6 +86,9 @@ const Project = () => {
       console.error(e);
       console.log('hi');
     }
+
+    navigate("/");
+
   }
 
   const removeMember = async (memberId, username) => {
@@ -287,7 +292,7 @@ const Project = () => {
                 </Button>
                 <div style={{ marginRight: '10px' }}>
                   <a
-                    href="https://github.com/isaacgalvan10/project-3"
+                    href={project.repo}
                     target="_blank"
                     rel="noreferrer"
                     className="text-reset"

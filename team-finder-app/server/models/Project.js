@@ -10,6 +10,10 @@ const projectSchema = new Schema({
   date: {
     type: String,
   },
+  repo: {
+    type: String,
+    required: true
+  },
   poster: {
     type: Schema.Types.ObjectId,
     ref: 'User'   

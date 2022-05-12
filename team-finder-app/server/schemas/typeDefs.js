@@ -14,6 +14,7 @@ const typeDefs = gql`
     members: [User]
     tags: [String]
     requests: [User]
+    repo: String
   }
 
   type User {
@@ -45,7 +46,7 @@ const typeDefs = gql`
     type Mutation {
         addUser(username: String!, email: String!, password: String!, github: String): Auth
         login(email: String!, password: String!): Auth
-        addPost(title: String!, tagsString: String!, description: String!, teamSize: Int!, projectImg: String!): Project
+        addPost(title: String!, tagsString: String!, description: String!, teamSize: Int!, projectImg: String!, repo: String!): Project
         removePost(postId: ID!): Project
         addMember(userId: ID!, projectId: ID!): Project
         removeMember(projectId: ID!, userId: ID!): Project

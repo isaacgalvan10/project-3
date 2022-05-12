@@ -59,7 +59,7 @@ const resolvers = {
 
       return { token, user };
     },
-    addPost: async (parent, { title, tagsString, description, teamSize, projectImg }, context) => {
+    addPost: async (parent, { title, tagsString, description, teamSize, projectImg, repo }, context) => {
       if (context.user) {
 
         const tags = tagsString.split(', ');
@@ -70,7 +70,7 @@ const resolvers = {
 
         const date = 'May 5, 2022'
 
-        const project = await Project.create({ title, tags, description, teamSize, projectImg, poster, date });
+        const project = await Project.create({ title, tags, description, teamSize, projectImg, repo, poster, date });
 
         await User.findOneAndUpdate(
           { _id: me._id },
