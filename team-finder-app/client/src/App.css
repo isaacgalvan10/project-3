@@ -6,9 +6,41 @@ body {
 }
 
 .main-container {
-  min-height: 100%;
-  overflow: hidden;
-  display: block;
-  position: relative;
-  padding-bottom: 100px;
+  padding-bottom: 800px;
+  margin-top: 30px;
+}
+
+.btn {
+  color: black;
+  background-color: #e0fbfc;
+  border-color: #e0fbfc;
+  box-shadow: 0, 5, 20, black;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  border: none;
+}
+
+.btn:hover {
+  background-color: #98c1d9 !important;
+  color: black;
+}
+
+.btn:active {
+  background-color: #98c1d9 !important;
+  color: black;
+}
+
+.btn:focus {
+  background-color: #98c1d9 !important;
+  color: black;
+}
+
+.show > .btn-primary.dropdown-toggle {
+  background-color: #98c1d9 !important;
+  color: black;
+}
+
+@media all and (min-width: 768px) {
+  .main-container {
+    padding-bottom: 350px;
+  }
 }

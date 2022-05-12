@@ -90,10 +90,8 @@ function Login(props) {
 
           <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
               <Nav.Item>
-                
               </Nav.Item>
               <Nav.Item>
-                
               </Nav.Item>
           </Nav>
 

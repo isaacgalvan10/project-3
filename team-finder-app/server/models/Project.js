@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const memberSchema = require('./Member');
-const tagSchema = require('./Tag');
-
 const projectSchema = new Schema({
   title: {
     type: String,
@@ -14,30 +11,43 @@ const projectSchema = new Schema({
     type: String,
   },
   poster: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'User'   
   },
   edited: {
     type: Boolean,
-    default: false
-  },
-  profile: {
-    type: String,
+    default: false,
   },
   description: {
-    type: String
+    type: String,
   },
   projectImg: {
-    type: String
+    type: String,
   },
   teamSize: {
     type: Number,
     required: true,
-    min: 1
+    min: 1,
   },
-  members: [memberSchema],
-  tags: [tagSchema],
+  closed: {
+    type: Boolean,
+    default: false
+  },
+  members: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  tags: [String],
+  requests: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
 });
 
-const Project = mongoose.model('Product', projectSchema);
+const Project = mongoose.model('Project', projectSchema);
 
 module.exports = Project;

@@ -4,12 +4,13 @@
   background-color: #3d5a80;
 }
 
+.offcanvas {
+  background-color: #3d5a80;
+}
+
 .navbar-brand {
   font-weight: bold;
   color: #e0fbfc !important;
-}
-
-.btn-outline-success {
 }
 
 .bg-danger {
@@ -35,6 +36,14 @@
   font-size: 20px;
 }
 
+.search-form {
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.search-btn {
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
 .header-profile-img {
   border-radius: 50%;
   height: 40px;
@@ -43,12 +52,16 @@
   object-fit: cover;
 }
 
+.navbar-light .navbar-toggler {
+  background-color: #e0fbfc !important;
+}
+
 @media all and (min-width: 768px) {
   .login-btn {
     margin: 0;
   }
   .form {
-    margin-right: 40px;
+    margin-right: 20px;
   }
   .navbar-nav {
     -webkit-box-orient: vertical;

@@ -1,51 +1,101 @@
+h1,
+h2,
+h3,
+h4,
+p {
+  color: white;
+}
+
 .profile-img {
-    height: 100px;
-    width: 100px;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+}
+
+.sm-profile-img {
+  height: 80px;
+  width: 80px;
+  object-fit: cover;
+}
+
+.col-2 {
+  width: 100px !important;
+  margin-top: 20px;
 }
 
 .project-img {
-    height: 200px;
-    width: 300px;
+  height: 250px;
+  width: 355px;
+  object-fit: cover;
+  margin-top: 40px;
 }
 
 .edited {
-    text-align: center;
+  text-align: center;
 }
 
 .edit-close-delete {
-    position: relative;
-    left: 15px;
-    bottom: 15px;
+  position: relative;
+  left: 15px;
+  bottom: 15px;
+}
+
+.delete-btn {
+  background-color: #ee6c4d;
 }
 
 .gh-icon {
-    height: 50px;
-    position: relative;
-    top: 15px;
-    right: 70px;
+  height: 50px;
+  position: relative;
+  top: 15px;
+  right: 70px;
 }
 
 .dropdown-custom {
-    border: none;
-    background-color: transparent;
+  border: none;
+  background-color: transparent;
 }
 
-.show>.btn-primary.dropdown-toggle  {
-    border: none;
-    background-color: transparent; 
+.show > .btn-primary.dropdown-toggle {
+  border: none;
+  background-color: transparent;
 }
 
 .btn-primary:focus {
-    border: none;
-    background-color: transparent; 
+  border: none;
+  background-color: transparent;
 }
 
 .btn-primary:hover {
-    border: none;
-    background-color: transparent; 
+  border: none;
+  background-color: transparent;
 }
 
-.btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
-    border: none;
-    background-color: transparent; 
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
+  border: none;
+  background-color: transparent;
+}
+
+.responsive-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media all and (min-width: 992px) {
+  .responsive-col {
+    display: block;
+  }
+
+  .project-img {
+    margin-top: 0;
+  }
+}
+
+@media all and (min-width: 580px) {
+  .project-img {
+    height: 300px;
+    width: 450px;
+  }
 }

@@ -1,22 +1,23 @@
+import React from 'react';
 import './App.css';
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink
+  createHttpLink,
 } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context'
+import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
 
 import Header from './components/Header';
-import Homepage from './pages/results/Homepage'
-import SearchResults from './pages/results/SearchResults';
-import Project from './pages/projects/Project';
-import Profile from './pages/profiles/Profile';
+import Homepage from './pages/Homepage';
+import SearchResults from './pages/SearchResults';
+import Project from './pages/Project';
+import Profile from './pages/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
 import Signup from './components/Signup';
@@ -25,9 +26,10 @@ import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
 import RequestModal from './components/RequestModal';
 import CreatePostModal from './components/CreatePostModal';
+import Auth from './utils/auth';
 
 const httpLink = createHttpLink({
-  uri: 'graphql',
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -51,42 +53,27 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <>
-        <GlobalProvider>
-          <Header />
-          <Routes>
-            <Route
-              path='/'
-              element={<Homepage />}
-            />
-            <Route
-              path='/searchResults'
-              element={<SearchResults />}
-            />
-            <Route
-              path='/project/:id'
-              element={<Project />}
-            />
-            <Route
-              path='/profile'
-              element={<Profile />}
-            />
-            <Route
-              path='/myProfile'
-              element={<MyProfile />}
-            />
-          <Route
-              path='/signUp'
-              element={<Signup />}
-            />
-            <Route
-              path='/login'
-              element={<Login />}
-            />
+          <GlobalProvider>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/searchResults/:input" element={<SearchResults />} />
+              <Route path="/project/:projectId" element={<Project />} />
+              <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/myProfile" element={<MyProfile />} />
+              {/* <Signup /> */}
+              <Route path="/signUp" element={<Signup />} />
+              {/* <Login /> */}
+              <Route path="/login" element={<Login />} />
             </Routes>
-          <Footer />
-          <Notification />
-          <RequestModal />
-          <CreatePostModal />
+            {/* <Footer /> */}
+            {Auth.loggedIn() ? (
+              <>
+                <Notification />
+                <RequestModal />
+                <CreatePostModal />
+              </>
+            ) : null}
           </GlobalProvider>
         </>
       </Router>

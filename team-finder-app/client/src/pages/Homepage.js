@@ -1,11 +1,13 @@
+import React from 'react';
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { UPDATE_PROJECTS } from '../../utils/actions';
-import { QUERY_PROJECTS } from '../../utils/queries';
+import { UPDATE_PROJECTS } from '../utils/actions';
+import { QUERY_PROJECTS } from '../utils/queries';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { useGlobalContext } from '../../utils/GlobalState';
+import { useGlobalContext } from '../utils/GlobalState';
 import { Link } from 'react-router-dom';
-import '../../components/styles/homepage.css';
+import '../components/styles/homepage.css';
+import { useState } from 'react';
 
 const Homepage = () => {
   const [state, dispatch] = useGlobalContext();
@@ -22,7 +24,7 @@ const Homepage = () => {
   }, [data, loading, dispatch]);
 
   return (
-    <Container style={{ marginTop: '30px' }} className="main-container">
+    <Container className="main-container">
       {state.projects.length ? (
         <Row>
           <Col
@@ -31,12 +33,11 @@ const Homepage = () => {
           >
             {state.projects.map((project, index) => (
               <Card key={`${project}${index}`}>
-                {/* {console.log(project)} */}
-                <Card.Img variant="top" src={`./${project.projectImg}`} />
+                <Card.Img variant="top" src={project.projectImg} />
                 <Card.Body>
-                  {project.tags.slice(0, 2).map((tag) => (
+                  {project.tags.slice(0, 2).map((tag, index) => (
                     <span
-                      key={`${index}${project.title}${tag.tagName}`}
+                      key={`${index}${project.title}${project.tags[index]}`}
                       className="badge rounded-pill"
                       style={{
                         marginRight: '10px',
@@ -44,7 +45,7 @@ const Homepage = () => {
                         fontWeight: '500',
                       }}
                     >
-                      {tag.tagName}
+                      {project.tags[index]}
                     </span>
                   ))}
                   <Card.Title style={{ marginTop: '10px' }}>
@@ -54,7 +55,11 @@ const Homepage = () => {
                     0,
                     70
                   )}...`}</Card.Text>
-                  <Button variant="primary" as={Link} to={`/project/${project._id}`}>
+                  <Button
+                    variant="primary"
+                    as={Link}
+                    to={`/project/${project._id}`}
+                  >
                     View Project
                   </Button>
                 </Card.Body>

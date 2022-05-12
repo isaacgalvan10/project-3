@@ -2,14 +2,15 @@ import { useReducer } from 'react';
 import {
     SHOW_NOTIF,
     HIDE_NOTIF,
-    ADD_MEMBER,
-    REMOVE_MEMBER,
+    POST_MEMBER,
+    DELETE_MEMBER,
     STATUS,
     SHOW_MODAL,
     HIDE_MODAL,
     SHOW_MODAL_NOTIF,
     ADD_PROJECT,
-    UPDATE_PROJECTS
+    UPDATE_PROJECTS,
+    UPDATE_ME
 } from './actions';
 
 export const reducer = (state, action) => {
@@ -32,7 +33,9 @@ export const reducer = (state, action) => {
                     show: true,
                     text: action.payload.text,
                     route: action.payload.route,
-                    modal: true
+                    modal: true,
+                    index: action.payload.index,
+                    projectId: action.payload.projectId
                 }
             };
 
@@ -46,31 +49,33 @@ export const reducer = (state, action) => {
 
             };
 
-        case ADD_MEMBER:
+        case POST_MEMBER:
             const updatedProject = {
-                ...state.projects[0], members: [...state.projects[0].members, {
-                    id: action.payload.id,
+                ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
+                    memberId: action.payload.memberId,
                     username: action.payload.username,
                     picture: action.payload.picture
                 }]
             };
 
             const projectsCopy = [...state.projects];
-            projectsCopy[0] = updatedProject
+            projectsCopy[action.payload.index] = updatedProject
             return {
                 ...state,
                 projects: projectsCopy
             };
 
-        case REMOVE_MEMBER:
-            const membersLeft = state.projects[0].members.filter((member) => {
-                return member.id !== action.id;
+        case DELETE_MEMBER:
+            const membersLeft = state.projects[action.payload.index].members.filter((member) => {
+                return member._id !== action.payload.id;
             });
 
-            const updatedProject2 = { ...state.projects[0], members: membersLeft };
+            console.log(membersLeft);
+
+            const updatedProject2 = { ...state.projects[action.payload.index], members: membersLeft };
 
             const projectsCopy2 = [...state.projects];
-            projectsCopy2[0] = updatedProject2
+            projectsCopy2[action.payload.index] = updatedProject2
 
             return {
                 ...state,
@@ -132,6 +137,13 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 projects: updatedProjects
+            };
+
+        case UPDATE_ME:
+            const requestedMe = action.me;
+            return {
+                ...state,
+                me: requestedMe
             };
 
         default:
