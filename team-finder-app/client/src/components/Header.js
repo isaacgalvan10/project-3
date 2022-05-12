@@ -129,7 +129,7 @@ const Header = () => {
                           style={{ marginRight: '10px' }}
                           onClick={() => displayPostModal()}
                         >
-                          Create Post
+                          Create Project
                         </Button>
                       ) : null}
                       {/* <Dropdown>
@@ -150,7 +150,7 @@ const Header = () => {
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown> */}
-                      <div style={{ marginLeft: '10px' }}>
+                      <div>
                         {Auth.loggedIn() ? (
                           <Link to={`./profile/${state.me._id}`}>
                             <Image

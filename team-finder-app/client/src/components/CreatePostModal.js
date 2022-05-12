@@ -107,11 +107,17 @@ const CreatePostModal = () => {
       aria-labelledby="signup-modal"
     >
       <Modal.Header closeButton>
-        <h1>Create a Post</h1>
+        <h1>Post a project</h1>
       </Modal.Header>
       <Modal.Body>
+        <div className="form-label">Upload Image</div>
         <ImageUpload />
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+          style={{ marginTop: '20px' }}
+        >
           <Form.Group className="form-field">
             <Form.Label htmlFor="title">Post Title</Form.Label>
             <Form.Control

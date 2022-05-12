@@ -63,7 +63,7 @@ function App() {
               {/* <Login /> */}
               <Route path="/login" element={<Login />} />
             </Routes>
-            {/* <Footer /> */}
+            <Footer />
             {Auth.loggedIn() ? (
               <>
                 <Notification />
