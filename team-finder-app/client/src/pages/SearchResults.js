@@ -1,14 +1,11 @@
-import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { UPDATE_PROJECTS } from '../utils/actions';
 import { SEARCH_TAG } from '../utils/queries';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-// import { useGlobalContext } from '../utils/GlobalState';
 import { Link, useParams } from 'react-router-dom';
 import '../components/styles/homepage.css';
 
-const SearchResults = (props) => {
-  // const [state, dispatch] = useGlobalContext();
+const SearchResults = () => {
+
   const { input } = useParams();
 
   const { loading, data } = useQuery(SEARCH_TAG, {
@@ -20,16 +17,6 @@ const SearchResults = (props) => {
   }
 
   const projects = data.search;
-  // const { loading, data } = useQuery(SEARCH_TAG);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     dispatch({
-  //       type: UPDATE_PROJECTS,
-  //       projects: data.projects,
-  //     });
-  //   }
-  // }, [data, loading, dispatch]);
 
   return (
     <Container style={{ marginTop: '30px' }} className="main-container">

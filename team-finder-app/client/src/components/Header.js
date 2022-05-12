@@ -6,7 +6,8 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import { Offcanvas, Image, Dropdown, Modal, Tab } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 import './styles/header.css';
 import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
@@ -23,8 +24,10 @@ const Header = () => {
   const [showModal, setShowModal] = useState(false);
 
   const [state, dispatch] = useGlobalContext();
+  const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState('');
+  const [isSearch, setSearch] = useState(false);
 
   const { loading, data } = useQuery(QUERY_ME);
 
@@ -57,6 +60,15 @@ const Header = () => {
     setSearchValue(value);
   };
 
+
+  const handleSubmit = (event) => {
+
+    event.preventDefault();
+
+    navigate(`/searchResults/${searchValue}`);
+
+  }
+
   return (
     <>
       {loading ? (
@@ -80,7 +92,7 @@ const Header = () => {
                     className="justify-content-end"
                   ></Offcanvas.Header>
                   <Offcanvas.Body className="justify-content-end">
-                    <Form className="d-flex form">
+                    <Form className="d-flex form" onSubmit={handleSubmit}>
                       <FormControl
                         type="text"
                         name="search"
@@ -91,18 +103,13 @@ const Header = () => {
                         aria-label="Search"
                       />
                       <Button
-                        as={Link}
-                        to={`/searchResults/${searchValue}`}
                         type="submit"
                         className="search-btn"
                       >
                         <i className="fa-solid fa-magnifying-glass"></i>
                       </Button>
                     </Form>
-                    {/* <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Button className="login-btn">Login</Button>
-                </Nav> */}
-
+      
                     <Nav className="justify-content-end align-items-center">
                       {Auth.loggedIn() ? (
                         <button
@@ -165,6 +172,11 @@ const Header = () => {
               </Container>
             </Navbar>
           ))}
+          {!isSearch ? (
+            null
+          ) : (
+            <SearchResults input={searchValue} />
+          )}
         </>
       )}
       <Modal

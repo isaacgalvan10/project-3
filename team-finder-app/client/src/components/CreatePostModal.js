@@ -8,97 +8,82 @@ import './styles/modal.css';
 import ImageUpload from '../components/ImageUpload';
 
 const CreatePostModal = () => {
-  const [state, dispatch] = useGlobalContext();
-  const [validated, setValidated] = useState(false);
-  const [projectImage, setProjectImg] = useState('');
-  const [addPost, { error, data }] = useMutation(ADD_POST);
-  const [postFormData, setPostFormData] = useState({
-    title: '',
-    tagsString: '',
-    description: '',
-    teamSize: '',
-    projectImg: projectImage,
-  });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setPostFormData({ ...postFormData, [name]: value });
-  };
-
-  const handleSubmit = async (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    // event.preventDefault();
-
-    const retrievedImg = JSON.parse(localStorage.getItem('image'));
-    console.log(retrievedImg);
-
-    // const tagsArr = postFormData.tags.split(', ');
-
-    // const tagsArrObj = [];
-
-    // for (let tag in tagsArr) {
-    //     tagsArrObj.push({
-    //         id: +tag + 1,
-    //         tagName: tagsArr[tag]
-    //     });
-    // };
-
-    // const post = {
-    //     ...postFormData,
-    //     tags: tagsArrObj
-    // }
-
-    console.log(postFormData);
-
-    const post = {
-      ...postFormData,
-      teamSize: +postFormData.teamSize,
-      projectImg: retrievedImg,
-    };
-
-    console.log(post);
-
-    try {
-      const { data } = await addPost({
-        variables: { ...post },
-      });
-    } catch (e) {
-      console.error(e);
-    }
-
-    //   try {
-    //     await addUserPost({
-    //       variables: {
-    //           ...post,
-    //           userId: state.me._id
-    //      },
-    //     });
-
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-
-    // const addProject = await dispatch({
-    //     type: ADD_PROJECT,
-    //     newProject: postFormData
-    // });
-
-    setPostFormData({
-      title: '',
-      tagsString: '',
-      description: '',
-      teamSize: '',
-      projectImg: '',
+    const [state, dispatch] = useGlobalContext();
+    const [validated, setValidated] = useState(false);
+    const [projectImage, setProjectImg] = useState('');
+    const [addPost, { error, data }] = useMutation(ADD_POST);
+    const [postFormData, setPostFormData] = useState({
+        title: '',
+        tagsString: '',
+        description: '',
+        teamSize: '',
+        projectImg: projectImage,
+        repo: '',
     });
 
-    setValidated(true);
-  };
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setPostFormData({ ...postFormData, [name]: value });
+    };
 
+    const handleSubmit = async (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const retrievedImg = JSON.parse(localStorage.getItem('image'));
+        console.log(retrievedImg);
+
+        console.log(postFormData);
+
+        const post = {
+            ...postFormData,
+            teamSize: +postFormData.teamSize,
+            projectImg: retrievedImg,
+        }
+
+        console.log(post);
+
+        try {
+            const { data } = await addPost({
+                variables: { ...post },
+            });
+
+        } catch (e) {
+            console.error(e);
+        }
+
+        //   try {
+        //     await addUserPost({
+        //       variables: { 
+        //           ...post,
+        //           userId: state.me._id
+        //      },
+        //     });
+
+        //   } catch (e) {
+        //     console.error(e);
+        //   }
+
+        // const addProject = await dispatch({
+        //     type: ADD_PROJECT,
+        //     newProject: postFormData
+        // });
+
+        setPostFormData({
+            title: '',
+            tagsString: '',
+            description: '',
+            teamSize: '',
+            projectImg: '',
+            repo: '',
+        });
+
+        setValidated(true);
+    };
+  
   return (
     <Modal
       size="lg"
@@ -180,17 +165,16 @@ const CreatePostModal = () => {
               A number is required!
             </Form.Control.Feedback>
           </Form.Group>
-
-          {/* <Form.Group className="form-field">
-                        <Form.Label htmlFor='tags'>Image</Form.Label>
                         <Form.Control
                             type='text'
-                            placeholder='Image link'
-                            name='projectImg'
+                            placeholder='https://github.com/isaacgalvan10/project-3'
+                            name='repo'
                             onChange={handleInputChange}
-                            value={postFormData.projectImg}
+                            value={postFormData.repo}
+                            required
                         />
-                    </Form.Group> */}
+                        <Form.Control.Feedback type='invalid'>You need to provide a link to your project repo</Form.Control.Feedback>
+                    </Form.Group>
 
           <Button type="submit" variant="success">
             Submit

@@ -26,8 +26,8 @@ export const ADD_USER = gql`
 `;
 
 export const ADD_POST = gql`
-mutation AddPost($title: String!, $tagsString: String!, $description: String!, $teamSize: Int!, $projectImg: String!) {
-  addPost(title: $title, tagsString: $tagsString, description: $description, teamSize: $teamSize, projectImg: $projectImg) {
+mutation AddPost($title: String!, $tagsString: String!, $description: String!, $teamSize: Int!, $projectImg: String!, $repo: String!) {
+  addPost(title: $title, tagsString: $tagsString, description: $description, teamSize: $teamSize, projectImg: $projectImg, repo: $repo) {
     _id
     title
     date
