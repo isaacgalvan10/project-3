@@ -223,7 +223,13 @@ const resolvers = {
         return user;
       // }
       // throw new AuthenticationError('You need to be logged in!');
-    }
+    },
+
+    checkUserExist: async (parent, { email }) => {
+      const user = await User.findOne({ email });
+      const token = signToken(user);
+      return { token, user };
+  },
 
   },
 };
