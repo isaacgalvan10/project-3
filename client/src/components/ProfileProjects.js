@@ -39,6 +39,7 @@ const ProfileProjects = (props) => {
                     <Card.Text>
                       {`${project.description.substring(0, 70)}...`}
                     </Card.Text>
+
                     <Button
                       variant="primary"
                       as={Link}
