@@ -47,6 +47,7 @@ const typeDefs = gql`
         addUser(username: String!, email: String!, password: String!, github: String): Auth
         login(email: String!, password: String!): Auth
         addPost(title: String!, tagsString: String!, description: String!, teamSize: Int!, projectImg: String!, repo: String!): Project
+        checkUserExist(email: String!): Auth
         removePost(postId: ID!): Project
         addMember(userId: ID!, projectId: ID!): Project
         removeMember(projectId: ID!, userId: ID!): Project

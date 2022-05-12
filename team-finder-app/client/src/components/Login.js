@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Form, Button, Nav } from "react-bootstrap";
+import { Container, Card, Form, Button, Nav, Modal } from "react-bootstrap";
+import { useGlobalContext } from '../utils/GlobalState';
+import { HIDE_MODAL } from '../utils/actions';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
+import { Link } from 'react-router-dom'
 
 import Auth from '../utils/auth';
 
+
 function Login(props) {
+  const [state, dispatch] = useGlobalContext();
   const initialValues = { email: "", password: "" };
   const [login, { error, data }] = useMutation(LOGIN_USER);
 
@@ -40,6 +45,11 @@ function Login(props) {
       email: '',
       password: '',
     });
+
+    dispatch({
+      type: HIDE_MODAL,
+  });
+
   };
 
   
@@ -80,10 +90,8 @@ function Login(props) {
 
           <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
               <Nav.Item>
-                <Nav.Link activeKey="1" eventKey="link-1">Login</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link activeKey="2" eventKey="link-2">Sign Up</Nav.Link>
               </Nav.Item>
           </Nav>
 
@@ -136,4 +144,4 @@ function Login(props) {
   );
 }
 
-export default Login
+export default Login;

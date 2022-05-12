@@ -1,11 +1,13 @@
+
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { Offcanvas, Image, Dropdown } from 'react-bootstrap';
+import { Offcanvas, Image, Dropdown, Modal, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+
 import './styles/header.css';
 import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
@@ -14,8 +16,13 @@ import SearchResults from '../pages/SearchResults';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
+import Login from './Login';
+import Signup from './Signup';
+
 
 const Header = () => {
+  const [showModal, setShowModal] = useState(false);
+
   const [state, dispatch] = useGlobalContext();
   const navigate = useNavigate();
 
@@ -95,14 +102,14 @@ const Header = () => {
                         className="search-form"
                         aria-label="Search"
                       />
-                      <Button type="submit" className="search-btn">
+                      <Button
+                        type="submit"
+                        className="search-btn"
+                      >
                         <i className="fa-solid fa-magnifying-glass"></i>
                       </Button>
                     </Form>
-                    {/* <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Button className="login-btn">Login</Button>
-                </Nav> */}
-
+      
                     <Nav className="justify-content-end align-items-center">
                       {Auth.loggedIn() ? (
                         <button
@@ -114,20 +121,12 @@ const Header = () => {
                         </button>
                       ) : (
                         <>
-                          <Link
-                            className="btn"
-                            to="/login"
+                          <Button
                             style={{ marginRight: '10px' }}
+                            onClick={() => setShowModal(true)}
                           >
-                            Login
-                          </Link>
-                          <Link
-                            className="btn"
-                            to="/signup"
-                            style={{ marginRight: '10px' }}
-                          >
-                            Signup
-                          </Link>
+                            Login/Signup
+                          </Button>
                         </>
                       )}
                       {Auth.loggedIn() ? (
@@ -135,10 +134,10 @@ const Header = () => {
                           style={{ marginRight: '10px' }}
                           onClick={() => displayPostModal()}
                         >
-                          Create Post
+                          Create Project
                         </Button>
                       ) : null}
-                      <Dropdown>
+                      {/* <Dropdown>
                         <Dropdown.Toggle className="position-relative">
                           <i className="fa-solid fa-bell"></i>
                           <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -155,8 +154,8 @@ const Header = () => {
                             Something else
                           </Dropdown.Item>
                         </Dropdown.Menu>
-                      </Dropdown>
-                      <div style={{ marginLeft: '25px' }}>
+                      </Dropdown> */}
+                      <div>
                         {Auth.loggedIn() ? (
                           <Link to={`./profile/${state.me._id}`}>
                             <Image
@@ -180,6 +179,37 @@ const Header = () => {
           )}
         </>
       )}
+      <Modal
+            size='lg'
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            aria-labelledby='signup-modal'>
+            {/* tab container to do either signup or login component */}
+            <Tab.Container defaultActiveKey='login'>
+              <Modal.Header closeButton>
+                <Modal.Title id='signup-modal'>
+                  <Nav variant='pills'>
+                    <Nav.Item>
+                      <Nav.Link eventKey='login'>Login</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey='signUp'>Sign Up</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Tab.Content>
+                  <Tab.Pane eventKey='login'>
+                    <Login handleModalClose={() => setShowModal(false)} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey='signUp'>
+                    <Signup handleModalClose={() => setShowModal(false)} />
+                  </Tab.Pane>
+                </Tab.Content>
+              </Modal.Body>
+            </Tab.Container>
+          </Modal>
     </>
   );
 };

@@ -1,12 +1,17 @@
 .card {
   min-width: none;
   background-color: #98c1d9;
+  color: black !important;
 }
 
 .card-img-top {
   height: 200px;
   width: 100%;
   object-fit: cover;
+}
+
+.card-text {
+  color: black;
 }
 
 .badge {
