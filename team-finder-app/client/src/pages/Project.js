@@ -27,7 +27,12 @@ import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER, REMOVE_PROJECT } from '../utils/mutations';
+import {
+  REMOVE_POST,
+  ADD_REQUEST,
+  REMOVE_MEMBER,
+  REMOVE_PROJECT,
+} from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -77,14 +82,13 @@ const Project = () => {
   const deletePost = async () => {
     try {
       removePost({
-        variables: { postId: projectId }
+        variables: { postId: projectId },
       });
-
     } catch (e) {
       console.error(e);
       console.log('hi');
     }
-  }
+  };
 
   const removeMember = async (memberId, username) => {
     console.log(memberId);
@@ -106,9 +110,8 @@ const Project = () => {
           variables: {
             projectId: projectId,
             userId: memberId,
-          }
+          },
         });
-
       } catch (e) {
         console.error(e);
         console.log('hi');
@@ -118,9 +121,8 @@ const Project = () => {
           variables: {
             userId: memberId,
             projectId: projectId,
-          }
+          },
         });
-
       } catch (e) {
         console.error(e);
       }
@@ -133,28 +135,30 @@ const Project = () => {
         route: `/project/${projectId}`,
       },
     });
-  }
-
+  };
 
   const setBtnText = () => {
     if (Auth.loggedIn()) {
-      const meInProject = state.me.joinedProjects.find((project) => project._id === projectId);
+      const meInProject = state.me.joinedProjects.find(
+        (project) => project._id === projectId
+      );
       console.log(meInProject);
       if (meInProject) {
-        return 'Dropout'
-      }
-      else {
-        const meInRequests = project.requests.find((request) => request._id === state.me._id);
+        return 'Dropout';
+      } else {
+        const meInRequests = project.requests.find(
+          (request) => request._id === state.me._id
+        );
         if (meInRequests) {
-          return 'Pending...'
+          return 'Pending...';
         } else {
-          return 'Ask to Join!'
+          return 'Ask to Join!';
         }
       }
     } else {
-      return 'Ask to Join!'
+      return 'Ask to Join!';
     }
-  }
+  };
 
   const sendRequest = async (btnText) => {
     if (Auth.loggedIn()) {
@@ -183,8 +187,9 @@ const Project = () => {
           dispatch({
             type: SHOW_MODAL_NOTIF,
             payload: {
-              text: `${Auth.getProfile().data.username
-                } has sent a request to join your team!`,
+              text: `${
+                Auth.getProfile().data.username
+              } has sent a request to join your team!`,
               route: `/project/${projectId}`,
               index: projectIndex,
               projectId: projectId,
@@ -220,9 +225,8 @@ const Project = () => {
               variables: {
                 projectId: projectId,
                 userId: state.me._id,
-              }
+              },
             });
-
           } catch (e) {
             console.error(e);
           }
@@ -231,7 +235,7 @@ const Project = () => {
               variables: {
                 userId: state.me._id,
                 projectId: projectId,
-              }
+              },
             });
           } catch (e) {
             console.error(e);
@@ -250,7 +254,7 @@ const Project = () => {
   return (
     <>
       <Container className="main-container d-flex flex-column align-items-start">
-        <Row className=" mb-3 flex-wrap">
+        <Row className=" mb-3 flex-wrap" style={{ width: '100%' }}>
           <Col className="responsive-col">
             <h1 className="mb-3">{project.title}</h1>
 
@@ -323,7 +327,7 @@ const Project = () => {
                   fontSize: '16px',
                 }}
               >
-                Tags:{' '}
+                Tags:
               </span>
               {project.tags.map((tag, index) => (
                 <span
@@ -335,10 +339,11 @@ const Project = () => {
                     fontWeight: '500',
                   }}
                 >
-                  {project.tags[index].tagName}
+                  {project.tags[index]}
                 </span>
               ))}
             </div>
+
             <p>
               {/* {project.edited ? (
                   <>
@@ -377,9 +382,7 @@ const Project = () => {
 
                 {Auth.loggedIn() && isPoster() ? (
                   <Button
-                    onClick={() =>
-                      removeMember(member._id, member.username)
-                    }
+                    onClick={() => removeMember(member._id, member.username)}
                     className="delete-btn"
                   >
                     Remove
@@ -403,12 +406,9 @@ const Project = () => {
             currentProject={project}
           />
         </>
-      ) : (
-        null
-      )}
+      ) : null}
     </>
   );
 };
 
 export default Project;
-

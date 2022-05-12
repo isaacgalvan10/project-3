@@ -84,7 +84,12 @@ const Header = () => {
                         className="search-form"
                         aria-label="Search"
                       />
-                      <Button as={Link} to={`/searchResults/${searchValue}`} type="submit" className="search-btn">
+                      <Button
+                        as={Link}
+                        to={`/searchResults/${searchValue}`}
+                        type="submit"
+                        className="search-btn"
+                      >
                         <i className="fa-solid fa-magnifying-glass"></i>
                       </Button>
                     </Form>
@@ -127,7 +132,7 @@ const Header = () => {
                           Create Post
                         </Button>
                       ) : null}
-                      <Dropdown>
+                      {/* <Dropdown>
                         <Dropdown.Toggle className="position-relative">
                           <i className="fa-solid fa-bell"></i>
                           <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -144,8 +149,8 @@ const Header = () => {
                             Something else
                           </Dropdown.Item>
                         </Dropdown.Menu>
-                      </Dropdown>
-                      <div style={{ marginLeft: '25px' }}>
+                      </Dropdown> */}
+                      <div style={{ marginLeft: '10px' }}>
                         {Auth.loggedIn() ? (
                           <Link to={`./profile/${state.me._id}`}>
                             <Image
