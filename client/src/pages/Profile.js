@@ -36,7 +36,7 @@ const MyProfile = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <h1 className="text-center">Loading...</h1>;
   }
 
   const user = data.user;
@@ -123,6 +123,11 @@ const MyProfile = () => {
                 transition={false}
                 id="noanim-tab-example"
                 className="mb-3"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
               >
                 <Tab eventKey="my-posts" title="My Projects">
                   <ProfileProjects

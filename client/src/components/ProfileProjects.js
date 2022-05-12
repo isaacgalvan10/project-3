@@ -12,20 +12,34 @@ const ProfileProjects = (props) => {
         <Row>
           <Col
             className="d-flex flex-wrap justify-content-center"
-            style={{ gap: '30px' }}
+            style={{ gap: '20px' }}
           >
             {projectsSelected.map((project) => (
               <div key={project._id}>
-                <Card style={{ width: '18rem' }} className="mb-3">
+                <Card style={{ width: '250px' }}>
                   <Card.Img variant="top" src={project.projectImg} />
-                  <Card.Body className="text-center">
-                    <Card.Title>{project.title} </Card.Title>
-                    <Card.Subtitle className="mt-1 mb-2 fw-bold">
-                      {project.tags.map((tag) => (
-                        <p key={tag}>{tag} </p>
-                      ))}
-                    </Card.Subtitle>
-                    <Card.Text>{project.description}</Card.Text>
+                  <Card.Body>
+                    {project.tags.slice(0, 2).map((tag, index) => (
+                      <span
+                        key={`${index}${project.title}${project.tags[index]}`}
+                        className="badge rounded-pill"
+                        style={{
+                          marginRight: '10px',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                        }}
+                      >
+                        {project.tags[index]}
+                      </span>
+                    ))}
+                    <Card.Title style={{ marginTop: '10px' }}>
+                      {project.title}{' '}
+                    </Card.Title>
+
+                    <Card.Text>
+                      {`${project.description.substring(0, 70)}...`}
+                    </Card.Text>
+
                     <Button
                       variant="primary"
                       as={Link}

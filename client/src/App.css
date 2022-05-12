@@ -5,6 +5,10 @@ body {
   background-color: #293241;
 }
 
+a {
+  text-decoration: none !important;
+}
+
 .main-container {
   padding-bottom: 800px;
   margin-top: 30px;

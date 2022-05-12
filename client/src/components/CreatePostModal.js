@@ -95,7 +95,7 @@ const CreatePostModal = () => {
         <h1>Post a project</h1>
       </Modal.Header>
       <Modal.Body>
-        <div className="form-label">Upload Image</div>
+        <div className="form-label">Upload Project Image</div>
         <ImageUpload />
         <Form
           noValidate
@@ -135,19 +135,18 @@ const CreatePostModal = () => {
 
           <Form.Group className="form-field">
             <Form.Label htmlFor="description">Description</Form.Label>
-            <FloatingLabel controlId="floatingTextarea2">
-              <Form.Control
-                as="textarea"
-                name="description"
-                style={{ height: '100px' }}
-                onChange={handleInputChange}
-                value={postFormData.description}
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                A description is required!
-              </Form.Control.Feedback>
-            </FloatingLabel>
+
+            <Form.Control
+              as="textarea"
+              name="description"
+              style={{ height: '100px' }}
+              onChange={handleInputChange}
+              value={postFormData.description}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              A description is required!
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="form-field">
