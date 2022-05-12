@@ -49,6 +49,7 @@ type Tag {
     type Mutation {
         addUser(username: String!, email: String!, password: String!, github: String): Auth
         login(email: String!, password: String!): Auth
+        checkUserExist(email: String!): Auth
     }
 `;
 

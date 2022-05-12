@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Form, Button, Nav } from "react-bootstrap";
+import { Container, Card, Form, Button, Nav, Modal } from "react-bootstrap";
+import { useGlobalContext } from '../utils/GlobalState';
+import { HIDE_MODAL } from '../utils/actions';
 import swal from "sweetalert";
 import { Link } from 'react-router-dom'
 
@@ -9,6 +11,7 @@ import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 function Signup(props) {
+  const [state, dispatch] = useGlobalContext();
   const initialValues = { username: "", github: "", email: "", password: "" };
   // Function that watches input information in form
   const handleChange = (e) => {
@@ -92,10 +95,8 @@ function Signup(props) {
 
           <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
             <Nav.Item>
-              <Link to= '/login'>Login</Link>
             </Nav.Item>
             <Nav.Item>
-              <Link to= '/signUp'>Sign Up</Link>
             </Nav.Item>
           </Nav>
 

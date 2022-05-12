@@ -10,6 +10,7 @@ import Auth from '../utils/auth';
 
 
 function Login(props) {
+  const [state, dispatch] = useGlobalContext();
   const initialValues = { email: "", password: "" };
   const [login, { error, data }] = useMutation(LOGIN_USER);
 
@@ -44,6 +45,11 @@ function Login(props) {
       email: '',
       password: '',
     });
+
+    dispatch({
+      type: HIDE_MODAL,
+  });
+
   };
 
   
@@ -84,10 +90,10 @@ function Login(props) {
 
           <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
               <Nav.Item>
-                <Link to= '/login'>Login</Link>
+                
               </Nav.Item>
               <Nav.Item>
-                <Link to= '/signUp'>Sign Up</Link>
+                
               </Nav.Item>
           </Nav>
 
@@ -140,4 +146,4 @@ function Login(props) {
   );
 }
 
-export default Login
+export default Login;

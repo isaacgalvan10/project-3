@@ -116,7 +116,9 @@ const GlobalProvider = ({ value = [], ...props }) => {
     
     modals: {
       request: false,
-      post: false
+      post: false,
+      login: false,
+      signup: false
     }
 
   });
