@@ -5,35 +5,35 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     projects: async () => {
-      return await Project.find({}).populate('members').populate('requests');
+      return await Project.find({}).populate('members').populate('requests').populate('poster');
     },
     project: async (parent, { projectId }) => {
-      return await Project.findOne({ _id: projectId }).populate('members').populate('requests');
+      return await Project.findOne({ _id: projectId }).populate('members').populate('requests').populate('poster');
     },
     users: async () => {
-      return await User.find();
+      return await User.find().populate('posts').populate('joinedProjects');
     },
     user: async (parent, { userId }) => {
-      return await User.findOne({ _id: userId });
+      return await User.findOne({ _id: userId }).populate('posts').populate('joinedProjects');
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id });
+        return User.findOne({ _id: context.user._id }).populate('posts').populate('projects');
       }
       throw new AuthenticationError('You need to be logged in!');
     },
-    // search: async (parent, { input }) => {
-    //   const inputArray = input.split(', ');
+    search: async (parent, { input }) => {
+      const inputArray = input.split(', ');
 
-    //   return await Project.find({ tags: inputArray[0] }, (error, data) => {
-    //     if (error) {
-    //       console.log(error);
-    //     } else {
-    //       console.log(data);
-    //       return data;
-    //     }
-    //   });
-    // },
+      return await Project.find({ tags: { $in: [inputArray[0]] } }, (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data);
+          return data;
+        }
+      });
+    },
   },
 
   Mutation: {
@@ -62,23 +62,24 @@ const resolvers = {
     addPost: async (parent, { title, tagsString, description, teamSize, projectImg }, context) => {
       if (context.user) {
 
-        const tags = tagsString.split(', ').map((tag, index) => {
-          return {
-            tagId: index + '00',
-            tagName: tag
-          }
-        });
+        const tags = tagsString.split(', ');
 
         const me = await User.findOne({ _id: context.user._id });
 
-        const poster = {
-          username: me.username,
-          picture: me.picture
-        }
+        const poster = me._id;
 
         const date = 'May 5, 2022'
 
-        const project = Project.create({ title, tags, description, teamSize, projectImg, poster, date });
+        const project = await Project.create({ title, tags, description, teamSize, projectImg, poster, date });
+
+        await User.findOneAndUpdate(
+          { _id: me._id },
+          { $addToSet: { posts: project._id } },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
 
         return project;
       }
@@ -88,49 +89,141 @@ const resolvers = {
     removePost: async (parent, { postId }, context) => {
       if (context.user) {
 
-        const thought = await Project.findOneAndDelete({
+        const project = await Project.findOneAndDelete({
           _id: postId
         });
 
-        return thought;
+        return project;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    addMember: async (parent, { projectId, memberId, username, picture }, context) => {
+    addMember: async (parent, { userId, projectId }, context) => {
       // if (context.user) {
-        return Project.findOneAndUpdate(
-          { _id: projectId },
-          {
-            $addToSet: {
-              members: { memberId, username, picture },
-            },
+      const user = await User.findOne({ _id: userId });
+
+      const project = await Project.findOneAndUpdate(
+        { _id: projectId },
+        { $addToSet: { members: user._id } },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate('members');
+
+      await User.findOneAndUpdate(
+        { _id: user._id },
+        { 
+          $addToSet: 
+          { 
+            joinedProjects: project._id 
+          } 
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      await Project.findOneAndUpdate(
+        { _id: project._id },
+        {
+          $pull: {
+            requests: { _id: user._id }
+          }
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+
+      return project;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    removeMember: async (parent, { projectId, userId }, context) => {
+      // if (context.user) {
+
+      const project = await Project.findOneAndUpdate(
+        { _id: projectId },
+        { $pull: { members: userId } },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return project;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    addRequest: async (parent, { userId, projectId }, context) => {
+      // if (context.user) {
+      const user = await User.findOne({ _id: userId });
+
+      return Project.findOneAndUpdate(
+        { _id: projectId },
+        { $addToSet: { requests: user._id, } },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate('requests');
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    removeRequest: async (parent, { projectId, userId }, context) => {
+      // if (context.user) {
+
+      const project = await Project.findOneAndUpdate(
+        { _id: projectId },
+        { $pull: { requests: userId } },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return project;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    removeProject: async (parent, { userId, projectId }, context) => {
+      // if (context.user) {
+
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { joinedProjects: projectId } },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return user;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
+    editProfile: async (parent, { userId, newUsername, newBio }, context) => {
+      // if (context.user) {
+
+        const user = await User.findOneAndUpdate(
+          { _id: userId },
+          { 
+            username: newUsername,
+            bio: newBio,
           },
           {
             new: true,
             runValidators: true,
           }
-        ).populate('members');
+        );
+        return user;
       // }
       // throw new AuthenticationError('You need to be logged in!');
-    },
-    addRequest: async (parent, { userId, username, projectId, picture }, context) => {
-      // if (context.user) {
-        return Project.findOneAndUpdate(
-          { _id: projectId },
-          {
-            $addToSet: {
-              requests: { userId, username, picture },
-            },
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        ).populate('requests');
-      // }
-      // throw new AuthenticationError('You need to be logged in!');
-    },
+    }
 
   },
 };

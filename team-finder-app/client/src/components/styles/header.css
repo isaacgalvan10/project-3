@@ -4,6 +4,10 @@
   background-color: #3d5a80;
 }
 
+.offcanvas {
+  background-color: #3d5a80;
+}
+
 .navbar-brand {
   font-weight: bold;
   color: #e0fbfc !important;
@@ -46,6 +50,10 @@
   width: 40px;
   -o-object-fit: cover;
   object-fit: cover;
+}
+
+.navbar-light .navbar-toggler {
+  background-color: #e0fbfc !important;
 }
 
 @media all and (min-width: 768px) {

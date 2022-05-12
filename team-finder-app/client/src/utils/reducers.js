@@ -3,13 +3,14 @@ import {
     SHOW_NOTIF,
     HIDE_NOTIF,
     POST_MEMBER,
-    REMOVE_MEMBER,
+    DELETE_MEMBER,
     STATUS,
     SHOW_MODAL,
     HIDE_MODAL,
     SHOW_MODAL_NOTIF,
     ADD_PROJECT,
-    UPDATE_PROJECTS
+    UPDATE_PROJECTS,
+    UPDATE_ME
 } from './actions';
 
 export const reducer = (state, action) => {
@@ -49,7 +50,6 @@ export const reducer = (state, action) => {
             };
 
         case POST_MEMBER:
-            console.log('hi');
             const updatedProject = {
                 ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
                     memberId: action.payload.memberId,
@@ -65,9 +65,7 @@ export const reducer = (state, action) => {
                 projects: projectsCopy
             };
 
-        case REMOVE_MEMBER:
-            console.log(action);
-            console.log(state.projects[action.payload.index].members);
+        case DELETE_MEMBER:
             const membersLeft = state.projects[action.payload.index].members.filter((member) => {
                 return member._id !== action.payload.id;
             });
@@ -139,6 +137,13 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 projects: updatedProjects
+            };
+
+        case UPDATE_ME:
+            const requestedMe = action.me;
+            return {
+                ...state,
+                me: requestedMe
             };
 
         default:

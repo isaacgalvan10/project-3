@@ -39,10 +39,7 @@ mutation AddPost($title: String!, $tagsString: String!, $description: String!, $
     description
     projectImg
     teamSize
-    tags {
-      tagId
-      tagName
-    }
+    tags 
   }
 }
 `;
@@ -56,11 +53,10 @@ mutation RemovePost($postId: ID!) {
 `;
 
 export const ADD_MEMBER = gql`
-mutation AddMember($projectId: ID!, $username: String!, $picture: String!, $memberId: String!) {
-  addMember(projectId: $projectId, username: $username, picture: $picture, memberId: $memberId) {
+mutation AddMember($userId: ID!, $projectId: ID!) {
+  addMember(userId: $userId, projectId: $projectId) {
     title
     members {
-      memberId
       picture
       username
     }
@@ -68,14 +64,66 @@ mutation AddMember($projectId: ID!, $username: String!, $picture: String!, $memb
 }
 `;
 
+export const REMOVE_MEMBER = gql`
+mutation RemoveMember($projectId: ID!, $userId: ID!) {
+  removeMember(projectId: $projectId, userId: $userId) {
+    _id
+    title
+    members {
+      _id
+      username
+    }
+  }
+}
+`;
+
 export const ADD_REQUEST = gql`
-mutation Mutation($projectId: ID!, $username: String!, $userId: String!, $picture: String!) {
-  addRequest(projectId: $projectId, username: $username, userId: $userId, picture: $picture) {
+mutation AddRequest( $userId: ID!, $projectId: ID!) {
+  addRequest(projectId: $projectId userId: $userId) {
+    _id
+    title
     requests {
-      userId
       username
       picture
     }
+  }
+}
+`;
+
+export const REMOVE_REQUEST = gql`
+mutation RemoveRequest($projectId: ID!, $userId: ID!) {
+  removeRequest(projectId: $projectId, userId: $userId) {
+    _id
+    title
+    requests {
+      _id
+      username
+    }
+  }
+}
+`;
+
+export const REMOVE_PROJECT = gql`
+mutation RemoveProject($userId: ID!, $projectId: ID!) {
+  removeProject(userId: $userId, projectId: $projectId) {
+    _id
+    username
+    joinedProjects {
+      _id
+      title
+      tags
+      description
+    }
+  }
+}
+`;
+
+export const EDIT_PROFILE = gql`
+mutation EditProfile($userId: ID!, $newUsername: String!, $newBio: String!) {
+  editProfile(userId: $userId, newUsername: $newUsername, newBio: $newBio) {
+    _id
+    username
+    bio
   }
 }
 `;

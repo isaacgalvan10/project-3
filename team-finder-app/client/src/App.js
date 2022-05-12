@@ -4,17 +4,17 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink
+  createHttpLink,
 } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context'
+import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './components/Header';
-import Homepage from './pages/Homepage'
+import Homepage from './pages/Homepage';
 import SearchResults from './pages/SearchResults';
 import Project from './pages/Project';
-import Profile from './pages/profiles/Profile';
+import Profile from './pages/Profile';
 import MyProfile from './pages/profiles/MyProfile';
 import Footer from './components/Footer';
 import Signup from './components/Signup';
@@ -53,36 +53,15 @@ function App() {
           <GlobalProvider>
             <Header />
             <Routes>
-              <Route
-                path='/'
-                element={<Homepage />}
-              />
-              <Route
-                path='/searchResults'
-                element={<SearchResults />}
-              />
-              <Route
-                path='/project/:projectId'
-                element={<Project />}
-              />
-              <Route
-                path='/profile'
-                element={<Profile />}
-              />
-              <Route
-                path='/myProfile'
-                element={<MyProfile />}
-              />
+              <Route path="/" element={<Homepage />} />
+              <Route path="/searchResults/:input" element={<SearchResults />} />
+              <Route path="/project/:projectId" element={<Project />} />
+              <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/myProfile" element={<MyProfile />} />
               {/* <Signup /> */}
-              <Route
-                path='/signUp'
-                element={<Signup />}
-              />
+              <Route path="/signUp" element={<Signup />} />
               {/* <Login /> */}
-              <Route
-                path='/login'
-                element={<Login />}
-              />
+              <Route path="/login" element={<Login />} />
             </Routes>
             {/* <Footer /> */}
             {Auth.loggedIn() ? (
@@ -91,9 +70,7 @@ function App() {
                 <RequestModal />
                 <CreatePostModal />
               </>
-            ) : (
-              null
-            )}
+            ) : null}
           </GlobalProvider>
         </>
       </Router>
