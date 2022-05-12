@@ -32,7 +32,7 @@ const CreatePostModal = () => {
             event.stopPropagation();
         }
 
-        // event.preventDefault();
+        event.preventDefault();
 
         const retrievedImg = JSON.parse(localStorage.getItem('image'));
         console.log(retrievedImg);

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { Container, Card, Nav, Button } from "react-bootstrap";
+import { Container, Card, Nav, Button, Image } from "react-bootstrap";
+import ProfileProjects from "../components/ProfileProjects";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faGithub} from '@fortawesome/free-brands-svg-icons'
 import '../components/styles/profile.css';
 import { useParams } from 'react-router-dom';
 import { QUERY_USER } from "../utils/queries";
@@ -10,7 +13,11 @@ import EditProfileForm from '../components/EditProfileForm';
 
 const MyProfile = () => {
 
+  const [displayProjects, setDisplayProjects] = useState();
+  const [profileProjectsData, setProfileProjectsData] = useState();
+
   const { userId } = useParams();
+  // const userId = "6279aa574eea1e4d8c95a783"
 
   const [editMode, setEditMode] = useState(false);
 
@@ -22,18 +29,43 @@ const MyProfile = () => {
     return <div>Loading...</div>;
   }
 
-  const user = data?.user || "";
+  const user = data.user
 
   const isMe = () => {
     if (Auth.loggedIn()) {
       return Auth.getProfile().data._id === user._id;
     }
   };
+  function clickHandler(e) {
+    const id = e.target.id;
+    setDisplayProjects(id);
+    setProfileProjectsData(user);
+    
+  }
 
-  return (
+  function RenderProjects() {
+    if(displayProjects) {
+      return (
+        <div>
+          <ProfileProjects 
+            displayProjects = {displayProjects}
+            setDisplayProjects = {setDisplayProjects}
+            profileProjectsData = {profileProjectsData}
+            setProfileProjectsData = {setProfileProjectsData}
+          />
+        </div>
+      )
+    } else {
+      return (
+        <div>
+        </div>
+      )
+    }
+  }
 
-    <Container className="main-container">
-      {Auth.loggedIn() && isMe() && !editMode ? (
+    return (
+      <Container>
+        {Auth.loggedIn() && isMe() && !editMode ? (
         <Button onClick={() => setEditMode(true)}>Edit</Button>
       ) : (
         null
@@ -43,43 +75,33 @@ const MyProfile = () => {
       ) : (
         <EditProfileForm user={user} setEditMode={setEditMode} />
       )}
+        {data ?
+        <div>
+      
       <h2 className="text-center mb-3 fw-bold">Projects</h2>
 
-      {/* I don't know how to set a default value without using href as it is seen in documentation */}
-      <Nav fill variant="tabs" className="mb-3 fw-bold" defaultActiveKey="1">
+      {/* <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
+
+    <Container className="main-container"> */}
+      
+
+      <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
         <Nav.Item>
-          <Nav.Link eventKey="link-1">Posted Projects</Nav.Link>
+          <Nav.Link id="posts" onClick={clickHandler} eventKey="link-1">Posted Projects</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="link-2">Joined Projects</Nav.Link>
+          <Nav.Link id="joinedProjects" onClick={clickHandler} eventKey="link-2">Joined Projects</Nav.Link>
         </Nav.Item>
       </Nav>
 
-      <div className="projects-div d-flex flex-column align-items-center">
-        <Card style={{ width: '18rem' }} className="mb-3">
-          <Card.Body className="text-center">
-            <Card.Title>Job Tracker App</Card.Title>
-            <Card.Subtitle className="mt-1 mb-2 fw-bold">HTML, CSS, JavaScript</Card.Subtitle>
-            <Card.Text>
-              This is an app that helps the user keep track of their job applica….
-            </Card.Text>
-            <Button variant="primary">Open</Button>
-          </Card.Body>
-        </Card>
-        <Card style={{ width: '18rem' }} className="mb-3">
-          <Card.Body className="text-center">
-            <Card.Title>Job Tracker App</Card.Title>
-            <Card.Subtitle className="mt-1 mb-2 fw-bold">HTML, CSS, JavaScript</Card.Subtitle>
-            <Card.Text>
-              This is an app that helps the user keep track of their job applica….
-            </Card.Text>
-            <Button variant="danger">Closed</Button>
-          </Card.Body>
-        </Card>
+      
+      <RenderProjects />
       </div>
-
-    </Container>
-  )
+      : ""}
+      
+      
+      </Container>
+    )
 }
 
 export default MyProfile;
