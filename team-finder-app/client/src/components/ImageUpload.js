@@ -36,15 +36,30 @@ export default function ImageUpload() {
               onClick={onImageUpload}
               {...dragProps}
             >
-              Click or Drop here
+              Click to upload image
             </Button>
             &nbsp;
             {imageList.map((image, index) => (
               <div key={index} className="image-item">
-                <img src={image['data_url']} alt="" width="100" />
+                <img
+                  src={image['data_url']}
+                  alt=""
+                  width="100"
+                  style={{ marginTop: '10px', marginBottom: '10px' }}
+                />
                 <div className="image-item__btn-wrapper">
-                  <Button onClick={() => onImageUpdate(index)}>Update</Button>
-                  <Button onClick={() => onImageRemove(index)}>Remove</Button>
+                  <Button
+                    onClick={() => onImageUpdate(index)}
+                    style={{ marginRight: '10px' }}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    onClick={() => onImageRemove(index)}
+                    className="delete-btn"
+                  >
+                    Remove
+                  </Button>
                 </div>
               </div>
             ))}

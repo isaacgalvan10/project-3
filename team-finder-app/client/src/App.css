@@ -19,6 +19,10 @@ body {
   border: none;
 }
 
+.delete-btn {
+  background-color: #ee6c4d;
+}
+
 .btn:hover {
   background-color: #98c1d9 !important;
   color: black;
