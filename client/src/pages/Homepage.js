@@ -25,7 +25,7 @@ const Homepage = () => {
 
   return (
     <Container className="main-container">
-      {state.projects.length ? (
+      {state.projects.length > 0 ? (
         <Row>
           <Col
             className="d-flex flex-wrap justify-content-center"
@@ -68,9 +68,9 @@ const Homepage = () => {
           </Col>
         </Row>
       ) : (
-        <h3>There are no posts yet 😱</h3>
+        <h3></h3>
       )}
-      {loading ? <h3>Loading...</h3> : null}
+      {loading ? <h3> </h3> : null}
     </Container>
   );
 };

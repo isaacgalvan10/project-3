@@ -21,10 +21,13 @@ import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import ProfileCard from '../components/ProfileCard';
 import EditProfileForm from '../components/EditProfileForm';
+import { useGlobalContext } from '../utils/GlobalState';
+
 
 const MyProfile = () => {
   const [displayProjects, setDisplayProjects] = useState();
   const [profileProjectsData, setProfileProjectsData] = useState();
+  const [state] = useGlobalContext();
 
   const { userId } = useParams();
   // const userId = "6279aa574eea1e4d8c95a783"

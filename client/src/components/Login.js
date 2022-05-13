@@ -37,6 +37,9 @@ function Login(props) {
       });
 
       Auth.login(data.login.token);
+      const user = await Auth.getProfile().data;
+      console.log(user);
+      localStorage.setItem('profileImg', JSON.stringify(user.picture));
     } catch (e) {
       console.error(e);
     }
@@ -84,16 +87,9 @@ function Login(props) {
 
   return (
     // Form for new logins
-    <div className="App w-100 margin-left-64">
-      <Container className="form-container">
-        <Card className="p-2">
+    <div>
+      <Container>
 
-          <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
-              <Nav.Item>
-              </Nav.Item>
-              <Nav.Item>
-              </Nav.Item>
-          </Nav>
 
           <p className="fs-5 m-1 fw-bold ">Login to your account</p>
           <Form onSubmit={handleSubmit}>
@@ -138,7 +134,6 @@ function Login(props) {
               Login
             </Button>
           </Form>
-        </Card>
       </Container>
     </div>
   );

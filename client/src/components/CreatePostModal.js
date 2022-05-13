@@ -9,14 +9,13 @@ import ImageUpload from '../components/ImageUpload';
 
 const CreatePostModal = () => {
   const [state, dispatch] = useGlobalContext();
-  const [validated, setValidated] = useState(false);
+  // const [validated, setValidated] = useState(false);
   const [projectImage, setProjectImg] = useState('');
   const [addPost, { error, data }] = useMutation(ADD_POST);
   const [postFormData, setPostFormData] = useState({
     title: '',
     tagsString: '',
     description: '',
-    teamSize: '',
     projectImg: projectImage,
     repo: '',
   });
@@ -33,6 +32,8 @@ const CreatePostModal = () => {
       event.stopPropagation();
     }
 
+    event.preventDefault();
+
     const retrievedImg = JSON.parse(localStorage.getItem('image'));
     console.log(retrievedImg);
 
@@ -40,7 +41,6 @@ const CreatePostModal = () => {
 
     const post = {
       ...postFormData,
-      teamSize: +postFormData.teamSize,
       projectImg: retrievedImg,
     }
 
@@ -50,6 +50,17 @@ const CreatePostModal = () => {
       const { data } = await addPost({
         variables: { ...post },
       });
+
+
+     const _id = data.addPost._id
+
+      await dispatch({
+        type: ADD_PROJECT,
+        formData: {
+          ...post,
+          _id
+        }
+    });
 
     } catch (e) {
       console.error(e);
@@ -67,21 +78,17 @@ const CreatePostModal = () => {
     //     console.error(e);
     //   }
 
-    // const addProject = await dispatch({
-    //     type: ADD_PROJECT,
-    //     newProject: postFormData
-    // });
-
     setPostFormData({
       title: '',
       tagsString: '',
       description: '',
-      teamSize: '',
       projectImg: '',
       repo: '',
     });
 
-    setValidated(true);
+    dispatch({ type: HIDE_MODAL })
+
+    // setValidated(true);
   };
 
   return (
@@ -95,11 +102,11 @@ const CreatePostModal = () => {
         <h1>Post a project</h1>
       </Modal.Header>
       <Modal.Body>
-        <div className="form-label">Upload Project Image</div>
+      <div className="form-label">Upload Project Image</div>
         <ImageUpload />
         <Form
           noValidate
-          validated={validated}
+          // validated={validated}
           onSubmit={handleSubmit}
           style={{ marginTop: '20px' }}
         >
@@ -113,9 +120,9 @@ const CreatePostModal = () => {
               value={postFormData.title}
               required
             />
-            <Form.Control.Feedback type="invalid">
+            {/* <Form.Control.Feedback type="invalid">
               Title is required!
-            </Form.Control.Feedback>
+            </Form.Control.Feedback> */}
           </Form.Group>
 
           <Form.Group className="form-field">
@@ -128,43 +135,42 @@ const CreatePostModal = () => {
               value={postFormData.tags}
               required
             />
-            <Form.Control.Feedback type="invalid">
+            {/* <Form.Control.Feedback type="invalid">
               At least one tag is required!
-            </Form.Control.Feedback>
+            </Form.Control.Feedback> */}
           </Form.Group>
 
           <Form.Group className="form-field">
             <Form.Label htmlFor="description">Description</Form.Label>
-
-            <Form.Control
-              as="textarea"
-              name="description"
-              style={{ height: '100px' }}
-              onChange={handleInputChange}
-              value={postFormData.description}
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              A description is required!
-            </Form.Control.Feedback>
+              <Form.Control
+                as="textarea"
+                name="description"
+                style={{ height: '100px' }}
+                onChange={handleInputChange}
+                value={postFormData.description}
+                required
+              />
+              {/* <Form.Control.Feedback type="invalid">
+                A description is required!
+              </Form.Control.Feedback> */}
           </Form.Group>
-
+{/* 
           <Form.Group className="form-field">
             <Form.Label htmlFor="tags">Team Size</Form.Label>
             <Form.Control
               type="number"
               min="1"
               placeholder="Besides you, how many members do you want in your team?"
-              name="teamSize"
               onChange={handleInputChange}
               value={postFormData.team}
               required
-            />
-            <Form.Control.Feedback type="invalid">
+            /> */}
+            {/* <Form.Control.Feedback type="invalid">
               A number is required!
-            </Form.Control.Feedback>
-          </Form.Group>
+            </Form.Control.Feedback> */}
+          {/* </Form.Group> */}
           <Form.Group className="form-field">
+          <Form.Label htmlFor="description">Project Repo</Form.Label>
             <Form.Control
               type='text'
               placeholder='https://github.com/isaacgalvan10/project-3'
@@ -173,7 +179,7 @@ const CreatePostModal = () => {
               value={postFormData.repo}
               required
             />
-            <Form.Control.Feedback type='invalid'>You need to provide a link to your project repo</Form.Control.Feedback>
+            {/* <Form.Control.Feedback type='invalid'>You need to provide a link to your project repo</Form.Control.Feedback> */}
           </Form.Group>
 
           <Button type="submit" variant="success">

@@ -4,10 +4,16 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useState, useEffect } from 'react';
 import { EDIT_PROFILE } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
+import { useGlobalContext } from '../utils/GlobalState';
+import ProfileImg from '../components/ProfileImg';
+
 
 const EditProfileForm = ({ user, setEditMode }) => {
   const [editProfile] = useMutation(EDIT_PROFILE);
+  const [state] = useGlobalContext();
 
+  const { picture } = state.me
+  const [profileImg, setProfileImg] = useState('');
   const [editFormData, setEditFormData] = useState({
     userId: user._id,
     newUsername: user.username,
@@ -17,10 +23,18 @@ const EditProfileForm = ({ user, setEditMode }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const retrievedImg = JSON.parse(localStorage.getItem('profileImg'));
+    console.log(retrievedImg);
+    console.log(editFormData);
+    const finalForm = {
+      ...editFormData,
+      newImg: retrievedImg,
+    }
+
     try {
       await editProfile({
         variables: {
-          ...editFormData,
+          ...finalForm,
         },
       });
     } catch (e) {
@@ -47,7 +61,7 @@ const EditProfileForm = ({ user, setEditMode }) => {
         <div className="d-flex justify-content-between">
           <div>
             <Image
-              src={`../${user.picture}`}
+              src={picture}
               alt="user"
               roundedCircle
               className="profile-img"
@@ -67,6 +81,7 @@ const EditProfileForm = ({ user, setEditMode }) => {
         </div>
       </Card.Header>
       <Card.Body className="text-center">
+      <ProfileImg />
         <Form noValidate onSubmit={handleSubmit}>
           <Form.Group className="form-field">
             <Form.Label htmlFor="title">Username</Form.Label>

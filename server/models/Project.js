@@ -28,11 +28,6 @@ const projectSchema = new Schema({
   projectImg: {
     type: String,
   },
-  teamSize: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
   closed: {
     type: Boolean,
     default: false

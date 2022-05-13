@@ -13,21 +13,22 @@ export const LOGIN_USER = gql`
 `;
 
 export const ADD_USER = gql`
-    mutation addUser($username: String!, $email: String!, $password: String!, $github: String! ) {
-        addUser(username: $username, email: $email, password: $password, github: $github) {
+    mutation addUser($username: String!, $email: String!, $password: String!, $github: String!, $picture: String! ) {
+        addUser(username: $username, email: $email, password: $password, github: $github, picture: $picture) {
         token
         user {
             _id
             username
             github
+            picture
         }
         }
     }
 `;
 
 export const ADD_POST = gql`
-mutation AddPost($title: String!, $tagsString: String!, $description: String!, $teamSize: Int!, $projectImg: String!, $repo: String!) {
-  addPost(title: $title, tagsString: $tagsString, description: $description, teamSize: $teamSize, projectImg: $projectImg, repo: $repo) {
+mutation AddPost($title: String!, $tagsString: String!, $description: String!, $projectImg: String!, $repo: String!) {
+  addPost(title: $title, tagsString: $tagsString, description: $description, projectImg: $projectImg, repo: $repo) {
     _id
     title
     date
@@ -38,7 +39,6 @@ mutation AddPost($title: String!, $tagsString: String!, $description: String!, $
     edited
     description
     projectImg
-    teamSize
     tags 
   }
 }
@@ -119,11 +119,22 @@ mutation RemoveProject($userId: ID!, $projectId: ID!) {
 `;
 
 export const EDIT_PROFILE = gql`
-mutation EditProfile($userId: ID!, $newUsername: String!, $newBio: String!) {
-  editProfile(userId: $userId, newUsername: $newUsername, newBio: $newBio) {
+mutation EditProfile($userId: ID!, $newUsername: String!, $newBio: String!, $newImg: String!) {
+  editProfile(userId: $userId, newUsername: $newUsername, newBio: $newBio, newImg: $newImg) {
     _id
     username
     bio
+    picture
+  }
+}
+`;
+
+export const SET_PROFILE_PICTURE = gql`
+mutation SetProfilePicture($userId: ID!, $picture: String!) {
+  setProfilePicture(userId: $userId, picture: $picture) {
+    _id
+    username
+    picture
   }
 }
 `;

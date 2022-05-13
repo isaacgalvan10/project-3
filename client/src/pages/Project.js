@@ -43,9 +43,7 @@ const Project = () => {
   });
 
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
-
-
+  
   const [state, dispatch] = useGlobalContext();
 
   const [addRequest] = useMutation(ADD_REQUEST);
@@ -57,7 +55,13 @@ const Project = () => {
     return <div>Loading...</div>;
   }
 
-  const project = data.project;
+  const project = data?.project || '';
+
+  const members = data.project?.members || [];
+
+  const tags = data.project?.tags || [];
+
+  const posterPicture = project.poster?.picture || state.me.picture || '';
 
   const isPoster = () => {
     if (Auth.loggedIn()) {
@@ -92,7 +96,9 @@ const Project = () => {
       console.log('hi');
     }
 
-    navigate("/");
+    // navigate("/");
+
+    window.location.replace('/');
 
   }
 
@@ -135,13 +141,13 @@ const Project = () => {
       }
     }
 
-    dispatch({
-      type: SHOW_NOTIF,
-      payload: {
-        text: `${project.poster.username} has kicked you out of their team :(`,
-        route: `/project/${projectId}`,
-      },
-    });
+    // dispatch({
+    //   type: SHOW_NOTIF,
+    //   payload: {
+    //     text: `${project.poster.username} has kicked you out of their team :(`,
+    //     route: `/project/${projectId}`,
+    //   },
+    // });
   };
 
   const setBtnText = () => {
@@ -191,17 +197,17 @@ const Project = () => {
             console.error(e);
           }
 
-          dispatch({
-            type: SHOW_MODAL_NOTIF,
-            payload: {
-              text: `${
-                Auth.getProfile().data.username
-              } has sent a request to join your team!`,
-              route: `/project/${projectId}`,
-              index: projectIndex,
-              projectId: projectId,
-            },
-          });
+          // dispatch({
+          //   type: SHOW_MODAL_NOTIF,
+          //   payload: {
+          //     text: `${
+          //       Auth.getProfile().data.username
+          //     } has sent a request to join your team!`,
+          //     route: `/project/${projectId}`,
+          //     index: projectIndex,
+          //     projectId: projectId,
+          //   },
+          // });
           dispatch({
             type: STATUS,
             status: 'pending',
@@ -274,7 +280,7 @@ const Project = () => {
               <div>
                 <Link as={Link} to={`/profile/${project.poster._id}`}>
                   <Image
-                    src={`../${project.poster.picture}`}
+                    src={posterPicture}
                     alt="user"
                     roundedCircle
                     className="profile-img"
@@ -336,7 +342,7 @@ const Project = () => {
               >
                 Tags:
               </span>
-              {project.tags.map((tag, index) => (
+              {tags.map((tag, index) => (
                 <span
                   key={`${index}${project.title}${project.tags[index]}`}
                   className="badge rounded-pill"
@@ -374,7 +380,7 @@ const Project = () => {
         <Row className="d-flex">
           <h3>Team Members</h3>
           {console.log(project.members)}
-          {project.members.map((member) => (
+          {members.map((member) => (
             <Col className="xs-col" xs={2} key={member._id}>
               <div className="d-flex flex-column align-items-center">
                 <Link as={Link} to={`/profile/${member._id}`}>
@@ -411,6 +417,7 @@ const Project = () => {
             requests={project.requests}
             projectId={projectId}
             currentProject={project}
+            projectIndex={projectIndex}
           />
         </>
       ) : null}

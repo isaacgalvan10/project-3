@@ -15,7 +15,6 @@ query Projects {
     edited
     description
     projectImg
-    teamSize
     closed
     members {
       _id
@@ -50,7 +49,6 @@ query Project($projectId: ID!) {
     edited
     description
     projectImg
-    teamSize
     closed
     members {
       _id
@@ -72,51 +70,20 @@ query Me {
   me {
     _id
     username
-    email
     github
     picture
     bio
     posts {
       _id
       title
-      date
       repo
-      poster {
-        _id
-        username
-        picture
-      }
-      edited
       description
-      projectImg
-      teamSize
-      closed
-      members {
-        _id
-        username
-        email
-        github
-        picture
-        bio
-      }
-      tags
-      requests {
-        _id
-        username
-        picture
-      }
     }
     joinedProjects {
       _id
       title
-      date
       repo
-      edited
       description
-      projectImg
-      teamSize
-      closed
-      tags
     }
   }
 } 
@@ -138,7 +105,6 @@ query User($userId: ID!) {
       repo
       description
       projectImg
-      teamSize
       closed
       members {
         _id
@@ -163,7 +129,6 @@ query User($userId: ID!) {
       edited
       description
       projectImg
-      teamSize
       closed
       tags
     }

@@ -4,11 +4,11 @@ import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL } from '../utils/actions';
 import swal from "sweetalert";
 import { Link } from 'react-router-dom'
-
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
-
 import Auth from '../utils/auth';
+// import ProfileImg from '../components/ProfileImg';
+
 
 function Signup(props) {
   const [state, dispatch] = useGlobalContext();
@@ -30,10 +30,17 @@ function Signup(props) {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setIsSubmit(true);
-
+    // const retrievedImg = await JSON.parse(localStorage.getItem('profileImg'));
+    // console.log(retrievedImg);
+    const finalForm = {
+      ...formValues,
+      picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+      // picture: retrievedImg,
+    };
+    console.log(finalForm);
     try {
       const { data } = await addUser({
-        variables: { ...formValues },
+        variables: { ...finalForm },
       });
       signUpAlert()
       Auth.login(data.addUser.token);
@@ -42,7 +49,7 @@ function Signup(props) {
     }
   };
 
-  
+
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log("No errors in form")
@@ -67,7 +74,7 @@ function Signup(props) {
       errors.email = "Please enter a valid email!";
     }
     if (!values.github) errors.github = "Please enter your GitHub account!";
-    
+
     if (!values.name) errors.name = "Please enter a username for your account!";
     if (!values.password) {
       errors.password = "Please enter a password for your account!";
@@ -91,91 +98,83 @@ function Signup(props) {
     <div className="App w-100">
       <Container className="form-container">
 
-        <Card className="p-2">
 
-          <Nav fill variant="tabs" className="mb-3 fw-bold"  defaultActiveKey="1">
-            <Nav.Item>
-            </Nav.Item>
-            <Nav.Item>
-            </Nav.Item>
-          </Nav>
 
-          <p className="fs-5 m-1 fw-bold ">Create a new account</p>
-          <Form onSubmit={handleSubmit}>
+        <p className="fs-5 m-1 fw-bold ">Create a new account</p>
+        {/* <ProfileImg /> */}
+        <Form onSubmit={handleSubmit}>
 
-            <Form.Group
-              id="githubForm"
-              className="mb-3"
-              controlId="github"
-              name="github"
-              value={formValues.github}
-              onChange={handleChange}
-            >
-              <Form.Label>GitHub</Form.Label>
-              <Form.Control type="" placeholder="Enter your GitHub account" />
-              <Form.Text id="nameAlert" className="text-danger fs-6">
-                {formErrors.github}
-              </Form.Text>
-            </Form.Group>
+          <Form.Group
+            className="mb-3"
+            controlId="username"
+            name="username"
+            value={formValues.username}
+            onChange={handleChange}
+          >
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type=""
+              placeholder="Create a username"
+            />
+            <Form.Text id="nameAlert" className="text-danger fs-6">
+              {formErrors.username}
+            </Form.Text>
+          </Form.Group>
 
-            <Form.Group
-              className="mb-3"
-              controlId="email"
-              name="email"
-              value={formValues.email}
-              onChange={handleChange}
-            >
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type=""
-                placeholder="Enter your email"
-              />
-              <Form.Text id="nameAlert" className="text-danger fs-6">
-                {formErrors.email}
-              </Form.Text>
-            </Form.Group>
+          <Form.Group
+            className="mb-3"
+            controlId="email"
+            name="email"
+            value={formValues.email}
+            onChange={handleChange}
+          >
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type=""
+              placeholder="Enter your email"
+            />
+            <Form.Text id="nameAlert" className="text-danger fs-6">
+              {formErrors.email}
+            </Form.Text>
+          </Form.Group>
 
-            <Form.Group
-              className="mb-3"
-              controlId="username"
-              name="username"
-              value={formValues.username}
-              onChange={handleChange}
-            >
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type=""
-                placeholder="Create a username"
-              />
-              <Form.Text id="nameAlert" className="text-danger fs-6">
-                {formErrors.username}
-              </Form.Text>
-            </Form.Group>
+          <Form.Group
+            className="mb-3"
+            controlId="password"
+            name="password"
+            value={formValues.password}
+            onChange={handleChange}
+          >
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Create a password" />
+            <Form.Text id="nameAlert" className="text-danger fs-6">
+              {formErrors.password}
+            </Form.Text>
+          </Form.Group>
 
-            <Form.Group
-              className="mb-3"
-              controlId="password"
-              name="password"
-              value={formValues.password}
-              onChange={handleChange}
-            >
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Create a password" />
-              <Form.Text id="nameAlert" className="text-danger fs-6">
-                {formErrors.password}
-              </Form.Text>
-            </Form.Group>
-
-            <Button
-              type="submit"
-              id="addBtn"
-              variant="outline-primary"
-              className="add-confirm-button"
-            >
-              Signup
-            </Button>
-          </Form>
-        </Card>
+          <Form.Group
+            id="githubForm"
+            className="mb-3"
+            controlId="github"
+            name="github"
+            value={formValues.github}
+            onChange={handleChange}
+          >
+            <Form.Label>GitHub Username</Form.Label>
+            <Form.Control type="" placeholder="Enter your GitHub account" />
+            <Form.Text id="nameAlert" className="text-danger fs-6">
+              {formErrors.github}
+            </Form.Text>
+          </Form.Group>
+          <Button
+            type="submit"
+            id="addBtn"
+            variant="outline-primary"
+            className="add-confirm-button"
+          >
+            Signup
+          </Button>
+        </Form>
       </Container>
     </div>
   );

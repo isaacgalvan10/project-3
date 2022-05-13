@@ -22,6 +22,7 @@ const ModalRequests = ({
   requests,
   projectId,
   currentProject,
+  projectIndex,
 }) => {
   const [state, dispatch] = useGlobalContext();
   const { loading, data } = useQuery(QUERY_ME);
@@ -29,7 +30,7 @@ const ModalRequests = ({
   const [removeRequest] = useMutation(REMOVE_REQUEST);
 
   if (loading) {
-    return <h2>LOADING...</h2>;
+    return <h2></h2>;
   }
 
   const me = data.me;
@@ -49,15 +50,15 @@ const ModalRequests = ({
     });
 
     if (confirm) {
-      // dispatch({
-      //     type: POST_MEMBER,
-      //     payload: {
-      //         index: projectIndex,
-      //         memberId: me._id,
-      //         username: me.username,
-      //         picture: me.picture
-      //     }
-      // });
+      dispatch({
+          type: POST_MEMBER,
+          payload: {
+              index: projectIndex,
+              _id: userId,
+              username: username,
+              picture: username
+          }
+      });
       try {
         await addMember({
           variables: {
@@ -79,13 +80,13 @@ const ModalRequests = ({
       } catch (e) {
         console.error(e);
       }
-      await dispatch({
-        type: SHOW_NOTIF,
-        payload: {
-          text: 'Your request has been accepted, you are part of the team!',
-          route: `/project/${projectId}`,
-        },
-      });
+      // await dispatch({
+      //   type: SHOW_NOTIF,
+      //   payload: {
+      //     text: 'Your request has been accepted, you are part of the team!',
+      //     route: `/project/${projectId}`,
+      //   },
+      // });
 
       setShowModal(false);
     }
@@ -112,13 +113,13 @@ const ModalRequests = ({
       } catch (e) {
         console.error(e);
       }
-      dispatch({
-        type: SHOW_NOTIF,
-        payload: {
-          text: 'Your request has been rejected your request :(',
-          route: '/project',
-        },
-      });
+      // dispatch({
+      //   type: SHOW_NOTIF,
+      //   payload: {
+      //     text: 'Your request has been rejected your request :(',
+      //     route: '/project',
+      //   },
+      // });
     }
   };
 
@@ -160,14 +161,14 @@ const ModalRequests = ({
               </Link>
               <div style={{ marginLeft: '20px', marginBottom: '30px' }}>
                 <Button
-                  onClick={() => acceptRequest(request.username, request._id)}
+                  onClick={(e) => acceptRequest(request.username, request._id)}
                   style={{ marginRight: '10px' }}
                 >
                   Accept
                 </Button>
 
                 <Button
-                  onClick={() => rejectRequest(request.username, request._id)}
+                  onClick={(e) => rejectRequest(request.username, request._id)}
                   className="delete-btn"
                 >
                   Reject

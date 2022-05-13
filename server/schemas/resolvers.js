@@ -37,8 +37,8 @@ const resolvers = {
   },
 
   Mutation: {
-    addUser: async (parent, { username, email, password, github }) => {
-      const user = await User.create({ username, email, password, github });
+    addUser: async (parent, { username, email, password, github, picture }) => {
+      const user = await User.create({ username, email, password, github, picture });
       const token = signToken(user);
       return { token, user };
     },
@@ -59,7 +59,7 @@ const resolvers = {
 
       return { token, user };
     },
-    addPost: async (parent, { title, tagsString, description, teamSize, projectImg, repo }, context) => {
+    addPost: async (parent, { title, tagsString, description, projectImg, repo }, context) => {
       if (context.user) {
 
         const tags = tagsString.split(', ');
@@ -70,7 +70,7 @@ const resolvers = {
 
         const date = 'May 5, 2022'
 
-        const project = await Project.create({ title, tags, description, teamSize, projectImg, repo, poster, date });
+        const project = await Project.create({ title, tags, description, projectImg, repo, poster, date });
 
         await User.findOneAndUpdate(
           { _id: me._id },
@@ -206,7 +206,7 @@ const resolvers = {
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },
-    editProfile: async (parent, { userId, newUsername, newBio }, context) => {
+    editProfile: async (parent, { userId, newUsername, newBio, newImg }, context) => {
       // if (context.user) {
 
         const user = await User.findOneAndUpdate(
@@ -214,6 +214,7 @@ const resolvers = {
           { 
             username: newUsername,
             bio: newBio,
+            picture: newImg
           },
           {
             new: true,
@@ -224,7 +225,23 @@ const resolvers = {
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },
+    
+    setProfilePicture: async (parent, { userId, picture }, context) => {
+      // if (context.user) {
 
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        { picture: picture},
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return user;
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
+    },
     checkUserExist: async (parent, { email }) => {
       const user = await User.findOne({ email });
       const token = signToken(user);

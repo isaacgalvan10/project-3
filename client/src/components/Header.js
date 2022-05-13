@@ -42,6 +42,7 @@ const Header = () => {
 
   const logout = (event) => {
     event.preventDefault();
+    navigate(`/`);
     Auth.logout();
   };
 
@@ -69,17 +70,20 @@ const Header = () => {
 
   }
 
+  // const navigateHomePage = () => {
+  //   navigate(`/`);
+  // }
   return (
     <>
       {loading ? (
-        <h3>Loading...</h3>
+        <h3></h3>
       ) : (
         <>
           {['md'].map((expand) => (
             <Navbar key={expand} expand={expand} className="mb-3">
               <Container>
-                <Navbar.Brand as={Link} to="/">
-                  &lt;Team Finder/&gt;
+                <Navbar.Brand>
+                  <a href='/' className='text-reset'>&lt;Squad Finder/&gt;</a>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
                 <Navbar.Offcanvas
@@ -125,7 +129,7 @@ const Header = () => {
                             style={{ marginRight: '10px' }}
                             onClick={() => setShowModal(true)}
                           >
-                            Login/Signup
+                            Login
                           </Button>
                         </>
                       )}
@@ -159,7 +163,7 @@ const Header = () => {
                         {Auth.loggedIn() ? (
                           <Link to={`./profile/${state.me._id}`}>
                             <Image
-                              src={`../${state.me.picture}`}
+                              src={state.me.picture}
                               alt="user"
                               className="header-profile-img"
                             ></Image>
