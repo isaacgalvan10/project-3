@@ -9,7 +9,6 @@ const typeDefs = gql`
     edited: Boolean
     description: String
     projectImg: String
-    teamSize: Int
     closed: Boolean
     members: [User]
     tags: [String]
@@ -44,9 +43,9 @@ const typeDefs = gql`
   }
 
     type Mutation {
-        addUser(username: String!, email: String!, password: String!, github: String): Auth
+        addUser(username: String!, email: String!, password: String!, github: String, picture: String!): Auth
         login(email: String!, password: String!): Auth
-        addPost(title: String!, tagsString: String!, description: String!, teamSize: Int!, projectImg: String!, repo: String!): Project
+        addPost(title: String!, tagsString: String!, description: String!, projectImg: String!, repo: String!): Project
         checkUserExist(email: String!): Auth
         removePost(postId: ID!): Project
         addMember(userId: ID!, projectId: ID!): Project
@@ -54,9 +53,10 @@ const typeDefs = gql`
         addRequest(userId: ID!, projectId: ID!): Project
         removeRequest(projectId: ID!, userId: ID!): Project
         removeProject(userId: ID!, projectId: ID!): User
-        editProfile(userId: ID!, newUsername: String!, newBio: String!): User
+        editProfile(userId: ID!, newUsername: String!, newBio: String!, newImg: String!): User
+        setProfilePicture(userId: ID!, picture: String!): User
     }
 `;
 
-module.exports = typeDefs;             
+module.exports = typeDefs;               
 

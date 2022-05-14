@@ -7,6 +7,7 @@ import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
 import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
+import Auth from '../utils/auth';
 
 const RequestModal = () => {
   const [state, dispatch] = useGlobalContext();
@@ -15,10 +16,10 @@ const RequestModal = () => {
   const [removeRequest] = useMutation(REMOVE_REQUEST);
 
   if (loading) {
-    return <h2>LOADING...</h2>;
+    return <h2></h2>;
   }
 
-  const me = data.me;
+  const me = data?.me || Auth.getProfile().data;
 
   const acceptRequest = async (projectIndex) => {
     const confirm = await swal({
@@ -118,7 +119,7 @@ const RequestModal = () => {
             <h3 style={{ marginBottom: '20px' }}>
               {me.username} has sent a request to join your team!
             </h3>
-            <Link to={`/profile/${me._id}`}>
+            <Link to={me._id}>
               <Image
                 src={`../${me.picture}`}
                 alt="user"

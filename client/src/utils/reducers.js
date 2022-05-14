@@ -52,7 +52,7 @@ export const reducer = (state, action) => {
         case POST_MEMBER:
             const updatedProject = {
                 ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
-                    memberId: action.payload.memberId,
+                    _id: action.payload._id,
                     username: action.payload.username,
                     picture: action.payload.picture
                 }]
@@ -106,11 +106,25 @@ export const reducer = (state, action) => {
             };
 
         case ADD_PROJECT:
+
+            const { title, tagsString, description, projectImg, repo, _id} = action.formData;
+
+            const tags = tagsString.split(', ');
+
+            const newProject = {
+                _id,
+                title,
+                tags,
+                description,
+                projectImg,
+                repo
+            }
+
             return {
                 ...state,
                 projects: [
                     ...state.projects,
-                    action.newProject
+                    newProject
                 ]
             };
 
@@ -120,18 +134,18 @@ export const reducer = (state, action) => {
             const updatedProjects = requestedProjects.map((project) => {
                 return {
                     ...project,
-                    spotsLeft: function () {
-                        const spots = [];
-                        const spotsQty = this.teamSize - this.members.length;
-                        for (let i = 0; i < spotsQty; i++) {
-                            spots.push({
-                                id: i + 1,
-                                pic: './no-profile-picture.jpeg'
-                            }
-                            );
-                        };
-                        return spots;
-                    }
+                    // spotsLeft: function () {
+                    //     const spots = [];
+                    //     const spotsQty = this.teamSize - this.members.length;
+                    //     for (let i = 0; i < spotsQty; i++) {
+                    //         spots.push({
+                    //             id: i + 1,
+                    //             pic: './no-profile-picture.jpeg'
+                    //         }
+                    //         );
+                    //     };
+                    //     return spots;
+                    // }
                 }
             });
             return {
@@ -143,7 +157,7 @@ export const reducer = (state, action) => {
             const requestedMe = action.me;
             return {
                 ...state,
-                me: requestedMe
+                me: requestedMe,
             };
 
         default:
