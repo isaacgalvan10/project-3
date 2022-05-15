@@ -119,22 +119,15 @@ mutation RemoveProject($userId: ID!, $projectId: ID!) {
 `;
 
 export const EDIT_PROFILE = gql`
-mutation EditProfile($userId: ID!, $newUsername: String!, $newBio: String!, $newImg: String!) {
-  editProfile(userId: $userId, newUsername: $newUsername, newBio: $newBio, newImg: $newImg) {
-    _id
-    username
-    bio
-    picture
-  }
-}
-`;
-
-export const SET_PROFILE_PICTURE = gql`
-mutation SetProfilePicture($userId: ID!, $picture: String!) {
-  setProfilePicture(userId: $userId, picture: $picture) {
-    _id
-    username
-    picture
+mutation EditProfile($newUsername: String!, $newBio: String!, $newImg: String!) {
+  editProfile(newUsername: $newUsername, newBio: $newBio, newImg: $newImg) {
+    token
+    user {
+      _id
+      username
+      bio
+      picture
+    }
   }
 }
 `;
