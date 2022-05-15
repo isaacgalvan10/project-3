@@ -8,11 +8,11 @@ import {
   ListGroupItem,
 } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
-import { HIDE_MODAL, STATUS, POST_MEMBER, SHOW_NOTIF } from '../utils/actions';
+import { HIDE_MODAL, STATUS, POST_MEMBER, SHOW_NOTIF, DELETE_REQUEST } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { useQuery } from '@apollo/client';
-import { QUERY_ME } from '../utils/queries';
+// import { useQuery } from '@apollo/client';
+// import { QUERY_ME } from '../utils/queries';
 import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 
@@ -25,15 +25,15 @@ const ModalRequests = ({
   projectIndex,
 }) => {
   const [state, dispatch] = useGlobalContext();
-  const { loading, data } = useQuery(QUERY_ME);
+  // const { loading, data } = useQuery(QUERY_ME);
   const [addMember] = useMutation(ADD_MEMBER);
   const [removeRequest] = useMutation(REMOVE_REQUEST);
 
-  if (loading) {
-    return <h2></h2>;
-  }
+  // if (loading) {
+  //   return <h2></h2>;
+  // }
 
-  const me = data.me;
+  // const me = data.me;
 
   const tagArr = [
     ...currentProject.tags.map((tag) => {
@@ -43,7 +43,7 @@ const ModalRequests = ({
   const tagsString = tagArr.join(', ');
   console.log(tagsString);
 
-  const acceptRequest = async (username, userId) => {
+  const acceptRequest = async (userId, username, picture) => {
     const confirm = await swal({
       title: `Are you sure you want to accept ${username} in your team?`,
       buttons: ['No', 'Yes'],
@@ -56,7 +56,7 @@ const ModalRequests = ({
               index: projectIndex,
               _id: userId,
               username: username,
-              picture: username
+              picture: picture
           }
       });
       try {
@@ -70,8 +70,15 @@ const ModalRequests = ({
         console.error(e);
         console.log('hi');
       }
+      await dispatch({
+        type: DELETE_REQUEST,
+        payload: {
+            index: projectIndex,
+            id: userId,
+        }
+    });
       try {
-        await removeRequest({
+        removeRequest({
           variables: {
             projectId: projectId,
             userId: userId,
@@ -88,7 +95,7 @@ const ModalRequests = ({
       //   },
       // });
 
-      setShowModal(false);
+      // setShowModal(false);
     }
   };
 
@@ -98,11 +105,18 @@ const ModalRequests = ({
       buttons: ['No', 'Yes'],
     });
     if (confirm) {
-      dispatch({ type: HIDE_MODAL });
+      // dispatch({ type: HIDE_MODAL });
+      // dispatch({
+      //   type: STATUS,
+      //   status: 'out',
+      // });
       dispatch({
-        type: STATUS,
-        status: 'out',
-      });
+        type: DELETE_REQUEST,
+        payload: {
+            index: projectIndex,
+            id: userId,
+        }
+    });
       try {
         removeRequest({
           variables: {
@@ -152,7 +166,7 @@ const ModalRequests = ({
                 style={{ textAlign: 'center', textDecoration: 'none' }}
               >
                 <Image
-                  src={`../${request.picture}`}
+                  src={request.picture}
                   alt="user"
                   roundedCircle
                   className="profile-img"
@@ -161,7 +175,7 @@ const ModalRequests = ({
               </Link>
               <div style={{ marginLeft: '20px', marginBottom: '30px' }}>
                 <Button
-                  onClick={(e) => acceptRequest(request.username, request._id)}
+                  onClick={(e) => acceptRequest(request._id, request.username, request.picture)}
                   style={{ marginRight: '10px' }}
                 >
                   Accept
