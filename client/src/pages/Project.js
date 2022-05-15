@@ -20,6 +20,8 @@ import {
   STATUS,
   SHOW_MODAL_NOTIF,
   UPDATE_PROJECTS,
+  POST_REQUEST,
+  DELETE_POST
 } from '../utils/actions';
 import React from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -43,9 +45,9 @@ const Project = () => {
   });
 
   const [showModal, setShowModal] = useState(false);
-  
-  const [state, dispatch] = useGlobalContext();
 
+  const [state, dispatch] = useGlobalContext();
+  // const navigate = useNavigate();
   const [addRequest] = useMutation(ADD_REQUEST);
   const [removePost] = useMutation(REMOVE_POST);
   const [deleteMember] = useMutation(REMOVE_MEMBER);
@@ -55,17 +57,9 @@ const Project = () => {
     return <div>Loading...</div>;
   }
 
-  const project = data?.project || '';
-
-  const members = data.project?.members || [];
-
-  const tags = data.project?.tags || [];
-
-  const posterPicture = project.poster?.picture || state.me.picture || '';
-
   const isPoster = () => {
     if (Auth.loggedIn()) {
-      return Auth.getProfile().data._id === project.poster._id;
+      return (Auth.getProfile().data?._id || Auth.getProfile().data?.userId) === project.poster._id;
     }
   };
 
@@ -73,6 +67,15 @@ const Project = () => {
     (project) => project._id === projectId
   );
   // const currentProject = state.projects[projectIndex];
+
+  // console.log(currentProject);
+
+  const project = state?.projects[projectIndex] || data?.project || '';
+  const members = project?.members || data.project?.members || [];
+  const tags = project?.members || data.project?.tags || [];
+  const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
+  const joinedProjects = state?.me?.joinedProjects || [];
+  const requests = project?.requests || [];
 
   // const emptySpots = currentProject.spotsLeft();
 
@@ -86,22 +89,34 @@ const Project = () => {
   // };
 
   const deletePost = async () => {
-    try {
-      await removePost({
-        variables: { postId: projectId }
+    const confirm = await swal({
+      title: 'Are you sure you want to delete your post?',
+      buttons: ['No', 'Yes'],
+    });
 
-      });
-    } catch (e) {
-      console.error(e);
-      console.log('hi');
+    if (confirm) {
+      try {
+        await dispatch({
+          type: DELETE_POST,
+          payload: {
+            id: projectId,
+          }
+        });
+        await removePost({
+          variables: { postId: projectId }
+        });
+        await swal({
+          title: `Your post has been deleted`,
+          button: 'Go to homepage'
+        });
+      } catch (e) {
+        console.error(e);
+        console.log('hi');
+      }
+
+      window.location.replace('/');
     }
-
-    // navigate("/");
-
-    window.location.replace('/');
-
-  }
-
+  };
 
   const removeMember = async (memberId, username) => {
     console.log(memberId);
@@ -111,13 +126,13 @@ const Project = () => {
     });
 
     if (confirm) {
-      // dispatch({
-      //     type: DELETE_MEMBER,
-      //     payload: {
-      //         id: memberId,
-      //         index: projectIndex
-      //     }
-      // });
+      dispatch({
+        type: DELETE_MEMBER,
+        payload: {
+          id: memberId,
+          index: projectIndex
+        }
+      });
       try {
         await deleteMember({
           variables: {
@@ -150,18 +165,19 @@ const Project = () => {
     // });
   };
 
+  let meInProject;
+  let meInRequests;
+
+  if (Auth.loggedIn()) {
+    meInProject = joinedProjects.find((project) => project._id === projectId);
+    meInRequests = requests.find((request) => request._id === (state?.me?._id || Auth.getProfile().data?.userId));
+  }
+
   const setBtnText = () => {
     if (Auth.loggedIn()) {
-      const meInProject = state.me.joinedProjects.find(
-        (project) => project._id === projectId
-      );
-      console.log(meInProject);
       if (meInProject) {
         return 'Dropout';
       } else {
-        const meInRequests = project.requests.find(
-          (request) => request._id === state.me._id
-        );
         if (meInRequests) {
           return 'Pending...';
         } else {
@@ -185,12 +201,20 @@ const Project = () => {
           swal({
             text: `You have sent ${project.poster.username} a request to join their team`,
           });
-
+          dispatch({
+            type: POST_REQUEST,
+            payload: {
+              _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
+              index: projectIndex,
+              username: state?.me?.username || Auth.getProfile().data.username,
+              picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+            }
+          });
           try {
             addRequest({
               variables: {
                 projectId: projectId,
-                userId: state.me._id,
+                userId: state?.me?._id || Auth.getProfile().data?.userId,
               },
             });
           } catch (e) {
@@ -226,13 +250,13 @@ const Project = () => {
           swal({
             text: `You have dropout of ${project.poster.username}'s team`,
           });
-          // dispatch({
-          //     type: DELETE_MEMBER,
-          //     payload: {
-          //         id: Auth.getProfile().data._id,
-          //         index: projectIndex
-          //     }
-          // });
+          dispatch({
+            type: DELETE_MEMBER,
+            payload: {
+              id: Auth.getProfile().data._id,
+              index: projectIndex
+            }
+          });
           try {
             await deleteMember({
               variables: {
@@ -270,12 +294,6 @@ const Project = () => {
         <Row className=" mb-3 flex-wrap" style={{ width: '100%' }}>
           <Col className="responsive-col">
             <h1 className="mb-3">{project.title}</h1>
-
-            {/* {Auth.loggedIn() && isPoster() ? (
-                <h3>POSTER SIDE</h3>
-              ) : (
-                <h3>USER SIDE</h3>
-              )} */}
             <div className="d-flex align-items-center">
               <div>
                 <Link as={Link} to={`/profile/${project.poster._id}`}>
@@ -317,13 +335,31 @@ const Project = () => {
                 </Button>
               </div>
             ) : (
-              <Button
-                variant="success"
-                onClick={(e) => sendRequest(e.target.textContent)}
-                style={{ marginTop: '20px' }}
-              >
-                {setBtnText()}
-              </Button>
+              <>
+                <div className="d-flex" style={{ marginTop: '20px' }}>
+                  <Button
+                    variant="success"
+                    onClick={(e) => sendRequest(e.target.textContent)}
+                    style={{ marginTop: '20px' }}
+                  >
+                    {setBtnText()}
+                  </Button>
+                  {meInProject ? (
+                    <div style={{ marginLeft: '10px', marginTop: '20px' }}>
+                      <a
+                        href={project.repo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-reset"
+                      >
+                        <Button>Repository</Button>
+                      </a>
+                    </div>
+                  ) : (
+                    null
+                  )}
+                </div>
+              </>
             )}
           </Col>
           <Col className="responsive-col">
@@ -379,13 +415,13 @@ const Project = () => {
                               )} */}
         <Row className="d-flex">
           <h3>Team Members</h3>
-          {console.log(project.members)}
+          {console.log(members)}
           {members.map((member) => (
             <Col className="xs-col" xs={2} key={member._id}>
               <div className="d-flex flex-column align-items-center">
                 <Link as={Link} to={`/profile/${member._id}`}>
                   <Image
-                    src={`../${member.picture}`}
+                    src={member.picture}
                     alt="user"
                     roundedCircle
                     className="sm-profile-img"
@@ -414,7 +450,7 @@ const Project = () => {
           <ModalRequests
             show={showModal}
             setShowModal={setShowModal}
-            requests={project.requests}
+            requests={requests}
             projectId={projectId}
             currentProject={project}
             projectIndex={projectIndex}
