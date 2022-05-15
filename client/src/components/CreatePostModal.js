@@ -43,16 +43,11 @@ const CreatePostModal = () => {
     event.preventDefault();
 
     const retrievedImg = JSON.parse(localStorage.getItem('image'));
-    console.log(retrievedImg);
-
-    console.log(postFormData);
 
     const post = {
       ...postFormData,
       projectImg: retrievedImg,
     }
-
-    console.log(post);
 
     try {
       const { data } = await addPost({

@@ -49,8 +49,6 @@ const Project = () => {
   );
   // const currentProject = state.projects[projectIndex];
 
-  // console.log(currentProject);
-
   const project = state?.projects[projectIndex] || data?.project || '';
   const members = project?.members || data.project?.members || [];
   const tags = project?.members || data.project?.tags || [];
@@ -92,7 +90,6 @@ const Project = () => {
         });
       } catch (e) {
         console.error(e);
-        console.log('hi');
       }
 
       window.location.replace('/');
@@ -100,7 +97,6 @@ const Project = () => {
   };
 
   const removeMember = async (memberId, username) => {
-    console.log(memberId);
     const confirm = await swal({
       title: `Are you sure you want to remove ${username} from your team?`,
       buttons: ['No', 'Yes'],
@@ -123,7 +119,6 @@ const Project = () => {
         });
       } catch (e) {
         console.error(e);
-        console.log('hi');
       }
       try {
         removeProject({
@@ -396,7 +391,6 @@ const Project = () => {
                               )} */}
         <Row className="d-flex">
           <h3>Team Members</h3>
-          {console.log(members)}
           {members.map((member) => (
             <Col className="xs-col" xs={2} key={member._id}>
               <div className="d-flex flex-column align-items-center">

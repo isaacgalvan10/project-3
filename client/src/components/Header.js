@@ -87,7 +87,6 @@ const Header = () => {
         <h3></h3>
       ) : ( */}
         <>
-        {console.log(state)}
           {['md'].map((expand) => (
             <Navbar key={expand} expand={expand} className="mb-3">
               <Container>

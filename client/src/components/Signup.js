@@ -27,13 +27,11 @@ function Signup(props) {
     setFormErrors(validate(formValues));
     // setIsSubmit(true);
     // const retrievedImg = await JSON.parse(localStorage.getItem('profileImg'));
-    // console.log(retrievedImg);
     const finalForm = {
       ...formValues,
       picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
       // picture: retrievedImg,
     };
-    console.log(finalForm);
     try {
       const { data } = await addUser({
         variables: { ...finalForm },
@@ -48,11 +46,9 @@ function Signup(props) {
 
   // useEffect(() => {
   //   if (Object.keys(formErrors).length === 0 && isSubmit) {
-  //     console.log("No errors in form")
   //     // props.setNewProduct(formValues);
   //     // props.orderData.items.push(formValues);
   //     signUpAlert()
-  //     console.log(formValues)
   //     setIsSubmit(false);
   //   }
   // });

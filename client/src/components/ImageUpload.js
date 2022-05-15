@@ -8,7 +8,6 @@ export default function ImageUpload() {
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    console.log(imageList[0], addUpdateIndex);
     setImages(imageList);
     localStorage.setItem('image', JSON.stringify(imageList[0].data_url));
   };

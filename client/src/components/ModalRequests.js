@@ -33,7 +33,6 @@ const ModalRequests = ({
     }),
   ];
   const tagsString = tagArr.join(', ');
-  console.log(tagsString);
 
   const acceptRequest = async (userId, username, picture) => {
     const confirm = await swal({
@@ -60,7 +59,6 @@ const ModalRequests = ({
         });
       } catch (e) {
         console.error(e);
-        console.log('hi');
       }
       await dispatch({
         type: DELETE_REQUEST,
@@ -152,7 +150,6 @@ const ModalRequests = ({
                 marginTop: '10px',
               }}
             >
-              {console.log(request)}
               <Link
                 to={`/profile/${request._id}`}
                 style={{ textAlign: 'center', textDecoration: 'none' }}

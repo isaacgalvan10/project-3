@@ -53,7 +53,6 @@ export const reducer = (state, action) => {
             };
 
         case POST_MEMBER:
-            console.log(state);
             const updatedProject = {
                 ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
                     _id: action.payload._id,
@@ -74,8 +73,6 @@ export const reducer = (state, action) => {
                 return member._id !== action.payload.id;
             });
 
-            console.log(membersLeft);
-
             const updatedProject2 = { ...state.projects[action.payload.index], members: membersLeft };
 
             const projectsCopy2 = [...state.projects];
@@ -87,7 +84,6 @@ export const reducer = (state, action) => {
             };
 
         case POST_REQUEST:
-            console.log(state);
             const updatedProject3 = {
                 ...state.projects[action.payload.index], requests: [...state.projects[action.payload.index].requests, {
                     _id: action.payload._id,

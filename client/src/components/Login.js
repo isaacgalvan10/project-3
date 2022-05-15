@@ -37,7 +37,6 @@ function Login(props) {
 
       Auth.login(data.login.token);
       const user = await Auth.getProfile().data;
-      console.log(user);
       localStorage.setItem('profileImg', JSON.stringify(user.picture));
     } catch (e) {
       console.error(e);
@@ -57,10 +56,8 @@ function Login(props) {
   
   // useEffect(() => {
   //   if (Object.keys(formErrors).length === 0 && isSubmit) {
-  //     console.log("No errors in form")
   //     // props.setNewProduct(formValues);
   //     // props.orderData.items.push(formValues);
-  //     console.log(formValues)
   //     setIsSubmit(false);
   //   }
   // });

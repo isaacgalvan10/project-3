@@ -25,8 +25,6 @@ const EditProfileForm = ({ user, setEditMode }) => {
     event.preventDefault();
 
     const retrievedImg = JSON.parse(localStorage.getItem('profileImg'));
-    console.log(retrievedImg);
-    console.log(editFormData);
     const finalForm = {
       ...editFormData,
       newImg: retrievedImg,
