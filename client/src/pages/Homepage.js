@@ -23,15 +23,17 @@ const Homepage = () => {
     }
   }, [data, loading, dispatch]);
 
+  const projects = state?.projects || data?.projects || [];
+
   return (
     <Container className="main-container">
-      {state.projects.length > 0 ? (
+      {projects.length > 0 ? (
         <Row>
           <Col
             className="d-flex flex-wrap justify-content-center"
             style={{ gap: '30px' }}
           >
-            {state.projects.map((project, index) => (
+            {projects.map((project, index) => (
               <Card key={`${project}${index}`}>
                 <Card.Img variant="top" src={project.projectImg} />
                 <Card.Body>
@@ -70,7 +72,7 @@ const Homepage = () => {
       ) : (
         <h3></h3>
       )}
-      {loading ? <h3> </h3> : null}
+      {loading ? <h3>Loading...</h3> : null}
     </Container>
   );
 };
