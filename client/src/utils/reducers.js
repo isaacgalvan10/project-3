@@ -9,8 +9,11 @@ import {
     HIDE_MODAL,
     SHOW_MODAL_NOTIF,
     ADD_PROJECT,
+    DELETE_POST,
     UPDATE_PROJECTS,
-    UPDATE_ME
+    UPDATE_ME,
+    POST_REQUEST,
+    DELETE_REQUEST
 } from './actions';
 
 export const reducer = (state, action) => {
@@ -50,6 +53,7 @@ export const reducer = (state, action) => {
             };
 
         case POST_MEMBER:
+            console.log(state);
             const updatedProject = {
                 ...state.projects[action.payload.index], members: [...state.projects[action.payload.index].members, {
                     _id: action.payload._id,
@@ -82,6 +86,38 @@ export const reducer = (state, action) => {
                 projects: projectsCopy2
             };
 
+        case POST_REQUEST:
+            console.log(state);
+            const updatedProject3 = {
+                ...state.projects[action.payload.index], requests: [...state.projects[action.payload.index].requests, {
+                    _id: action.payload._id,
+                    username: action.payload.username,
+                    picture: action.payload.picture
+                }]
+            };
+
+            const projectsCopy3 = [...state.projects];
+            projectsCopy3[action.payload.index] = updatedProject3
+            return {
+                ...state,
+                projects: projectsCopy3
+            };
+
+        case DELETE_REQUEST:
+            const requestsLeft = state.projects[action.payload.index].requests.filter((request) => {
+                return request._id !== action.payload.id;
+            });
+
+            const updatedProject4 = { ...state.projects[action.payload.index], requests: requestsLeft };
+
+            const projectsCopy4 = [...state.projects];
+            projectsCopy4[action.payload.index] = updatedProject4
+
+            return {
+                ...state,
+                projects: projectsCopy4
+            };
+
         case STATUS:
             return {
                 ...state,
@@ -107,13 +143,15 @@ export const reducer = (state, action) => {
 
         case ADD_PROJECT:
 
-            const { title, tagsString, description, projectImg, repo, _id} = action.formData;
+            const { title, tagsString, description, projectImg, repo, _id, date, ...poster } = action.formData;
 
             const tags = tagsString.split(', ');
 
             const newProject = {
                 _id,
                 title,
+                date,
+                ...poster,
                 tags,
                 description,
                 projectImg,
@@ -128,6 +166,15 @@ export const reducer = (state, action) => {
                 ]
             };
 
+            case DELETE_POST:    
+            const postsLeft = state.projects.filter((post) => {
+                return post._id !== action.payload.id;
+            });
+                return {
+                    ...state,
+                    projects: postsLeft
+                };
+                
         case UPDATE_PROJECTS:
             const requestedProjects = action.projects;
 
