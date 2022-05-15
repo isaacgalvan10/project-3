@@ -53,7 +53,7 @@ const typeDefs = gql`
         addRequest(userId: ID!, projectId: ID!): Project
         removeRequest(projectId: ID!, userId: ID!): Project
         removeProject(userId: ID!, projectId: ID!): User
-        editProfile(userId: ID!, newUsername: String!, newBio: String!, newImg: String!): User
+        editProfile(newUsername: String!, newBio: String!, newImg: String!): Auth
         setProfilePicture(userId: ID!, picture: String!): User
     }
 `;
