@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
 const { Schema } = mongoose;
 
@@ -8,7 +9,9 @@ const projectSchema = new Schema({
     required: true,
   },
   date: {
-    type: String,
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => dateFormat(timestamp),
   },
   repo: {
     type: String,
