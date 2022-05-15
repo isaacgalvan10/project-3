@@ -17,7 +17,7 @@ import Profile from './pages/Profile';
 // import Footer from './components/Footer';
 import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
-import RequestModal from './components/RequestModal';
+// import RequestModal from './components/RequestModal';
 import CreatePostModal from './components/CreatePostModal';
 import Auth from './utils/auth';
 
@@ -58,7 +58,7 @@ function App() {
             {Auth.loggedIn() ? (
               <>
                 <Notification />
-                <RequestModal />
+                {/* <RequestModal /> */}
                 <CreatePostModal />
               </>
             ) : null}
