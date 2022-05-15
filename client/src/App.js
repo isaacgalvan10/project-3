@@ -14,13 +14,10 @@ import Homepage from './pages/Homepage';
 import SearchResults from './pages/SearchResults';
 import Project from './pages/Project';
 import Profile from './pages/Profile';
-import MyProfile from './pages/profiles/MyProfile';
-import Footer from './components/Footer';
-import Signup from './components/Signup';
-import Login from './components/Login';
+// import Footer from './components/Footer';
 import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
-import RequestModal from './components/RequestModal';
+// import RequestModal from './components/RequestModal';
 import CreatePostModal from './components/CreatePostModal';
 import Auth from './utils/auth';
 
@@ -56,17 +53,12 @@ function App() {
               <Route path="/searchResults/:input" element={<SearchResults />} />
               <Route path="/project/:projectId" element={<Project />} />
               <Route path="/profile/:userId" element={<Profile />} />
-              <Route path="/myProfile" element={<MyProfile />} />
-              {/* <Signup /> */}
-              <Route path="/signUp" element={<Signup />} />
-              {/* <Login /> */}
-              <Route path="/login" element={<Login />} />
             </Routes>
             {/* <Footer /> */}
             {Auth.loggedIn() ? (
               <>
                 <Notification />
-                <RequestModal />
+                {/* <RequestModal /> */}
                 <CreatePostModal />
               </>
             ) : null}

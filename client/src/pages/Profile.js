@@ -15,8 +15,8 @@ import ProfileProjects from '../components/ProfileProjects';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import '../components/styles/profile.css';
-import { useParams } from 'react-router-dom';
-import { QUERY_USER } from '../utils/queries';
+import { useParams, Navigate } from 'react-router-dom';
+import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import ProfileCard from '../components/ProfileCard';
@@ -30,9 +30,11 @@ const MyProfile = () => {
   const [state] = useGlobalContext();
 
   const { userId } = useParams();
-  // const userId = "6279aa574eea1e4d8c95a783"
-
   const [editMode, setEditMode] = useState(false);
+
+  // const { loading, data } = useQuery(userId ? QUERY_USER : QUERY_ME, {
+  //   variables: { userId: userId },
+  // });
 
   const { loading, data } = useQuery(QUERY_USER, {
     variables: { userId: userId },
@@ -42,11 +44,20 @@ const MyProfile = () => {
     return <h1 className="text-center">Loading...</h1>;
   }
 
-  const user = data.user;
+  let me;
+
+  if (Auth.loggedIn()) {
+    me = Auth.getProfile().data;
+  }
+
+  const user = data?.me || data?.user || me || '';
+
+  const projects = data?.me?.joinedProjects || data?.user?.joinedProjects || [];
+  const posts =  data?.me?.posts || data?.user?.posts || [];
 
   const isMe = () => {
     if (Auth.loggedIn()) {
-      return Auth.getProfile().data._id === user._id;
+      return (Auth.getProfile().data?._id || Auth.getProfile().data?.userId) === userId;
     }
   };
 
@@ -55,6 +66,7 @@ const MyProfile = () => {
     setDisplayProjects(id);
     setProfileProjectsData(user);
   }
+
 
   function RenderProjects() {
     if (displayProjects) {
@@ -93,7 +105,7 @@ const MyProfile = () => {
           )}
         </Col>
         <Col lg={8}>
-          {data ? (
+          {/* {data ? ( */}
             <div>
               <h2 className="text-center mb-3">Projects</h2>
 
@@ -136,7 +148,7 @@ const MyProfile = () => {
                   <ProfileProjects
                     displayProjects={'posts'}
                     setDisplayProjects={'posts'}
-                    profileProjectsData={user}
+                    profileProjectsData={posts}
                     setProfileProjectsData={user}
                   />
                 </Tab>
@@ -144,15 +156,15 @@ const MyProfile = () => {
                   <ProfileProjects
                     displayProjects={'joinedProjects'}
                     setDisplayProjects={'joinedProjects'}
-                    profileProjectsData={user}
+                    profileProjectsData={projects}
                     setProfileProjectsData={user}
                   />
                 </Tab>
               </Tabs>
             </div>
-          ) : (
+          {/* ) : (
             ''
-          )}
+          )} */}
         </Col>
       </Row>
     </Container>

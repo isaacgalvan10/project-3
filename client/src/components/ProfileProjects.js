@@ -3,7 +3,9 @@ import { Container, Card, Nav, Button, Image, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const ProfileProjects = (props) => {
-  const projectsSelected = props.profileProjectsData[props.displayProjects];
+  console.log(props);
+  const projectsSelected = props.profileProjectsData;
+  console.log(projectsSelected);
   //Continue here
 
   return (

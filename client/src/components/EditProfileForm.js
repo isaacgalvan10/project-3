@@ -6,19 +6,22 @@ import { EDIT_PROFILE } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 import { useGlobalContext } from '../utils/GlobalState';
 import ProfileImg from '../components/ProfileImg';
-
+import Auth from '../utils/auth';
 
 const EditProfileForm = ({ user, setEditMode }) => {
   const [editProfile] = useMutation(EDIT_PROFILE);
-  const [state] = useGlobalContext();
 
-  const { picture } = state.me
+  const picture = user.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const [profileImg, setProfileImg] = useState('');
   const [editFormData, setEditFormData] = useState({
-    userId: user._id,
     newUsername: user.username,
-    newBio: user.bio,
+    newBio: user?.bio || '',
   });
+
+  const cancel = () => {
+    setEditMode(false);
+    localStorage.removeItem('profileImg');
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,17 +35,18 @@ const EditProfileForm = ({ user, setEditMode }) => {
     }
 
     try {
-      await editProfile({
+      const { data } = await editProfile({
         variables: {
           ...finalForm,
         },
       });
+      localStorage.removeItem('profileImg');
+      Auth.login(data.editProfile.token);
     } catch (e) {
       console.error(e);
     }
 
-    setEditFormData({
-      userId: user._id,
+    await setEditFormData({
       newUsername: '',
       newBio: '',
     });
@@ -107,7 +111,7 @@ const EditProfileForm = ({ user, setEditMode }) => {
           <Button type="submit" style={{ marginRight: '10px' }}>
             Update
           </Button>
-          <Button type="submit" onClick={() => setEditMode(false)}>
+          <Button className="delete-btn" type="submit" onClick={() => cancel()}>
             Cancel
           </Button>
         </Form>

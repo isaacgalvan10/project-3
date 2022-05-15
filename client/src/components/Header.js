@@ -31,6 +31,12 @@ const Header = () => {
 
   const { loading, data } = useQuery(QUERY_ME);
 
+  let myId = ''; 
+
+  if (Auth.loggedIn()) {
+      myId = Auth.getProfile().data.userId;
+  } 
+
   useEffect(() => {
     if (data) {
       dispatch({
@@ -39,6 +45,10 @@ const Header = () => {
       });
     }
   }, [data, loading, dispatch]);
+
+  const id = state?.me?._id || data?.me?._id || myId;
+
+  const picture = state?.me?.picture || data?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
 
   const logout = (event) => {
     event.preventDefault();
@@ -75,10 +85,11 @@ const Header = () => {
   // }
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <h3></h3>
-      ) : (
+      ) : ( */}
         <>
+        {console.log(state)}
           {['md'].map((expand) => (
             <Navbar key={expand} expand={expand} className="mb-3">
               <Container>
@@ -161,9 +172,9 @@ const Header = () => {
                       </Dropdown> */}
                       <div>
                         {Auth.loggedIn() ? (
-                          <Link to={`./profile/${state.me._id}`}>
+                          <Link to={`./profile/${id}`}>
                             <Image
-                              src={state.me.picture}
+                              src={picture}
                               alt="user"
                               className="header-profile-img"
                             ></Image>
@@ -182,7 +193,7 @@ const Header = () => {
             <SearchResults input={searchValue} />
           )}
         </>
-      )}
+      {/* )} */}
       <Modal
             size='lg'
             show={showModal}

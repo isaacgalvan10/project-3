@@ -11,18 +11,12 @@ query Projects {
       username
       picture
     }
-    repo
-    edited
     description
     projectImg
-    closed
     members {
       _id
       username
-      email
-      github
       picture
-      bio
     }
     tags
     requests {

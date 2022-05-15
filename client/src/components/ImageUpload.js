@@ -52,13 +52,7 @@ export default function ImageUpload() {
                     onClick={() => onImageUpdate(index)}
                     style={{ marginRight: '10px' }}
                   >
-                    Update
-                  </Button>
-                  <Button
-                    onClick={() => onImageRemove(index)}
-                    className="delete-btn"
-                  >
-                    Remove
+                    Change
                   </Button>
                 </div>
               </div>

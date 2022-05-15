@@ -24,6 +24,7 @@ const userSchema = new Schema({
 
     github: {
         type: String,
+        required: true,
     },
 
     picture: {
