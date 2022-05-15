@@ -1,40 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Card,
-  Nav,
-  Button,
-  Image,
-  Row,
-  Col,
-  Tabs,
-  Tab,
-  Link,
-} from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Button, Row, Col, Tabs, Tab } from 'react-bootstrap';
 import ProfileProjects from '../components/ProfileProjects';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import '../components/styles/profile.css';
-import { useParams, Navigate } from 'react-router-dom';
-import { QUERY_USER, QUERY_ME } from '../utils/queries';
+import { useParams } from 'react-router-dom';
+import { QUERY_USER } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import ProfileCard from '../components/ProfileCard';
 import EditProfileForm from '../components/EditProfileForm';
-import { useGlobalContext } from '../utils/GlobalState';
-
 
 const MyProfile = () => {
-  const [displayProjects, setDisplayProjects] = useState();
-  const [profileProjectsData, setProfileProjectsData] = useState();
-  const [state] = useGlobalContext();
 
   const { userId } = useParams();
   const [editMode, setEditMode] = useState(false);
-
-  // const { loading, data } = useQuery(userId ? QUERY_USER : QUERY_ME, {
-  //   variables: { userId: userId },
-  // });
 
   const { loading, data } = useQuery(QUERY_USER, {
     variables: { userId: userId },
@@ -60,30 +38,6 @@ const MyProfile = () => {
       return (Auth.getProfile().data?._id || Auth.getProfile().data?.userId) === userId;
     }
   };
-
-  function ClickHandler(e) {
-    const id = e.target.id;
-    setDisplayProjects(id);
-    setProfileProjectsData(user);
-  }
-
-
-  function RenderProjects() {
-    if (displayProjects) {
-      return (
-        <div>
-          <ProfileProjects
-            displayProjects={displayProjects}
-            setDisplayProjects={setDisplayProjects}
-            profileProjectsData={profileProjectsData}
-            setProfileProjectsData={setProfileProjectsData}
-          />
-        </div>
-      );
-    } else {
-      return <div></div>;
-    }
-  }
 
   return (
     <Container className="main-container">

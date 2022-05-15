@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Container, Card, Form, Button, Nav, Modal } from "react-bootstrap";
-import { useGlobalContext } from '../utils/GlobalState';
-import { HIDE_MODAL } from '../utils/actions';
+import React, { useState } from "react";
+import { Container, Form, Button } from "react-bootstrap";
 import swal from "sweetalert";
-import { Link } from 'react-router-dom'
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
@@ -11,7 +8,6 @@ import Auth from '../utils/auth';
 
 
 function Signup(props) {
-  const [state, dispatch] = useGlobalContext();
   const initialValues = { username: "", github: "", email: "", password: "" };
   // Function that watches input information in form
   const handleChange = (e) => {
@@ -22,14 +18,14 @@ function Signup(props) {
   // useStates for the input values, errors in the inputs and submit of a new signup respectively
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
+  // const [isSubmit, setIsSubmit] = useState(false);
 
-  const [addUser, { error, data }] = useMutation(ADD_USER);
+  const [addUser] = useMutation(ADD_USER);
   // Function for submition of new signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-    setIsSubmit(true);
+    // setIsSubmit(true);
     // const retrievedImg = await JSON.parse(localStorage.getItem('profileImg'));
     // console.log(retrievedImg);
     const finalForm = {
@@ -50,22 +46,22 @@ function Signup(props) {
   };
 
 
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log("No errors in form")
-      // props.setNewProduct(formValues);
-      // props.orderData.items.push(formValues);
-      signUpAlert()
-      console.log(formValues)
-      setIsSubmit(false);
-    }
-  });
+  // useEffect(() => {
+  //   if (Object.keys(formErrors).length === 0 && isSubmit) {
+  //     console.log("No errors in form")
+  //     // props.setNewProduct(formValues);
+  //     // props.orderData.items.push(formValues);
+  //     signUpAlert()
+  //     console.log(formValues)
+  //     setIsSubmit(false);
+  //   }
+  // });
 
   // All input validations
   const validate = (values) => {
     const errors = {};
     const passwordRegex = /^.{8,}$/
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
 
     if (!values.email) {
       errors.email =

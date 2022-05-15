@@ -1,30 +1,11 @@
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Image,
-  ListGroup,
-  Dropdown,
-  Card,
-} from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Image } from 'react-bootstrap';
+import { useState } from 'react';
 import '../components/styles/project.css';
 import swal from 'sweetalert';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../utils/GlobalState';
-import {
-  SHOW_NOTIF,
-  DELETE_MEMBER,
-  STATUS,
-  SHOW_MODAL_NOTIF,
-  UPDATE_PROJECTS,
-  POST_REQUEST,
-  DELETE_POST
-} from '../utils/actions';
+import { DELETE_MEMBER, STATUS, POST_REQUEST, DELETE_POST } from '../utils/actions';
 import React from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';

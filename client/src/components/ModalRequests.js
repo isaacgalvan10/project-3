@@ -1,14 +1,6 @@
-import {
-  Modal,
-  Row,
-  Col,
-  Image,
-  Button,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Modal, Row, Image, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
-import { HIDE_MODAL, STATUS, POST_MEMBER, SHOW_NOTIF, DELETE_REQUEST } from '../utils/actions';
+import { POST_MEMBER, DELETE_REQUEST } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 // import { useQuery } from '@apollo/client';
@@ -24,7 +16,7 @@ const ModalRequests = ({
   currentProject,
   projectIndex,
 }) => {
-  const [state, dispatch] = useGlobalContext();
+  const [dispatch] = useGlobalContext();
   // const { loading, data } = useQuery(QUERY_ME);
   const [addMember] = useMutation(ADD_MEMBER);
   const [removeRequest] = useMutation(REMOVE_REQUEST);

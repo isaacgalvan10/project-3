@@ -1,4 +1,4 @@
-import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
@@ -13,8 +13,8 @@ const CreatePostModal = () => {
 
   const me = state?.me || Auth.getProfile().data;
   // const [validated, setValidated] = useState(false);
-  const [projectImage, setProjectImg] = useState('');
-  const [addPost, { error, data }] = useMutation(ADD_POST);
+  const [projectImage] = useState('');
+  const [addPost] = useMutation(ADD_POST);
   const [postFormData, setPostFormData] = useState({
     title: '',
     tagsString: '',

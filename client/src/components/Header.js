@@ -1,13 +1,11 @@
-
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { Offcanvas, Image, Dropdown, Modal, Tab } from 'react-bootstrap';
+import { Offcanvas, Image, Modal, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-
 import './styles/header.css';
 import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
@@ -27,7 +25,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState('');
-  const [isSearch, setSearch] = useState(false);
+  const [isSearch] = useState(false);
 
   const { loading, data } = useQuery(QUERY_ME);
 

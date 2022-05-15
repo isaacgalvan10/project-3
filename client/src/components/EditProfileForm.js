@@ -1,10 +1,9 @@
-import { Card, Nav, Image, Form, Button, Row, Col } from 'react-bootstrap';
+import { Card, Image, Form, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { EDIT_PROFILE } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
-import { useGlobalContext } from '../utils/GlobalState';
 import ProfileImg from '../components/ProfileImg';
 import Auth from '../utils/auth';
 
@@ -12,7 +11,6 @@ const EditProfileForm = ({ user, setEditMode }) => {
   const [editProfile] = useMutation(EDIT_PROFILE);
 
   const picture = user.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
-  const [profileImg, setProfileImg] = useState('');
   const [editFormData, setEditFormData] = useState({
     newUsername: user.username,
     newBio: user?.bio || '',
