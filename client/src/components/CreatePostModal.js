@@ -6,9 +6,12 @@ import { useMutation } from '@apollo/client';
 import { ADD_POST } from '../utils/mutations';
 import './styles/modal.css';
 import ImageUpload from '../components/ImageUpload';
+import Auth from '../utils/auth';
 
 const CreatePostModal = () => {
   const [state, dispatch] = useGlobalContext();
+
+  const me = state?.me || Auth.getProfile().data;
   // const [validated, setValidated] = useState(false);
   const [projectImage, setProjectImg] = useState('');
   const [addPost, { error, data }] = useMutation(ADD_POST);
@@ -19,6 +22,11 @@ const CreatePostModal = () => {
     projectImg: projectImage,
     repo: '',
   });
+
+  const closePostModal = () => {
+    dispatch({ type: HIDE_MODAL });
+    localStorage.removeItem('image');
+  }
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -52,15 +60,25 @@ const CreatePostModal = () => {
       });
 
 
-     const _id = data.addPost._id
+     const _id = data.addPost._id;
+     const date = data.addPost.date;
 
-      await dispatch({
+      dispatch({
         type: ADD_PROJECT,
         formData: {
           ...post,
-          _id
+          _id,
+          date,
+          poster: {
+            _id: me?._id || me?.userId,
+            username: me.username,
+            picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+          }
         }
     });
+
+    window.location.replace(`/project/${data.addPost._id}`);
+
 
     } catch (e) {
       console.error(e);
@@ -86,6 +104,8 @@ const CreatePostModal = () => {
       repo: '',
     });
 
+    localStorage.removeItem('image');
+
     dispatch({ type: HIDE_MODAL })
 
     // setValidated(true);
@@ -95,7 +115,7 @@ const CreatePostModal = () => {
     <Modal
       size="lg"
       show={state.modals.post}
-      onHide={() => dispatch({ type: HIDE_MODAL })}
+      onHide={() => closePostModal()}
       aria-labelledby="signup-modal"
     >
       <Modal.Header closeButton>
