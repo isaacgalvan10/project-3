@@ -6,7 +6,7 @@ import { useGlobalContext } from '../utils/GlobalState';
 
 const ProfileCard = ({ user }) => {
   const [state] = useGlobalContext();
-  const picture = state.me?.picture || user?.picture || '';
+  const picture = user.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
 
   return (
     <Card className="mb-3">
