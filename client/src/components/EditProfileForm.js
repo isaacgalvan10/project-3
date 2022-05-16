@@ -6,6 +6,7 @@ import { EDIT_PROFILE } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 import ProfileImg from '../components/ProfileImg';
 import Auth from '../utils/auth';
+import swal from "sweetalert";
 
 const EditProfileForm = ({ user, setEditMode }) => {
   const [editProfile] = useMutation(EDIT_PROFILE);
@@ -40,6 +41,9 @@ const EditProfileForm = ({ user, setEditMode }) => {
       Auth.login(data.editProfile.token);
     } catch (e) {
       console.error(e);
+      swal({
+        title: 'Sorry, that username is already taken :(',
+      });
     }
 
     await setEditFormData({
