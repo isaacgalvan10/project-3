@@ -4,11 +4,11 @@ import swal from "sweetalert";
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
-// import ProfileImg from '../components/ProfileImg';
-
 
 function Signup(props) {
   const initialValues = { username: "", github: "", email: "", password: "" };
+  let validated = true;
+
   // Function that watches input information in form
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -25,33 +25,26 @@ function Signup(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-    // setIsSubmit(true);
-    // const retrievedImg = await JSON.parse(localStorage.getItem('profileImg'));
-    const finalForm = {
-      ...formValues,
-      picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
-      // picture: retrievedImg,
-    };
-    try {
-      const { data } = await addUser({
-        variables: { ...finalForm },
-      });
-      signUpAlert()
-      Auth.login(data.addUser.token);
-    } catch (e) {
-      console.error(e);
+
+    if (validated) {
+      const finalForm = {
+        ...formValues,
+        picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+      };
+      try {
+        const { data } = await addUser({
+          variables: { ...finalForm },
+        });
+        Auth.login(data.addUser.token);
+      } catch (e) {
+        console.error(e);
+        swal({
+          title: 'Username and/or email already exist',
+        });
+        return
+      }
     }
   };
-
-
-  // useEffect(() => {
-  //   if (Object.keys(formErrors).length === 0 && isSubmit) {
-  //     // props.setNewProduct(formValues);
-  //     // props.orderData.items.push(formValues);
-  //     signUpAlert()
-  //     setIsSubmit(false);
-  //   }
-  // });
 
   // All input validations
   const validate = (values) => {
@@ -62,38 +55,37 @@ function Signup(props) {
     if (!values.email) {
       errors.email =
         "Please enter your email!";
+        validated = false;
     } else if (!emailRegex.test(values.email)) {
       errors.email = "Please enter a valid email!";
+      validated = false;
     }
-    if (!values.github) errors.github = "Please enter your GitHub account!";
-
-    if (!values.name) errors.name = "Please enter a username for your account!";
+    if (!values.github) {
+      errors.github = "Please enter your GitHub account!";
+      validated = false;
+    } else if (values.github.includes(' ')) {
+      errors.github = "Please enter a valid GitHub!";
+      validated = false;
+    }
+    if (!values.username) {
+      errors.username = "Please enter a username for your account!";
+      validated = false;
+    }
     if (!values.password) {
       errors.password = "Please enter a password for your account!";
+      validated = false;
     } else if (!passwordRegex.test(values.password)) {
       errors.password = "Password must be at least 8 characters long!";
+      validated = false;
     }
     return errors;
-  };
-
-  const signUpAlert = () => {
-    swal({
-      title: "Account created succesfully!",
-      // text: `Total: ${props.total}`,
-      icon: "success",
-      button: "Ok",
-    });
   };
 
   return (
     // Form for new signups
     <div className="App w-100">
       <Container className="form-container">
-
-
-
         <p className="fs-5 m-1 fw-bold ">Create a new account</p>
-        {/* <ProfileImg /> */}
         <Form onSubmit={handleSubmit}>
 
           <Form.Group
