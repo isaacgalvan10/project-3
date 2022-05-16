@@ -1,4 +1,4 @@
-import { Modal, Button, Form, FloatingLabel } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
@@ -7,14 +7,16 @@ import { ADD_POST } from '../utils/mutations';
 import './styles/modal.css';
 import ImageUpload from '../components/ImageUpload';
 import Auth from '../utils/auth';
+import swal from "sweetalert";
 
 const CreatePostModal = () => {
   const [state, dispatch] = useGlobalContext();
+  let validated = true;
 
   const me = state?.me || Auth.getProfile().data;
-  // const [validated, setValidated] = useState(false);
-  const [projectImage, setProjectImg] = useState('');
-  const [addPost, { error, data }] = useMutation(ADD_POST);
+  const [projectImage] = useState('');
+  const [addPost] = useMutation(ADD_POST);
+  const [formErrors, setFormErrors] = useState({});
   const [postFormData, setPostFormData] = useState({
     title: '',
     tagsString: '',
@@ -34,81 +36,100 @@ const CreatePostModal = () => {
   };
 
   const handleSubmit = async (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
     event.preventDefault();
+    setFormErrors(validate(postFormData));
 
-    const retrievedImg = JSON.parse(localStorage.getItem('image'));
-    console.log(retrievedImg);
+    if (validated) {
+      const retrievedImg = JSON.parse(localStorage.getItem('image'));
+      let projectImg;
 
-    console.log(postFormData);
-
-    const post = {
-      ...postFormData,
-      projectImg: retrievedImg,
-    }
-
-    console.log(post);
-
-    try {
-      const { data } = await addPost({
-        variables: { ...post },
-      });
-
-
-     const _id = data.addPost._id;
-     const date = data.addPost.date;
-
-      dispatch({
-        type: ADD_PROJECT,
-        formData: {
-          ...post,
-          _id,
-          date,
-          poster: {
-            _id: me?._id || me?.userId,
-            username: me.username,
-            picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
-          }
+      if (retrievedImg) {
+        projectImg = retrievedImg
+      } else {
+        projectImg = "../no-image.jpeg"
+        const confirm = await swal({
+          text: `Are you sure you dont want to include an image for your project? (you won't be able to edit your post until we add that feature)`,
+          buttons: ["I'll include it later", "I'll add it now"],
+        });
+        if (confirm) {
+          return
         }
-    });
+      };
 
-    window.location.replace(`/project/${data.addPost._id}`);
-
-
-    } catch (e) {
-      console.error(e);
+      const post = {
+        ...postFormData,
+        projectImg: projectImg,
+      }
+  
+      try {
+        const { data } = await addPost({
+          variables: { ...post },
+        });
+  
+        const _id = data.addPost._id;
+        const date = data.addPost.date;
+  
+        dispatch({
+          type: ADD_PROJECT,
+          formData: {
+            ...post,
+            _id,
+            date,
+            poster: {
+              _id: me?._id || me?.userId,
+              username: me.username,
+              picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+            }
+          }
+        });
+  
+        window.location.replace(`/project/${data.addPost._id}`);
+  
+      } catch (e) {
+        console.error(e);
+        return
+      }
+  
+      setPostFormData({
+        title: '',
+        tagsString: '',
+        description: '',
+        projectImg: '',
+        repo: '',
+      });
+  
+      localStorage.removeItem('image');
+  
+      dispatch({ type: HIDE_MODAL })
     }
+ 
+  };
 
-    //   try {
-    //     await addUserPost({
-    //       variables: { 
-    //           ...post,
-    //           userId: state.me._id
-    //      },
-    //     });
+  const validate = (values) => {
+    const errors = {};
+    const gitHubRegex = /^(((https?:\/\/)(((([a-zA-Z0-9][a-zA-Z0-9\-_]{1,252})\.){1,8}[a-zA-Z]{2,63})\/))|((ssh:\/\/)?git@)(((([a-zA-Z0-9][a-zA-Z0-9\-_]{1,252})\.){1,8}[a-zA-Z]{2,63})(:)))([a-zA-Z0-9][a-zA-Z0-9_-]{1,36})(\/)([a-zA-Z0-9][a-zA-Z0-9_-]{1,36})((\.git)?)$/
 
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-
-    setPostFormData({
-      title: '',
-      tagsString: '',
-      description: '',
-      projectImg: '',
-      repo: '',
-    });
-
-    localStorage.removeItem('image');
-
-    dispatch({ type: HIDE_MODAL })
-
-    // setValidated(true);
+    if (!values.title) {
+      errors.title =
+        "Please enter a title for your post";
+      validated = false;
+    } 
+    if (!values.tagsString) {
+      errors.tags = "Please include at least one tag for your post";
+      validated = false;
+    } 
+    if (!values.description) {
+      errors.description = "Please include a description for your post";
+      validated = false;
+    }
+    if (!values.repo) {
+      errors.repo = "Please enter a link for your GitHub repository!";
+      validated = false;
+    } else if (!gitHubRegex.test(values.repo)) {
+      errors.repo = "Please enter a valid GitHub repository link";
+      validated = false;
+    }
+    return errors;
   };
 
   return (
@@ -122,11 +143,10 @@ const CreatePostModal = () => {
         <h1>Post a project</h1>
       </Modal.Header>
       <Modal.Body>
-      <div className="form-label">Upload Project Image</div>
+        <div className="form-label">Upload Project Image</div>
         <ImageUpload />
         <Form
           noValidate
-          // validated={validated}
           onSubmit={handleSubmit}
           style={{ marginTop: '20px' }}
         >
@@ -140,9 +160,9 @@ const CreatePostModal = () => {
               value={postFormData.title}
               required
             />
-            {/* <Form.Control.Feedback type="invalid">
-              Title is required!
-            </Form.Control.Feedback> */}
+            <Form.Text id="titleAlert" className="text-danger fs-6">
+              {formErrors.title}
+            </Form.Text>
           </Form.Group>
 
           <Form.Group className="form-field">
@@ -152,45 +172,30 @@ const CreatePostModal = () => {
               placeholder="HTML, CSS, JavaScript"
               name="tagsString"
               onChange={handleInputChange}
-              value={postFormData.tags}
+              value={postFormData.tagsString}
               required
             />
-            {/* <Form.Control.Feedback type="invalid">
-              At least one tag is required!
-            </Form.Control.Feedback> */}
+            <Form.Text id="tagsAlert" className="text-danger fs-6">
+              {formErrors.tags}
+            </Form.Text>
           </Form.Group>
 
           <Form.Group className="form-field">
             <Form.Label htmlFor="description">Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="description"
-                style={{ height: '100px' }}
-                onChange={handleInputChange}
-                value={postFormData.description}
-                required
-              />
-              {/* <Form.Control.Feedback type="invalid">
-                A description is required!
-              </Form.Control.Feedback> */}
-          </Form.Group>
-{/* 
-          <Form.Group className="form-field">
-            <Form.Label htmlFor="tags">Team Size</Form.Label>
             <Form.Control
-              type="number"
-              min="1"
-              placeholder="Besides you, how many members do you want in your team?"
+              as="textarea"
+              name="description"
+              style={{ height: '100px' }}
               onChange={handleInputChange}
-              value={postFormData.team}
+              value={postFormData.description}
               required
-            /> */}
-            {/* <Form.Control.Feedback type="invalid">
-              A number is required!
-            </Form.Control.Feedback> */}
-          {/* </Form.Group> */}
+            />
+            <Form.Text id="descriptionAlert" className="text-danger fs-6">
+              {formErrors.description}
+            </Form.Text>
+          </Form.Group>
           <Form.Group className="form-field">
-          <Form.Label htmlFor="description">Project Repo</Form.Label>
+            <Form.Label htmlFor="description">Project Repo</Form.Label>
             <Form.Control
               type='text'
               placeholder='https://github.com/isaacgalvan10/project-3'
@@ -199,7 +204,9 @@ const CreatePostModal = () => {
               value={postFormData.repo}
               required
             />
-            {/* <Form.Control.Feedback type='invalid'>You need to provide a link to your project repo</Form.Control.Feedback> */}
+            <Form.Text id="repoAlert" className="text-danger fs-6">
+              {formErrors.repo}
+            </Form.Text>
           </Form.Group>
 
           <Button type="submit" variant="success">

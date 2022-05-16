@@ -20,7 +20,6 @@ const SearchResults = () => {
 
   return (
     <Container style={{ marginTop: '30px' }} className="main-container">
-      {console.log(projects)}
       {projects.length ? (
         <Row>
           <Col
@@ -29,7 +28,6 @@ const SearchResults = () => {
           >
             {projects.map((project, index) => (
               <Card key={`${project}${index}`}>
-                {/* {console.log(project)} */}
                 <Card.Img variant="top" src={project.projectImg} />
                 <Card.Body>
                   {project.tags.slice(0, 2).map((tag, index) => (

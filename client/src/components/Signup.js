@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Container, Card, Form, Button, Nav, Modal } from "react-bootstrap";
-import { useGlobalContext } from '../utils/GlobalState';
-import { HIDE_MODAL } from '../utils/actions';
+import React, { useState } from "react";
+import { Container, Form, Button } from "react-bootstrap";
 import swal from "sweetalert";
-import { Link } from 'react-router-dom'
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
-// import ProfileImg from '../components/ProfileImg';
-
 
 function Signup(props) {
-  const [state, dispatch] = useGlobalContext();
   const initialValues = { username: "", github: "", email: "", password: "" };
+  let validated = true;
+
   // Function that watches input information in form
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -22,86 +18,74 @@ function Signup(props) {
   // useStates for the input values, errors in the inputs and submit of a new signup respectively
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
+  // const [isSubmit, setIsSubmit] = useState(false);
 
-  const [addUser, { error, data }] = useMutation(ADD_USER);
+  const [addUser] = useMutation(ADD_USER);
   // Function for submition of new signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-    setIsSubmit(true);
-    // const retrievedImg = await JSON.parse(localStorage.getItem('profileImg'));
-    // console.log(retrievedImg);
-    const finalForm = {
-      ...formValues,
-      picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
-      // picture: retrievedImg,
-    };
-    console.log(finalForm);
-    try {
-      const { data } = await addUser({
-        variables: { ...finalForm },
-      });
-      signUpAlert()
-      Auth.login(data.addUser.token);
-    } catch (e) {
-      console.error(e);
+
+    if (validated) {
+      const finalForm = {
+        ...formValues,
+        picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+      };
+      try {
+        const { data } = await addUser({
+          variables: { ...finalForm },
+        });
+        Auth.login(data.addUser.token);
+      } catch (e) {
+        console.error(e);
+        swal({
+          title: 'Username and/or email already exist',
+        });
+        return
+      }
     }
   };
-
-
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log("No errors in form")
-      // props.setNewProduct(formValues);
-      // props.orderData.items.push(formValues);
-      signUpAlert()
-      console.log(formValues)
-      setIsSubmit(false);
-    }
-  });
 
   // All input validations
   const validate = (values) => {
     const errors = {};
     const passwordRegex = /^.{8,}$/
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
 
     if (!values.email) {
       errors.email =
         "Please enter your email!";
+        validated = false;
     } else if (!emailRegex.test(values.email)) {
       errors.email = "Please enter a valid email!";
+      validated = false;
     }
-    if (!values.github) errors.github = "Please enter your GitHub account!";
-
-    if (!values.name) errors.name = "Please enter a username for your account!";
+    if (!values.github) {
+      errors.github = "Please enter your GitHub account!";
+      validated = false;
+    } else if (values.github.trim().includes(' ')) {
+      errors.github = "Please enter a valid GitHub!";
+      validated = false;
+    }
+    if (!values.username) {
+      errors.username = "Please enter a username for your account!";
+      validated = false;
+    }
     if (!values.password) {
       errors.password = "Please enter a password for your account!";
+      validated = false;
     } else if (!passwordRegex.test(values.password)) {
       errors.password = "Password must be at least 8 characters long!";
+      validated = false;
     }
     return errors;
-  };
-
-  const signUpAlert = () => {
-    swal({
-      title: "Account created succesfully!",
-      // text: `Total: ${props.total}`,
-      icon: "success",
-      button: "Ok",
-    });
   };
 
   return (
     // Form for new signups
     <div className="App w-100">
       <Container className="form-container">
-
-
-
         <p className="fs-5 m-1 fw-bold ">Create a new account</p>
-        {/* <ProfileImg /> */}
         <Form onSubmit={handleSubmit}>
 
           <Form.Group

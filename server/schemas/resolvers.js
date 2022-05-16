@@ -211,12 +211,22 @@ const resolvers = {
     editProfile: async (parent, { newUsername, newBio, newImg }, context) => {
       if (context.user) {
 
-        const user = await User.findOneAndUpdate(
+        const user = await User.findOne({ _id: context.user?._id || context.user?.userId });
+
+        let picture;
+
+        if (newImg) {
+          picture = newImg;
+        } else {
+          picture = user.picture;
+        }
+
+        const updatedUser = await User.findOneAndUpdate(
           { _id: context.user?._id || context.user?.userId },
           { 
             username: newUsername,
             bio: newBio,
-            picture: newImg
+            picture: picture
           },
           {
             new: true,
@@ -224,29 +234,13 @@ const resolvers = {
           }
         );
 
-        const token = signToken(user);
+        const token = signToken(updatedUser);
 
-        return { token, user };
+        return { token, updatedUser };
       }
       throw new AuthenticationError('You need to be logged in!');
     },
     
-    // setProfilePicture: async (parent, { userId, picture }, context) => {
-    //   if (context.user) {
-
-    //   const user = await User.findOneAndUpdate(
-    //     { _id: context.user._id },
-    //     { picture: picture},
-    //     {
-    //       new: true,
-    //       runValidators: true,
-    //     }
-    //   );
-
-    //   return user;
-    //   }
-    //   throw new AuthenticationError('You need to be logged in!');
-    // },
     checkUserExist: async (parent, { email }) => {
       const user = await User.findOne({ email });
       const token = signToken(user);

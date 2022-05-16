@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Card, Nav, Button, Image, Row, Col } from 'react-bootstrap';
+import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const ProfileProjects = (props) => {
-  console.log(props);
   const projectsSelected = props.profileProjectsData;
-  console.log(projectsSelected);
   //Continue here
 
   return (

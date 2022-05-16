@@ -7,7 +7,6 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
 import { Link } from 'react-router-dom';
 import '../components/styles/homepage.css';
-import { useState } from 'react';
 
 const Homepage = () => {
   const [state, dispatch] = useGlobalContext();
@@ -70,7 +69,7 @@ const Homepage = () => {
           </Col>
         </Row>
       ) : (
-        <h3></h3>
+        <h3>...</h3>
       )}
       {loading ? <h3>Loading...</h3> : null}
     </Container>

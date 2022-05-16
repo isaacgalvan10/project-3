@@ -1,14 +1,6 @@
-import {
-  Modal,
-  Row,
-  Col,
-  Image,
-  Button,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Modal, Row, Image, Button } from 'react-bootstrap';
 import { useGlobalContext } from '../utils/GlobalState';
-import { HIDE_MODAL, STATUS, POST_MEMBER, SHOW_NOTIF, DELETE_REQUEST } from '../utils/actions';
+import { POST_MEMBER, DELETE_REQUEST } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 // import { useQuery } from '@apollo/client';
@@ -35,13 +27,6 @@ const ModalRequests = ({
 
   // const me = data.me;
 
-  const tagArr = [
-    ...currentProject.tags.map((tag) => {
-      return tag;
-    }),
-  ];
-  const tagsString = tagArr.join(', ');
-  console.log(tagsString);
 
   const acceptRequest = async (userId, username, picture) => {
     const confirm = await swal({
@@ -68,7 +53,6 @@ const ModalRequests = ({
         });
       } catch (e) {
         console.error(e);
-        console.log('hi');
       }
       await dispatch({
         type: DELETE_REQUEST,
@@ -160,7 +144,6 @@ const ModalRequests = ({
                 marginTop: '10px',
               }}
             >
-              {console.log(request)}
               <Link
                 to={`/profile/${request._id}`}
                 style={{ textAlign: 'center', textDecoration: 'none' }}

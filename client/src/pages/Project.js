@@ -1,30 +1,11 @@
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Image,
-  ListGroup,
-  Dropdown,
-  Card,
-} from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Image } from 'react-bootstrap';
+import { useState } from 'react';
 import '../components/styles/project.css';
 import swal from 'sweetalert';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../utils/GlobalState';
-import {
-  SHOW_NOTIF,
-  DELETE_MEMBER,
-  STATUS,
-  SHOW_MODAL_NOTIF,
-  UPDATE_PROJECTS,
-  POST_REQUEST,
-  DELETE_POST
-} from '../utils/actions';
+import { DELETE_MEMBER, STATUS, POST_REQUEST, DELETE_POST } from '../utils/actions';
 import React from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
@@ -68,11 +49,9 @@ const Project = () => {
   );
   // const currentProject = state.projects[projectIndex];
 
-  // console.log(currentProject);
-
   const project = state?.projects[projectIndex] || data?.project || '';
   const members = project?.members || data.project?.members || [];
-  const tags = project?.members || data.project?.tags || [];
+  const tags = project?.tags || data.project?.tags || [];
   const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const joinedProjects = state?.me?.joinedProjects || [];
   const requests = project?.requests || [];
@@ -111,7 +90,6 @@ const Project = () => {
         });
       } catch (e) {
         console.error(e);
-        console.log('hi');
       }
 
       window.location.replace('/');
@@ -119,7 +97,6 @@ const Project = () => {
   };
 
   const removeMember = async (memberId, username) => {
-    console.log(memberId);
     const confirm = await swal({
       title: `Are you sure you want to remove ${username} from your team?`,
       buttons: ['No', 'Yes'],
@@ -142,7 +119,6 @@ const Project = () => {
         });
       } catch (e) {
         console.error(e);
-        console.log('hi');
       }
       try {
         removeProject({
@@ -415,7 +391,6 @@ const Project = () => {
                               )} */}
         <Row className="d-flex">
           <h3>Team Members</h3>
-          {console.log(members)}
           {members.map((member) => (
             <Col className="xs-col" xs={2} key={member._id}>
               <div className="d-flex flex-column align-items-center">

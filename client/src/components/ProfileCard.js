@@ -1,11 +1,8 @@
-import { Card, Nav, Image } from 'react-bootstrap';
+import { Card, Image } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { useState, useEffect } from 'react';
-import { useGlobalContext } from '../utils/GlobalState';
 
 const ProfileCard = ({ user }) => {
-  const [state] = useGlobalContext();
   const picture = user.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
 
   return (
