@@ -16,7 +16,7 @@ const ModalRequests = ({
   currentProject,
   projectIndex,
 }) => {
-  const [dispatch] = useGlobalContext();
+  const [state, dispatch] = useGlobalContext();
   // const { loading, data } = useQuery(QUERY_ME);
   const [addMember] = useMutation(ADD_MEMBER);
   const [removeRequest] = useMutation(REMOVE_REQUEST);
