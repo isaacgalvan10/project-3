@@ -30,9 +30,9 @@
 
 ## Images
 
-![Main](./team-finder-app/client/src/images/MainProject.PNG)
-![Second](./team-finder-app/client/src/images/SecondProject.PNG)
-![Third](./team-finder-app/client/src/images/login.PNG)
+![Main](./images/MainProject.PNG)
+![Second](./images/SecondProject.PNG)
+![Third](./images/login.PNG)
 
 ## Installation
 
