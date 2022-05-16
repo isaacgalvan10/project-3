@@ -27,12 +27,6 @@ const ModalRequests = ({
 
   // const me = data.me;
 
-  const tagArr = [
-    ...currentProject.tags.map((tag) => {
-      return tag;
-    }),
-  ];
-  const tagsString = tagArr.join(', ');
 
   const acceptRequest = async (userId, username, picture) => {
     const confirm = await swal({
