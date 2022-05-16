@@ -63,7 +63,7 @@ function Signup(props) {
     if (!values.github) {
       errors.github = "Please enter your GitHub account!";
       validated = false;
-    } else if (values.github.includes(' ')) {
+    } else if (values.github.trim().includes(' ')) {
       errors.github = "Please enter a valid GitHub!";
       validated = false;
     }
