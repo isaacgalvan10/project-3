@@ -51,7 +51,7 @@ const Project = () => {
 
   const project = state?.projects[projectIndex] || data?.project || '';
   const members = project?.members || data.project?.members || [];
-  const tags = project?.members || data.project?.tags || [];
+  const tags = project?.tags || data.project?.tags || [];
   const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const joinedProjects = state?.me?.joinedProjects || [];
   const requests = project?.requests || [];
