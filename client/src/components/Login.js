@@ -37,8 +37,6 @@ function Login(props) {
         });
   
         Auth.login(data.login.token);
-        const user = await Auth.getProfile().data;
-        localStorage.setItem('profileImg', JSON.stringify(user.picture));
       } catch (e) {
         console.error(e);
         swal({
