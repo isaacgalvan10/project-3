@@ -55,6 +55,7 @@ mutation RemovePost($postId: ID!) {
 export const ADD_MEMBER = gql`
 mutation AddMember($userId: ID!, $projectId: ID!) {
   addMember(userId: $userId, projectId: $projectId) {
+    _id
     title
     members {
       picture
