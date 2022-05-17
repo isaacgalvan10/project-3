@@ -3,8 +3,6 @@ import { useGlobalContext } from '../utils/GlobalState';
 import { POST_MEMBER, DELETE_REQUEST } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-// import { useQuery } from '@apollo/client';
-// import { QUERY_ME } from '../utils/queries';
 import { ADD_MEMBER, REMOVE_REQUEST } from '../utils/mutations';
 import { useMutation } from '@apollo/client';
 
@@ -13,20 +11,11 @@ const ModalRequests = ({
   setShowModal,
   requests,
   projectId,
-  currentProject,
   projectIndex,
 }) => {
   const [state, dispatch] = useGlobalContext();
-  // const { loading, data } = useQuery(QUERY_ME);
   const [addMember] = useMutation(ADD_MEMBER);
   const [removeRequest] = useMutation(REMOVE_REQUEST);
-
-  // if (loading) {
-  //   return <h2></h2>;
-  // }
-
-  // const me = data.me;
-
 
   const acceptRequest = async (userId, username, picture) => {
     const confirm = await swal({
@@ -35,34 +24,26 @@ const ModalRequests = ({
     });
 
     if (confirm) {
-      // dispatch({
-      //     type: POST_MEMBER,
-      //     payload: {
-      //         index: projectIndex,
-      //         _id: userId,
-      //         username: username,
-      //         picture: picture
-      //     }
-      // });
+      console.log('posting member...')
+      await dispatch({
+        type: POST_MEMBER,
+        payload: {
+          index: projectIndex,
+          _id: userId,
+          username: username,
+          picture: picture
+        }
+      });
+      dispatch({
+        type: DELETE_REQUEST,
+        payload: {
+          index: projectIndex,
+          id: userId,
+        }
+      });
       try {
-        addMember({
-          variables: {
-            projectId: projectId,
-            userId: userId,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    //   await dispatch({
-    //     type: DELETE_REQUEST,
-    //     payload: {
-    //         index: projectIndex,
-    //         id: userId,
-    //     }
-    // });
-      try {
-        removeRequest({
+        console.log('adding member...')
+        await addMember({
           variables: {
             projectId: projectId,
             userId: userId,
@@ -89,18 +70,13 @@ const ModalRequests = ({
       buttons: ['No', 'Yes'],
     });
     if (confirm) {
-      // dispatch({ type: HIDE_MODAL });
-      // dispatch({
-      //   type: STATUS,
-      //   status: 'out',
-      // });
-    //   dispatch({
-    //     type: DELETE_REQUEST,
-    //     payload: {
-    //         index: projectIndex,
-    //         id: userId,
-    //     }
-    // });
+      dispatch({
+        type: DELETE_REQUEST,
+        payload: {
+          index: projectIndex,
+          id: userId,
+        }
+      });
       try {
         removeRequest({
           variables: {
@@ -125,7 +101,6 @@ const ModalRequests = ({
     <Modal
       size="md"
       show={show}
-      // onHide={() => dispatch({ type: HIDE_MODAL })}
       onHide={() => setShowModal(false)}
       aria-labelledby="signup-modal"
     >
