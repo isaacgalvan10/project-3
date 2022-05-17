@@ -58,8 +58,12 @@ mutation AddMember($userId: ID!, $projectId: ID!) {
     _id
     title
     members {
+      _id
       picture
       username
+    }
+    requests {
+      _id
     }
   }
 }
