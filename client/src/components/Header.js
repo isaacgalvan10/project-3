@@ -16,7 +16,7 @@ import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
 import Login from './Login';
 import Signup from './Signup';
-
+import Projects from '../components/Projects';
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
@@ -83,9 +83,7 @@ const Header = () => {
   // }
   return (
     <>
-      {/* {loading ? (
-        <h3></h3>
-      ) : ( */}
+    <Projects />
         <>
           {['md'].map((expand) => (
             <Navbar key={expand} expand={expand} className="mb-3">
