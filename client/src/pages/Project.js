@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import { useGlobalContext } from '../utils/GlobalState';
 import { DELETE_MEMBER, POST_REQUEST, DELETE_POST } from '../utils/actions';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
@@ -23,7 +23,7 @@ const Project = () => {
   const [showModal, setShowModal] = useState(false);
 
   const [state, dispatch] = useGlobalContext();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [addRequest] = useMutation(ADD_REQUEST);
   const [removePost] = useMutation(REMOVE_POST);
   const [deleteMember] = useMutation(REMOVE_MEMBER);
@@ -38,7 +38,6 @@ const Project = () => {
   const projectIndex = state.projects.findIndex(
     (project) => project._id === projectId
   );
-  // const currentProject = state.projects[projectIndex];
 
   const project = state?.projects[projectIndex] || data?.project || {};
   const members = project?.members || [];
@@ -86,8 +85,7 @@ const Project = () => {
       } catch (e) {
         console.error(e);
       }
-
-      window.location.replace('/');
+      navigate(`/`);
     }
   };
 

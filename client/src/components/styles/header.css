@@ -88,4 +88,8 @@
   .hidden {
     display: none;
   }
+
+  .home {
+    cursor: pointer;
+  }
 }

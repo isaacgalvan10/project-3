@@ -3,6 +3,7 @@ import { useGlobalContext } from '../utils/GlobalState';
 import { HIDE_MODAL, ADD_PROJECT } from '../utils/actions';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { ADD_POST } from '../utils/mutations';
 import './styles/modal.css';
 import ImageUpload from '../components/ImageUpload';
@@ -11,6 +12,8 @@ import swal from "sweetalert";
 
 const CreatePostModal = () => {
   const [state, dispatch] = useGlobalContext();
+  const navigate = useNavigate();
+
   let validated = true;
 
   const me = state?.me || Auth.getProfile().data;
@@ -82,8 +85,9 @@ const CreatePostModal = () => {
             }
           }
         });
-  
-        window.location.replace(`/project/${data.addPost._id}`);
+
+        navigate(`/project/${data.addPost._id}`);
+        // window.location.replace(`/project/${data.addPost._id}`);
   
       } catch (e) {
         console.error(e);
