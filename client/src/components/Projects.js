@@ -27,7 +27,6 @@ const Projects = () => {
 
     return (
         <>
-        {console.log(loading)}
         {console.log(state)}
         </>
     )
