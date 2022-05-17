@@ -78,9 +78,9 @@ const Header = () => {
 
   }
 
-  // const navigateHomePage = () => {
-  //   navigate(`/`);
-  // }
+  const navigateHomePage = () => {
+    navigate(`/`);
+  }
   return (
     <>
     <Projects />
@@ -89,7 +89,7 @@ const Header = () => {
             <Navbar key={expand} expand={expand} className="mb-3">
               <Container>
                 <Navbar.Brand>
-                  <a href='/' className='text-reset'>&lt;Squad Finder/&gt;</a>
+                  <h2 className='home' onClick={() => navigateHomePage()}>&lt;Squad Finder/&gt;</h2>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
                 <Navbar.Offcanvas
