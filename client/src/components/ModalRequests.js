@@ -35,17 +35,17 @@ const ModalRequests = ({
     });
 
     if (confirm) {
-      dispatch({
-          type: POST_MEMBER,
-          payload: {
-              index: projectIndex,
-              _id: userId,
-              username: username,
-              picture: picture
-          }
-      });
+      // dispatch({
+      //     type: POST_MEMBER,
+      //     payload: {
+      //         index: projectIndex,
+      //         _id: userId,
+      //         username: username,
+      //         picture: picture
+      //     }
+      // });
       try {
-        await addMember({
+        addMember({
           variables: {
             projectId: projectId,
             userId: userId,
@@ -54,13 +54,13 @@ const ModalRequests = ({
       } catch (e) {
         console.error(e);
       }
-      await dispatch({
-        type: DELETE_REQUEST,
-        payload: {
-            index: projectIndex,
-            id: userId,
-        }
-    });
+    //   await dispatch({
+    //     type: DELETE_REQUEST,
+    //     payload: {
+    //         index: projectIndex,
+    //         id: userId,
+    //     }
+    // });
       try {
         removeRequest({
           variables: {
@@ -94,13 +94,13 @@ const ModalRequests = ({
       //   type: STATUS,
       //   status: 'out',
       // });
-      dispatch({
-        type: DELETE_REQUEST,
-        payload: {
-            index: projectIndex,
-            id: userId,
-        }
-    });
+    //   dispatch({
+    //     type: DELETE_REQUEST,
+    //     payload: {
+    //         index: projectIndex,
+    //         id: userId,
+    //     }
+    // });
       try {
         removeRequest({
           variables: {
