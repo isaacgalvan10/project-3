@@ -10,12 +10,7 @@ import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import {
-  REMOVE_POST,
-  ADD_REQUEST,
-  REMOVE_MEMBER,
-  REMOVE_PROJECT,
-} from '../utils/mutations';
+import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER, REMOVE_PROJECT } from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -34,10 +29,6 @@ const Project = () => {
   const [deleteMember] = useMutation(REMOVE_MEMBER);
   const [removeProject] = useMutation(REMOVE_PROJECT);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   const isPoster = () => {
     if (Auth.loggedIn()) {
       return (Auth.getProfile().data?._id || Auth.getProfile().data?.userId) === project.poster._id;
@@ -49,12 +40,16 @@ const Project = () => {
   );
   // const currentProject = state.projects[projectIndex];
 
-  const project = state?.projects[projectIndex] || data?.project || '';
-  const members = project?.members || data.project?.members || [];
-  const tags = project?.tags || data.project?.tags || [];
+  const project = state?.projects[projectIndex] || data?.project || {};
+  const members = project?.members || [];
+  const tags = project?.tags || [];
   const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const joinedProjects = state?.me?.joinedProjects || [];
   const requests = project?.requests || [];
+
+  if (loading) {
+    return <h3>Loading...</h3>;
+  }
 
   // const emptySpots = currentProject.spotsLeft();
 
@@ -75,12 +70,12 @@ const Project = () => {
 
     if (confirm) {
       try {
-        await dispatch({
-          type: DELETE_POST,
-          payload: {
-            id: projectId,
-          }
-        });
+        // await dispatch({
+        //   type: DELETE_POST,
+        //   payload: {
+        //     id: projectId,
+        //   }
+        // });
         await removePost({
           variables: { postId: projectId }
         });
@@ -103,13 +98,13 @@ const Project = () => {
     });
 
     if (confirm) {
-      dispatch({
-        type: DELETE_MEMBER,
-        payload: {
-          id: memberId,
-          index: projectIndex
-        }
-      });
+      // dispatch({
+      //   type: DELETE_MEMBER,
+      //   payload: {
+      //     id: memberId,
+      //     index: projectIndex
+      //   }
+      // });
       try {
         await deleteMember({
           variables: {
@@ -177,15 +172,15 @@ const Project = () => {
           swal({
             text: `You have sent ${project.poster.username} a request to join their team`,
           });
-          dispatch({
-            type: POST_REQUEST,
-            payload: {
-              _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
-              index: projectIndex,
-              username: state?.me?.username || Auth.getProfile().data.username,
-              picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
-            }
-          });
+          // dispatch({
+          //   type: POST_REQUEST,
+          //   payload: {
+          //     _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
+          //     index: projectIndex,
+          //     username: state?.me?.username || Auth.getProfile().data.username,
+          //     picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+          //   }
+          // });
           try {
             addRequest({
               variables: {
@@ -226,13 +221,13 @@ const Project = () => {
           swal({
             text: `You have dropout of ${project.poster.username}'s team`,
           });
-          dispatch({
-            type: DELETE_MEMBER,
-            payload: {
-              id: Auth.getProfile().data._id,
-              index: projectIndex
-            }
-          });
+          // dispatch({
+          //   type: DELETE_MEMBER,
+          //   payload: {s
+          //     id: Auth.getProfile().data._id,
+          //     index: projectIndex
+          //   }
+          // });
           try {
             await deleteMember({
               variables: {
