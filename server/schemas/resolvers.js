@@ -111,7 +111,7 @@ const resolvers = {
           new: true,
           runValidators: true,
         }
-      ).populate('members');
+      )
 
       await User.findOneAndUpdate(
         { _id: user._id },
@@ -127,21 +127,19 @@ const resolvers = {
         }
       );
 
-      await Project.findOneAndUpdate(
+      const updatedProject = Project.findOneAndUpdate(
         { _id: project._id },
         {
-          $pull: {
-            requests: { _id: user._id }
-          }
+          $pull: { requests: user._id }
         },
         {
           new: true,
           runValidators: true,
         }
-      );
+      ).populate('members');;
 
 
-      return project;
+      return updatedProject;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },
