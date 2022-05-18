@@ -89,7 +89,6 @@ const CreatePostModal = () => {
         }
 
         navigate(`/project/${data.addPost._id}`);
-        // window.location.replace(`/project/${data.addPost._id}`);
   
       } catch (e) {
         console.error(e);
