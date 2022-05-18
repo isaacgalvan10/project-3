@@ -52,7 +52,6 @@ const typeDefs = gql`
         removeMember(projectId: ID!, userId: ID!): Project
         addRequest(userId: ID!, projectId: ID!): Project
         removeRequest(projectId: ID!, userId: ID!): Project
-        removeProject(userId: ID!, projectId: ID!): User
         editProfile(newUsername: String!, newBio: String, newImg: String): Auth
     }
 `;

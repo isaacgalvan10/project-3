@@ -116,10 +116,7 @@ const resolvers = {
       await User.findOneAndUpdate(
         { _id: user._id },
         { 
-          $addToSet: 
-          { 
-            joinedProjects: project._id 
-          } 
+          $addToSet: { joinedProjects: project._id } 
         },
         {
           new: true,
@@ -129,9 +126,7 @@ const resolvers = {
 
       const updatedProject = Project.findOneAndUpdate(
         { _id: project._id },
-        {
-          $pull: { requests: user._id }
-        },
+        { $pull: { requests: user._id } },
         {
           new: true,
           runValidators: true,
@@ -154,6 +149,11 @@ const resolvers = {
           runValidators: true,
         }
       );
+
+      await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { joinedProjects: projectId } },
+      )
 
       return project;
       // }
@@ -187,22 +187,6 @@ const resolvers = {
       );
 
       return project;
-      // }
-      // throw new AuthenticationError('You need to be logged in!');
-    },
-    removeProject: async (parent, { userId, projectId }, context) => {
-      // if (context.user) {
-
-      const user = await User.findOneAndUpdate(
-        { _id: userId },
-        { $pull: { joinedProjects: projectId } },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
-
-      return user;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },

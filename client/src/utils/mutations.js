@@ -108,20 +108,6 @@ mutation RemoveRequest($projectId: ID!, $userId: ID!) {
 }
 `;
 
-export const REMOVE_PROJECT = gql`
-mutation RemoveProject($userId: ID!, $projectId: ID!) {
-  removeProject(userId: $userId, projectId: $projectId) {
-    _id
-    username
-    joinedProjects {
-      _id
-      title
-      tags
-      description
-    }
-  }
-}
-`;
 
 export const EDIT_PROFILE = gql`
 mutation EditProfile($newUsername: String!, $newBio: String, $newImg: String) {
