@@ -24,25 +24,25 @@ const ModalRequests = ({
     });
 
     if (confirm) {
-      console.log('posting member...')
-      await dispatch({
-        type: POST_MEMBER,
-        payload: {
-          index: projectIndex,
-          _id: userId,
-          username: username,
-          picture: picture
-        }
-      });
-      dispatch({
-        type: DELETE_REQUEST,
-        payload: {
-          index: projectIndex,
-          id: userId,
-        }
-      });
+      if (state.projects.length > 0) {
+        dispatch({
+          type: POST_MEMBER,
+          payload: {
+            index: projectIndex,
+            _id: userId,
+            username: username,
+            picture: picture
+          }
+        });
+        dispatch({
+          type: DELETE_REQUEST,
+          payload: {
+            index: projectIndex,
+            id: userId,
+          }
+        });
+      }
       try {
-        console.log('adding member...')
         await addMember({
           variables: {
             projectId: projectId,
@@ -70,6 +70,7 @@ const ModalRequests = ({
       buttons: ['No', 'Yes'],
     });
     if (confirm) {
+      if (state.projects.length > 0) {
       dispatch({
         type: DELETE_REQUEST,
         payload: {
@@ -77,6 +78,7 @@ const ModalRequests = ({
           id: userId,
         }
       });
+    }
       try {
         removeRequest({
           variables: {

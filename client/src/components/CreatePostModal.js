@@ -71,20 +71,22 @@ const CreatePostModal = () => {
   
         const _id = data.addPost._id;
         const date = data.addPost.date;
-  
-        dispatch({
-          type: ADD_PROJECT,
-          formData: {
-            ...post,
-            _id,
-            date,
-            poster: {
-              _id: me?._id || me?.userId,
-              username: me.username,
-              picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+
+        if (state.projects.length > 0) {
+          dispatch({
+            type: ADD_PROJECT,
+            formData: {
+              ...post,
+              _id,
+              date,
+              poster: {
+                _id: me?._id || me?.userId,
+                username: me.username,
+                picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+              }
             }
-          }
-        });
+          });
+        }
 
         navigate(`/project/${data.addPost._id}`);
         // window.location.replace(`/project/${data.addPost._id}`);
