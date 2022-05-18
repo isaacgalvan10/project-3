@@ -79,7 +79,11 @@ const Header = () => {
   }
 
   const navigateHomePage = () => {
-    navigate(`/`);
+    if (state.projects.length > 0) {
+      navigate(`/`);
+    } else {
+      window.location.replace('/');
+    }
   }
   return (
     <>
