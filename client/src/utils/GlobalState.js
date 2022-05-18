@@ -22,7 +22,6 @@ const GlobalProvider = ({ value = [], ...props }) => {
       request: false,
       post: false,
       login: false,
-      signup: false
     }
 
   });

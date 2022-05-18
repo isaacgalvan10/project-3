@@ -60,6 +60,18 @@ const Header = () => {
       payload: {
         request: false,
         post: true,
+        login: false
+      },
+    });
+  };
+
+  const displayLogintModal = () => {
+    dispatch({
+      type: SHOW_MODAL,
+      payload: {
+        request: false,
+        post: false,
+        login: true
       },
     });
   };
@@ -137,8 +149,8 @@ const Header = () => {
                         <>
                           <Button
                             style={{ marginRight: '10px' }}
-                            onClick={() => setShowModal(true)}
-                          >
+                            onClick={() => displayLogintModal()}
+                            >
                             Login
                           </Button>
                         </>
@@ -151,24 +163,6 @@ const Header = () => {
                           Create Project
                         </Button>
                       ) : null}
-                      {/* <Dropdown>
-                        <Dropdown.Toggle className="position-relative">
-                          <i className="fa-solid fa-bell"></i>
-                          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            99+
-                            <span className="visually-hidden">Notifications</span>
-                          </span>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                          <Dropdown.Item href="#/action-2">
-                            Another action
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-3">
-                            Something else
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown> */}
                       <div>
                         {Auth.loggedIn() ? (
                           <Link to={`./profile/${id}`}>
@@ -192,38 +186,6 @@ const Header = () => {
             <SearchResults input={searchValue} />
           )}
         </>
-      {/* )} */}
-      <Modal
-            size='lg'
-            show={showModal}
-            onHide={() => setShowModal(false)}
-            aria-labelledby='signup-modal'>
-            {/* tab container to do either signup or login component */}
-            <Tab.Container defaultActiveKey='login'>
-              <Modal.Header closeButton>
-                <Modal.Title id='signup-modal'>
-                  <Nav variant='pills'>
-                    <Nav.Item>
-                      <Nav.Link eventKey='login'>Login</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey='signUp'>Sign Up</Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Tab.Content>
-                  <Tab.Pane eventKey='login'>
-                    <Login handleModalClose={() => setShowModal(false)} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey='signUp'>
-                    <Signup handleModalClose={() => setShowModal(false)} />
-                  </Tab.Pane>
-                </Tab.Content>
-              </Modal.Body>
-            </Tab.Container>
-          </Modal>
     </>
   );
 };

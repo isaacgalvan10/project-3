@@ -3,7 +3,7 @@ import { useState } from 'react';
 import '../components/styles/project.css';
 import swal from 'sweetalert';
 import { useGlobalContext } from '../utils/GlobalState';
-import { DELETE_MEMBER, POST_REQUEST, DELETE_POST, DELETE_PROJECT } from '../utils/actions';
+import { DELETE_MEMBER, POST_REQUEST, DELETE_POST, DELETE_PROJECT, SHOW_MODAL } from '../utils/actions';
 import React from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
@@ -252,7 +252,14 @@ const Project = () => {
         }
       }
     } else {
-      alert('you need to log in to join a team!');
+      dispatch({
+        type: SHOW_MODAL,
+        payload: {
+          request: false,
+          post: false,
+          login: true
+        },
+      });
     }
   };
 

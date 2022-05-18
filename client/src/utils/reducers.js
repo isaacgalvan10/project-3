@@ -139,6 +139,8 @@ export const reducer = (state, action) => {
                 ...state,
                 modals: {
                     request: false,
+                    post: false,
+                    login: false
                 }
             };
 
