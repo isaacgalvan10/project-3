@@ -4,7 +4,6 @@ import {
     HIDE_NOTIF,
     POST_MEMBER,
     DELETE_MEMBER,
-    STATUS,
     SHOW_MODAL,
     HIDE_MODAL,
     SHOW_MODAL_NOTIF,
@@ -13,7 +12,8 @@ import {
     UPDATE_PROJECTS,
     UPDATE_ME,
     POST_REQUEST,
-    DELETE_REQUEST
+    DELETE_REQUEST,
+    DELETE_PROJECT
 } from './actions';
 
 export const reducer = (state, action) => {
@@ -83,6 +83,20 @@ export const reducer = (state, action) => {
                 projects: projectsCopy2
             };
 
+        case DELETE_PROJECT:
+            console.log('hi');
+            const projectsLeft = state.me.joinedProjects.filter((project) => {
+                return project._id !== action.projectId
+            });
+
+            const updatedMe = { ...state.me, joinedProjects: projectsLeft };
+
+            console.log(updatedMe);
+            return {
+                ...state,
+                me: updatedMe
+            };
+
         case POST_REQUEST:
             const updatedProject3 = {
                 ...state.projects[action.payload.index], requests: [...state.projects[action.payload.index].requests, {
@@ -112,15 +126,6 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 projects: projectsCopy4
-            };
-
-        case STATUS:
-            return {
-                ...state,
-                me: {
-                    ...state.me,
-                    status: action.status,
-                }
             };
 
         case SHOW_MODAL:
@@ -162,15 +167,15 @@ export const reducer = (state, action) => {
                 ]
             };
 
-            case DELETE_POST:    
+        case DELETE_POST:
             const postsLeft = state.projects.filter((post) => {
                 return post._id !== action.payload.id;
             });
-                return {
-                    ...state,
-                    projects: postsLeft
-                };
-                
+            return {
+                ...state,
+                projects: postsLeft
+            };
+
         case UPDATE_PROJECTS:
             const requestedProjects = action.projects;
 

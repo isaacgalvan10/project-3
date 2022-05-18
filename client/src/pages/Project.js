@@ -3,14 +3,14 @@ import { useState } from 'react';
 import '../components/styles/project.css';
 import swal from 'sweetalert';
 import { useGlobalContext } from '../utils/GlobalState';
-import { DELETE_MEMBER, POST_REQUEST, DELETE_POST } from '../utils/actions';
+import { DELETE_MEMBER, POST_REQUEST, DELETE_POST, DELETE_PROJECT } from '../utils/actions';
 import React from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER, REMOVE_PROJECT } from '../utils/mutations';
+import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER } from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -26,8 +26,7 @@ const Project = () => {
   const navigate = useNavigate();
   const [addRequest] = useMutation(ADD_REQUEST);
   const [removePost] = useMutation(REMOVE_POST);
-  const [deleteMember] = useMutation(REMOVE_MEMBER);
-  const [removeProject] = useMutation(REMOVE_PROJECT);
+  const [removeMember] = useMutation(REMOVE_MEMBER);
 
   const isPoster = () => {
     if (Auth.loggedIn()) {
@@ -85,26 +84,36 @@ const Project = () => {
       } catch (e) {
         console.error(e);
       }
-      navigate(`/`);
+      if (state.projects.length > 0) {
+        navigate(`/`);
+      } else {
+        window.location.replace('/');
+      }
     }
   };
 
-  const removeMember = async (memberId, username) => {
+  const deleteMember = async (memberId, username) => {
     const confirm = await swal({
       title: `Are you sure you want to remove ${username} from your team?`,
       buttons: ['No', 'Yes'],
     });
 
     if (confirm) {
-      dispatch({
-        type: DELETE_MEMBER,
-        payload: {
-          id: memberId,
-          index: projectIndex
-        }
-      });
+      if (state.projects.length > 0) {
+        dispatch({
+          type: DELETE_MEMBER,
+          payload: {
+            id: memberId,
+            index: projectIndex
+          }
+        });
+        dispatch({
+          type: DELETE_PROJECT,
+          projectId: projectId
+        });
+      }
       try {
-        await deleteMember({
+        await removeMember({
           variables: {
             projectId: projectId,
             userId: memberId,
@@ -113,16 +122,16 @@ const Project = () => {
       } catch (e) {
         console.error(e);
       }
-      try {
-        removeProject({
-          variables: {
-            userId: memberId,
-            projectId: projectId,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      // try {
+      //   removeProject({
+      //     variables: {
+      //       userId: memberId,
+      //       projectId: projectId,
+      //     },
+      //   });
+      // } catch (e) {
+      //   console.error(e);
+      // }
     }
 
     // dispatch({
@@ -170,15 +179,17 @@ const Project = () => {
           swal({
             text: `You have sent ${project.poster.username} a request to join their team`,
           });
-          dispatch({
-            type: POST_REQUEST,
-            payload: {
-              _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
-              index: projectIndex,
-              username: state?.me?.username || Auth.getProfile().data.username,
-              picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
-            }
-          });
+          if (state.projects.length > 0) {
+            dispatch({
+              type: POST_REQUEST,
+              payload: {
+                _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
+                index: projectIndex,
+                username: state?.me?.username || Auth.getProfile().data.username,
+                picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+              }
+            });
+          }
           try {
             addRequest({
               variables: {
@@ -215,28 +226,24 @@ const Project = () => {
           swal({
             text: `You have dropout of ${project.poster.username}'s team`,
           });
-          dispatch({
-            type: DELETE_MEMBER,
-            payload: {
-              id: Auth.getProfile().data._id,
-              index: projectIndex
-            }
-          });
-          try {
-            await deleteMember({
-              variables: {
-                projectId: projectId,
-                userId: state.me._id,
-              },
+          if (state.projects.length > 0) {
+            dispatch({
+              type: DELETE_MEMBER,
+              payload: {
+                id: state.me._id || Auth.getProfile().data._id,
+                index: projectIndex
+              }
             });
-          } catch (e) {
-            console.error(e);
+            dispatch({
+              type: DELETE_PROJECT,
+              projectId: projectId
+            });
           }
           try {
-            removeProject({
+            await removeMember({
               variables: {
-                userId: state.me._id,
                 projectId: projectId,
+                userId: state.me._id,
               },
             });
           } catch (e) {
@@ -391,7 +398,7 @@ const Project = () => {
 
                 {Auth.loggedIn() && isPoster() ? (
                   <Button
-                    onClick={() => removeMember(member._id, member.username)}
+                    onClick={() => deleteMember(member._id, member.username)}
                     className="delete-btn"
                   >
                     Remove
