@@ -33,7 +33,10 @@ function Login(props) {
     if (validated) {
       try {
         const { data } = await login({
-          variables: { ...formValues },
+          variables: { 
+            ...formValues,
+            email: formValues.email.toLowerCase() 
+          },
         });
   
         Auth.login(data.login.token);
