@@ -25,6 +25,7 @@ query Projects {
       username
       picture
     }
+    teamSize
   }
 }
 `;
@@ -56,6 +57,7 @@ query Project($projectId: ID!) {
       username
       picture
     }
+    teamSize
   }
 }
 `;

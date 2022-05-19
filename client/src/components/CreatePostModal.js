@@ -26,6 +26,7 @@ const CreatePostModal = () => {
     description: '',
     projectImg: projectImage,
     repo: '',
+    teamSize: ''
   });
 
   const closePostModal = () => {
@@ -61,14 +62,15 @@ const CreatePostModal = () => {
 
       const post = {
         ...postFormData,
+        teamSize: +postFormData.teamSize,
         projectImg: projectImg,
       }
-  
+
       try {
         const { data } = await addPost({
           variables: { ...post },
         });
-  
+
         const _id = data.addPost._id;
         const date = data.addPost.date;
 
@@ -82,32 +84,33 @@ const CreatePostModal = () => {
               poster: {
                 _id: me?._id || me?.userId,
                 username: me.username,
-                picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+                picture: me.picture || '../default.png'
               }
             }
           });
         }
 
         navigate(`/project/${data.addPost._id}`);
-  
+
       } catch (e) {
         console.error(e);
         return
       }
-  
+
       setPostFormData({
         title: '',
         tagsString: '',
         description: '',
         projectImg: '',
         repo: '',
+        teamSize: ''
       });
-  
+
       localStorage.removeItem('image');
-  
+
       dispatch({ type: HIDE_MODAL })
     }
- 
+
   };
 
   const validate = (values) => {
@@ -118,13 +121,17 @@ const CreatePostModal = () => {
       errors.title =
         "Please enter a title for your post";
       validated = false;
-    } 
+    }
     if (!values.tagsString) {
       errors.tags = "Please include at least one tag for your post";
       validated = false;
-    } 
+    }
     if (!values.description) {
       errors.description = "Please include a description for your post";
+      validated = false;
+    }
+    if (!values.teamSize) {
+      errors.teamSize = "Please include a number of expected team members";
       validated = false;
     }
     if (!values.repo) {
@@ -197,6 +204,21 @@ const CreatePostModal = () => {
             />
             <Form.Text id="descriptionAlert" className="text-danger fs-6">
               {formErrors.description}
+            </Form.Text>
+          </Form.Group>
+          <Form.Group className="form-field">
+            <Form.Label htmlFor="tags">Team Size</Form.Label>
+            <Form.Control
+              type="number"
+              min="1"
+              placeholder="Besides you, how many members do you want in your team?"
+              name="teamSize"
+              onChange={handleInputChange}
+              value={postFormData.teamSize}
+              required
+            />
+            <Form.Text id="teamAlert" className="text-danger fs-6">
+              {formErrors.teamSize}
             </Form.Text>
           </Form.Group>
           <Form.Group className="form-field">

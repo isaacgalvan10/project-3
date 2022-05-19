@@ -48,6 +48,9 @@ const projectSchema = new Schema({
       ref: 'User'
     }
   ],
+  teamSize: {
+    type: Number
+  }
 });
 
 const Project = mongoose.model('Project', projectSchema);
