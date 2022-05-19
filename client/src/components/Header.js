@@ -4,28 +4,22 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { Offcanvas, Image, Modal, Tab } from 'react-bootstrap';
+import { Offcanvas, Image } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './styles/header.css';
 import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
-import SearchResults from '../pages/SearchResults';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
-import Login from './Login';
-import Signup from './Signup';
 import Projects from '../components/Projects';
 
 const Header = () => {
-  const [showModal, setShowModal] = useState(false);
-
   const [state, dispatch] = useGlobalContext();
   const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState('');
-  const [isSearch] = useState(false);
 
   const { loading, data } = useQuery(QUERY_ME);
 
@@ -180,11 +174,6 @@ const Header = () => {
               </Container>
             </Navbar>
           ))}
-          {!isSearch ? (
-            null
-          ) : (
-            <SearchResults input={searchValue} />
-          )}
         </>
     </>
   );
