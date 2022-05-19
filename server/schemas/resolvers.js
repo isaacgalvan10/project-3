@@ -70,8 +70,6 @@ const resolvers = {
 
         const poster = me._id;
 
-        // const date = 'May 5, 2022'
-
         const project = await Project.create({ title, tags, description, projectImg, repo, teamSize, poster });
 
         await User.findOneAndUpdate(
