@@ -11,7 +11,7 @@ import swal from "sweetalert";
 const EditProfileForm = ({ user, setEditMode }) => {
   const [editProfile] = useMutation(EDIT_PROFILE);
 
-  const picture = user.picture || '../default.png';
+  const picture = user.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const [editFormData, setEditFormData] = useState({
     newUsername: user.username,
     newBio: user?.bio || '',

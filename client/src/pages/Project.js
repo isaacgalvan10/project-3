@@ -41,7 +41,7 @@ const Project = () => {
   const project = state?.projects[projectIndex] || data?.project || {};
   const members = project?.members || [];
   const tags = project?.tags || [];
-  const posterPicture = project.poster?.picture || '../default.png';
+  const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const joinedProjects = state?.me?.joinedProjects || [];
   const requests = project?.requests || [];
 
@@ -190,7 +190,7 @@ const Project = () => {
                 _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
                 index: projectIndex,
                 username: state?.me?.username || Auth.getProfile().data.username,
-                picture: state?.me?.picture || '../default.png'
+                picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
               }
             });
           }

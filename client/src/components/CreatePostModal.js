@@ -84,7 +84,7 @@ const CreatePostModal = () => {
               poster: {
                 _id: me?._id || me?.userId,
                 username: me.username,
-                picture: me.picture || '../default.png'
+                picture: me.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
               }
             }
           });

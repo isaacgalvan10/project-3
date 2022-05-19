@@ -30,7 +30,7 @@ function Signup(props) {
       const finalForm = {
         ...formValues,
         email: formValues.email.toLowerCase(),
-        picture: './default.png'
+        picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
       };
       try {
         const { data } = await addUser({
