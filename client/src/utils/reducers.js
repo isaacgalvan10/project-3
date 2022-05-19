@@ -183,19 +183,7 @@ export const reducer = (state, action) => {
 
             const updatedProjects = requestedProjects.map((project) => {
                 return {
-                    ...project,
-                    // spotsLeft: function () {
-                    //     const spots = [];
-                    //     const spotsQty = this.teamSize - this.members.length;
-                    //     for (let i = 0; i < spotsQty; i++) {
-                    //         spots.push({
-                    //             id: i + 1,
-                    //             pic: './no-profile-picture.jpeg'
-                    //         }
-                    //         );
-                    //     };
-                    //     return spots;
-                    // }
+                    ...project
                 }
             });
             return {
