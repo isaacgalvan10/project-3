@@ -41,7 +41,7 @@ const Project = () => {
   const project = state?.projects[projectIndex] || data?.project || {};
   const members = project?.members || [];
   const tags = project?.tags || [];
-  const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
+  const posterPicture = project.poster?.picture || '../default.png';
   const joinedProjects = state?.me?.joinedProjects || [];
   const requests = project?.requests || [];
 
@@ -49,16 +49,20 @@ const Project = () => {
     return <h3>Loading...</h3>;
   }
 
-  // const emptySpots = currentProject.spotsLeft();
-
-  // const switchUser = () => {
-  //     if (!isPoster) {
-  //         setPoster(true);
-
-  //     } else {
-  //         setPoster(false);
-  //     }
-  // };
+  const spotsLeft = () => {
+    const spots = [];
+    console.log(project.teamSize);
+    console.log(members.length);
+    const spotsQty = project.teamSize - members.length;
+    console.log(spotsQty);
+    for (let i = 0; i < spotsQty; i++) {
+      spots.push({
+        id: i
+      });
+    };
+    console.log(spots);
+    return spots;
+  }
 
   const deletePost = async () => {
     const confirm = await swal({
@@ -186,7 +190,7 @@ const Project = () => {
                 _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
                 index: projectIndex,
                 username: state?.me?.username || Auth.getProfile().data.username,
-                picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+                picture: state?.me?.picture || '../default.png'
               }
             });
           }
@@ -381,22 +385,21 @@ const Project = () => {
             </p>
           </Col>
         </Row>
-
-        {/* {currentProject.spotsLeft().length !== 0
-                              ? (
-                                  <p>{currentProject.spotsLeft().length} Spots left!</p>
-                              ) : (
-                                  null
-                              )} */}
         <Row className="d-flex">
           <h3>Team Members</h3>
+          {spotsLeft().length !== 0
+            ? (
+              <h4>{spotsLeft().length} Spots left!</h4>
+            ) : (
+              null
+            )}
           {members.map((member) => (
             <Col className="xs-col" xs={2} key={member._id}>
               <div className="d-flex flex-column align-items-center">
                 <Link as={Link} to={`/profile/${member._id}`}>
                   <Image
                     src={member.picture}
-                    alt="user"
+                    alt={member.username}
                     roundedCircle
                     className="sm-profile-img"
                   ></Image>
@@ -414,23 +417,30 @@ const Project = () => {
               </div>
             </Col>
           ))}
-          {/* {currentProject.spotsLeft().map((emptySpot) => (
-                                  <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
-                              ))} */}
+          {spotsLeft().map((emptySpot) => (
+            <Col className="xs-col" xs={2} key={emptySpot.id}>
+              <div className="d-flex flex-column align-items-center">
+                <Image src={`../spot.png`} alt="user" roundedCircle className="sm-profile-img"
+                ></Image>
+              </div>
+            </Col>
+          ))}
         </Row>
       </Container>
-      {Auth.loggedIn() ? (
-        <>
-          <ModalRequests
-            show={showModal}
-            setShowModal={setShowModal}
-            requests={requests}
-            projectId={projectId}
-            currentProject={project}
-            projectIndex={projectIndex}
-          />
-        </>
-      ) : null}
+      {
+        Auth.loggedIn() ? (
+          <>
+            <ModalRequests
+              show={showModal}
+              setShowModal={setShowModal}
+              requests={requests}
+              projectId={projectId}
+              currentProject={project}
+              projectIndex={projectIndex}
+            />
+          </>
+        ) : null
+      }
     </>
   );
 };
