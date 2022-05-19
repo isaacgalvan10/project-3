@@ -19,6 +19,7 @@ import { GlobalProvider } from './utils/GlobalState';
 import Notification from './components/Notification';
 // import RequestModal from './components/RequestModal';
 import CreatePostModal from './components/CreatePostModal';
+import LoginModal from './components/LoginModal';
 import Auth from './utils/auth';
 
 const httpLink = createHttpLink({
@@ -62,6 +63,7 @@ function App() {
                 <CreatePostModal />
               </>
             ) : null}
+            <LoginModal />
           </GlobalProvider>
         </>
       </Router>

@@ -3,19 +3,14 @@ import { useState } from 'react';
 import '../components/styles/project.css';
 import swal from 'sweetalert';
 import { useGlobalContext } from '../utils/GlobalState';
-import { DELETE_MEMBER, STATUS, POST_REQUEST, DELETE_POST } from '../utils/actions';
+import { DELETE_MEMBER, POST_REQUEST, DELETE_POST, DELETE_PROJECT, SHOW_MODAL } from '../utils/actions';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { QUERY_PROJECT } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
-import {
-  REMOVE_POST,
-  ADD_REQUEST,
-  REMOVE_MEMBER,
-  REMOVE_PROJECT,
-} from '../utils/mutations';
+import { REMOVE_POST, ADD_REQUEST, REMOVE_MEMBER } from '../utils/mutations';
 import ModalRequests from '../components/ModalRequests';
 
 const Project = () => {
@@ -28,15 +23,10 @@ const Project = () => {
   const [showModal, setShowModal] = useState(false);
 
   const [state, dispatch] = useGlobalContext();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [addRequest] = useMutation(ADD_REQUEST);
   const [removePost] = useMutation(REMOVE_POST);
-  const [deleteMember] = useMutation(REMOVE_MEMBER);
-  const [removeProject] = useMutation(REMOVE_PROJECT);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const [removeMember] = useMutation(REMOVE_MEMBER);
 
   const isPoster = () => {
     if (Auth.loggedIn()) {
@@ -47,25 +37,32 @@ const Project = () => {
   const projectIndex = state.projects.findIndex(
     (project) => project._id === projectId
   );
-  // const currentProject = state.projects[projectIndex];
 
-  const project = state?.projects[projectIndex] || data?.project || '';
-  const members = project?.members || data.project?.members || [];
-  const tags = project?.tags || data.project?.tags || [];
+  const project = state?.projects[projectIndex] || data?.project || {};
+  const members = project?.members || [];
+  const tags = project?.tags || [];
   const posterPicture = project.poster?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png';
   const joinedProjects = state?.me?.joinedProjects || [];
   const requests = project?.requests || [];
 
-  // const emptySpots = currentProject.spotsLeft();
+  if (loading) {
+    return <h3>Loading...</h3>;
+  }
 
-  // const switchUser = () => {
-  //     if (!isPoster) {
-  //         setPoster(true);
-
-  //     } else {
-  //         setPoster(false);
-  //     }
-  // };
+  const spotsLeft = () => {
+    const spots = [];
+    console.log(project.teamSize);
+    console.log(members.length);
+    const spotsQty = project.teamSize - members.length;
+    console.log(spotsQty);
+    for (let i = 0; i < spotsQty; i++) {
+      spots.push({
+        id: i
+      });
+    };
+    console.log(spots);
+    return spots;
+  }
 
   const deletePost = async () => {
     const confirm = await swal({
@@ -91,27 +88,36 @@ const Project = () => {
       } catch (e) {
         console.error(e);
       }
-
-      window.location.replace('/');
+      if (state.projects.length > 0) {
+        navigate(`/`);
+      } else {
+        window.location.replace('/');
+      }
     }
   };
 
-  const removeMember = async (memberId, username) => {
+  const deleteMember = async (memberId, username) => {
     const confirm = await swal({
       title: `Are you sure you want to remove ${username} from your team?`,
       buttons: ['No', 'Yes'],
     });
 
     if (confirm) {
-      dispatch({
-        type: DELETE_MEMBER,
-        payload: {
-          id: memberId,
-          index: projectIndex
-        }
-      });
+      if (state.projects.length > 0) {
+        dispatch({
+          type: DELETE_MEMBER,
+          payload: {
+            id: memberId,
+            index: projectIndex
+          }
+        });
+        dispatch({
+          type: DELETE_PROJECT,
+          projectId: projectId
+        });
+      }
       try {
-        await deleteMember({
+        await removeMember({
           variables: {
             projectId: projectId,
             userId: memberId,
@@ -120,16 +126,16 @@ const Project = () => {
       } catch (e) {
         console.error(e);
       }
-      try {
-        removeProject({
-          variables: {
-            userId: memberId,
-            projectId: projectId,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      // try {
+      //   removeProject({
+      //     variables: {
+      //       userId: memberId,
+      //       projectId: projectId,
+      //     },
+      //   });
+      // } catch (e) {
+      //   console.error(e);
+      // }
     }
 
     // dispatch({
@@ -177,15 +183,17 @@ const Project = () => {
           swal({
             text: `You have sent ${project.poster.username} a request to join their team`,
           });
-          dispatch({
-            type: POST_REQUEST,
-            payload: {
-              _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
-              index: projectIndex,
-              username: state?.me?.username || Auth.getProfile().data.username,
-              picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
-            }
-          });
+          if (state.projects.length > 0) {
+            dispatch({
+              type: POST_REQUEST,
+              payload: {
+                _id: Auth.getProfile().data?._id || Auth.getProfile().data?.userId,
+                index: projectIndex,
+                username: state?.me?.username || Auth.getProfile().data.username,
+                picture: state?.me?.picture || 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
+              }
+            });
+          }
           try {
             addRequest({
               variables: {
@@ -208,10 +216,6 @@ const Project = () => {
           //     projectId: projectId,
           //   },
           // });
-          dispatch({
-            type: STATUS,
-            status: 'pending',
-          });
         }
       } else if (btnText === 'Pending...') {
         swal({
@@ -226,15 +230,21 @@ const Project = () => {
           swal({
             text: `You have dropout of ${project.poster.username}'s team`,
           });
-          dispatch({
-            type: DELETE_MEMBER,
-            payload: {
-              id: Auth.getProfile().data._id,
-              index: projectIndex
-            }
-          });
+          if (state.projects.length > 0) {
+            dispatch({
+              type: DELETE_MEMBER,
+              payload: {
+                id: state.me._id || Auth.getProfile().data._id,
+                index: projectIndex
+              }
+            });
+            dispatch({
+              type: DELETE_PROJECT,
+              projectId: projectId
+            });
+          }
           try {
-            await deleteMember({
+            await removeMember({
               variables: {
                 projectId: projectId,
                 userId: state.me._id,
@@ -243,24 +253,17 @@ const Project = () => {
           } catch (e) {
             console.error(e);
           }
-          try {
-            removeProject({
-              variables: {
-                userId: state.me._id,
-                projectId: projectId,
-              },
-            });
-          } catch (e) {
-            console.error(e);
-          }
-          dispatch({
-            type: STATUS,
-            status: 'out',
-          });
         }
       }
     } else {
-      alert('you need to log in to join a team!');
+      dispatch({
+        type: SHOW_MODAL,
+        payload: {
+          request: false,
+          post: false,
+          login: true
+        },
+      });
     }
   };
 
@@ -382,22 +385,21 @@ const Project = () => {
             </p>
           </Col>
         </Row>
-
-        {/* {currentProject.spotsLeft().length !== 0
-                              ? (
-                                  <p>{currentProject.spotsLeft().length} Spots left!</p>
-                              ) : (
-                                  null
-                              )} */}
         <Row className="d-flex">
           <h3>Team Members</h3>
+          {spotsLeft().length !== 0
+            ? (
+              <h4>{spotsLeft().length} Spots left!</h4>
+            ) : (
+              null
+            )}
           {members.map((member) => (
             <Col className="xs-col" xs={2} key={member._id}>
               <div className="d-flex flex-column align-items-center">
                 <Link as={Link} to={`/profile/${member._id}`}>
                   <Image
                     src={member.picture}
-                    alt="user"
+                    alt={member.username}
                     roundedCircle
                     className="sm-profile-img"
                   ></Image>
@@ -406,7 +408,7 @@ const Project = () => {
 
                 {Auth.loggedIn() && isPoster() ? (
                   <Button
-                    onClick={() => removeMember(member._id, member.username)}
+                    onClick={() => deleteMember(member._id, member.username)}
                     className="delete-btn"
                   >
                     Remove
@@ -415,23 +417,30 @@ const Project = () => {
               </div>
             </Col>
           ))}
-          {/* {currentProject.spotsLeft().map((emptySpot) => (
-                                  <Image key={emptySpot.id} src={`../${emptySpot.pic}`} alt="user" roundedCircle className='profile-img'></Image>
-                              ))} */}
+          {spotsLeft().map((emptySpot) => (
+            <Col className="xs-col" xs={2} key={emptySpot.id}>
+              <div className="d-flex flex-column align-items-center">
+                <Image src={`../spot.png`} alt="user" roundedCircle className="sm-profile-img"
+                ></Image>
+              </div>
+            </Col>
+          ))}
         </Row>
       </Container>
-      {Auth.loggedIn() ? (
-        <>
-          <ModalRequests
-            show={showModal}
-            setShowModal={setShowModal}
-            requests={requests}
-            projectId={projectId}
-            currentProject={project}
-            projectIndex={projectIndex}
-          />
-        </>
-      ) : null}
+      {
+        Auth.loggedIn() ? (
+          <>
+            <ModalRequests
+              show={showModal}
+              setShowModal={setShowModal}
+              requests={requests}
+              projectId={projectId}
+              currentProject={project}
+              projectIndex={projectIndex}
+            />
+          </>
+        ) : null
+      }
     </>
   );
 };

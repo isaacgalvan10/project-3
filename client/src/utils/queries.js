@@ -19,11 +19,13 @@ query Projects {
       picture
     }
     tags
+    repo
     requests {
       _id
       username
       picture
     }
+    teamSize
   }
 }
 `;
@@ -55,6 +57,7 @@ query Project($projectId: ID!) {
       username
       picture
     }
+    teamSize
   }
 }
 `;

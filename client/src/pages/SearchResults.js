@@ -13,7 +13,7 @@ const SearchResults = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <h3>Loading...</h3>;
   }
 
   const projects = data.search;

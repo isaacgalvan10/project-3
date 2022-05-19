@@ -4,28 +4,22 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { Offcanvas, Image, Modal, Tab } from 'react-bootstrap';
+import { Offcanvas, Image } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './styles/header.css';
 import { SHOW_MODAL, UPDATE_ME } from '../utils/actions';
 import { useGlobalContext } from '../utils/GlobalState';
 import Auth from '../utils/auth';
-import SearchResults from '../pages/SearchResults';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
-import Login from './Login';
-import Signup from './Signup';
-
+import Projects from '../components/Projects';
 
 const Header = () => {
-  const [showModal, setShowModal] = useState(false);
-
   const [state, dispatch] = useGlobalContext();
   const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState('');
-  const [isSearch] = useState(false);
 
   const { loading, data } = useQuery(QUERY_ME);
 
@@ -60,6 +54,18 @@ const Header = () => {
       payload: {
         request: false,
         post: true,
+        login: false
+      },
+    });
+  };
+
+  const displayLogintModal = () => {
+    dispatch({
+      type: SHOW_MODAL,
+      payload: {
+        request: false,
+        post: false,
+        login: true
       },
     });
   };
@@ -78,20 +84,22 @@ const Header = () => {
 
   }
 
-  // const navigateHomePage = () => {
-  //   navigate(`/`);
-  // }
+  const navigateHomePage = () => {
+    if (state.projects.length > 0) {
+      navigate(`/`);
+    } else {
+      window.location.replace('/');
+    }
+  }
   return (
     <>
-      {/* {loading ? (
-        <h3></h3>
-      ) : ( */}
+    <Projects />
         <>
           {['md'].map((expand) => (
             <Navbar key={expand} expand={expand} className="mb-3">
               <Container>
                 <Navbar.Brand>
-                  <a href='/' className='text-reset'>&lt;Squad Finder/&gt;</a>
+                  <h2 className='home' onClick={() => navigateHomePage()}>&lt;Squad Finder/&gt;</h2>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
                 <Navbar.Offcanvas
@@ -135,8 +143,8 @@ const Header = () => {
                         <>
                           <Button
                             style={{ marginRight: '10px' }}
-                            onClick={() => setShowModal(true)}
-                          >
+                            onClick={() => displayLogintModal()}
+                            >
                             Login
                           </Button>
                         </>
@@ -149,24 +157,6 @@ const Header = () => {
                           Create Project
                         </Button>
                       ) : null}
-                      {/* <Dropdown>
-                        <Dropdown.Toggle className="position-relative">
-                          <i className="fa-solid fa-bell"></i>
-                          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            99+
-                            <span className="visually-hidden">Notifications</span>
-                          </span>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                          <Dropdown.Item href="#/action-2">
-                            Another action
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-3">
-                            Something else
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown> */}
                       <div>
                         {Auth.loggedIn() ? (
                           <Link to={`./profile/${id}`}>
@@ -184,44 +174,7 @@ const Header = () => {
               </Container>
             </Navbar>
           ))}
-          {!isSearch ? (
-            null
-          ) : (
-            <SearchResults input={searchValue} />
-          )}
         </>
-      {/* )} */}
-      <Modal
-            size='lg'
-            show={showModal}
-            onHide={() => setShowModal(false)}
-            aria-labelledby='signup-modal'>
-            {/* tab container to do either signup or login component */}
-            <Tab.Container defaultActiveKey='login'>
-              <Modal.Header closeButton>
-                <Modal.Title id='signup-modal'>
-                  <Nav variant='pills'>
-                    <Nav.Item>
-                      <Nav.Link eventKey='login'>Login</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey='signUp'>Sign Up</Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Tab.Content>
-                  <Tab.Pane eventKey='login'>
-                    <Login handleModalClose={() => setShowModal(false)} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey='signUp'>
-                    <Signup handleModalClose={() => setShowModal(false)} />
-                  </Tab.Pane>
-                </Tab.Content>
-              </Modal.Body>
-            </Tab.Container>
-          </Modal>
     </>
   );
 };

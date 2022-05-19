@@ -29,6 +29,7 @@ function Signup(props) {
     if (validated) {
       const finalForm = {
         ...formValues,
+        email: formValues.email.toLowerCase(),
         picture: 'https://eecs.ceas.uc.edu/DDEL/images/default_display_picture.png/@@images/image.png'
       };
       try {

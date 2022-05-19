@@ -29,7 +29,6 @@ const resolvers = {
         if (error) {
           console.log(error);
         } else {
-          console.log(data);
           return data;
         }
       });
@@ -61,7 +60,7 @@ const resolvers = {
 
       return { token, user };
     },
-    addPost: async (parent, { title, tagsString, description, projectImg, repo }, context) => {
+    addPost: async (parent, { title, tagsString, description, projectImg, repo, teamSize }, context) => {
       if (context.user) {
 
         const tags = tagsString.split(', ');
@@ -70,9 +69,7 @@ const resolvers = {
 
         const poster = me._id;
 
-        // const date = 'May 5, 2022'
-
-        const project = await Project.create({ title, tags, description, projectImg, repo, poster });
+        const project = await Project.create({ title, tags, description, projectImg, repo, teamSize, poster });
 
         await User.findOneAndUpdate(
           { _id: me._id },
@@ -111,15 +108,12 @@ const resolvers = {
           new: true,
           runValidators: true,
         }
-      ).populate('members');
+      )
 
       await User.findOneAndUpdate(
         { _id: user._id },
         { 
-          $addToSet: 
-          { 
-            joinedProjects: project._id 
-          } 
+          $addToSet: { joinedProjects: project._id } 
         },
         {
           new: true,
@@ -127,21 +121,17 @@ const resolvers = {
         }
       );
 
-      await Project.findOneAndUpdate(
+      const updatedProject = Project.findOneAndUpdate(
         { _id: project._id },
-        {
-          $pull: {
-            requests: { _id: user._id }
-          }
-        },
+        { $pull: { requests: user._id } },
         {
           new: true,
           runValidators: true,
         }
-      );
+      ).populate('members');;
 
 
-      return project;
+      return updatedProject;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },
@@ -156,6 +146,11 @@ const resolvers = {
           runValidators: true,
         }
       );
+
+      await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { joinedProjects: projectId } },
+      )
 
       return project;
       // }
@@ -189,22 +184,6 @@ const resolvers = {
       );
 
       return project;
-      // }
-      // throw new AuthenticationError('You need to be logged in!');
-    },
-    removeProject: async (parent, { userId, projectId }, context) => {
-      // if (context.user) {
-
-      const user = await User.findOneAndUpdate(
-        { _id: userId },
-        { $pull: { joinedProjects: projectId } },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
-
-      return user;
       // }
       // throw new AuthenticationError('You need to be logged in!');
     },

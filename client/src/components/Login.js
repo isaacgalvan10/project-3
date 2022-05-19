@@ -33,12 +33,13 @@ function Login(props) {
     if (validated) {
       try {
         const { data } = await login({
-          variables: { ...formValues },
+          variables: { 
+            ...formValues,
+            email: formValues.email.toLowerCase() 
+          },
         });
   
         Auth.login(data.login.token);
-        const user = await Auth.getProfile().data;
-        localStorage.setItem('profileImg', JSON.stringify(user.picture));
       } catch (e) {
         console.error(e);
         swal({
