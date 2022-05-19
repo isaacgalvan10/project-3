@@ -29,7 +29,6 @@ const resolvers = {
         if (error) {
           console.log(error);
         } else {
-          console.log(data);
           return data;
         }
       });
